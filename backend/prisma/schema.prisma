@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum StatusEnum {
+  PENDENTE
+  PREPARANDO
+  SAIU_PARA_ENTREGA
+  ENTREGUE
+  CANCELADO
+}
+
+model Address {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  street      String
+  number      String
+  district    String
+  city        String
+  state       String
+  zipCode     String
+  isDefault   Boolean       @default(false)
+  userId      String        @db.ObjectId
+  user        User          @relation(fields: [userId], references: [id])
+  active      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model User {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  name        String
+  email       String        @unique
+  password    String
+  role        UserRole
+  orders      Order[]
+  addresses   Address[]
+  phone       String?
+  active      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Category {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  name        String        @unique
+  available   Boolean       @default(true)
+  products    Product[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Product {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  name        String
+  description String
+  price       Float
+  image       String?
+  available   Boolean       @default(true)
+  categoryId  String        @db.ObjectId
+  category    Category      @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model OrderItem {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  orderId     String        @db.ObjectId
+  order       Order         @relation(fields: [orderId], references: [id])
+  productId   String        @db.ObjectId
+  product     Product       @relation(fields: [productId], references: [id])
+  quantity    Int           @default(1)
+  price       Float
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Order {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  userId      String        @db.ObjectId
+  user        User          @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+  status      StatusEnum    @default(PENDENTE)
+  total       Float
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}

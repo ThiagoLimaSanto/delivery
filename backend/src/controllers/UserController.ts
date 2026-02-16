@@ -1,0 +1,76 @@
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { createUserToken } from '../helpers/createUserToken';
+import { CreateUserBody, CreateUserLogin } from '../schemas/UserSchemas';
+import { UserService } from '../services/UserService';
+
+const service = new UserService();
+
+export class UserController {
+  async getAllUsers(request: FastifyRequest, reply: FastifyReply) {
+    const users = await service.getAllUsers();
+
+    return reply.status(200).send({ data: users });
+  }
+  async createUser(
+    request: FastifyRequest<{ Body: CreateUserBody }>,
+    reply: FastifyReply,
+  ) {
+    const { name, email, password, phone } = request.body;
+
+    const user = await service.createUser({
+      name,
+      email,
+      password,
+      phone,
+    });
+
+    return reply
+      .status(201)
+      .send({ message: 'Usuário criado com sucesso', data: user });
+  }
+
+  async Login(
+    request: FastifyRequest<{ Body: CreateUserLogin }>,
+    reply: FastifyReply,
+  ) {
+    const { email, password } = request.body;
+
+    const user = await service.login({ email, password });
+
+    const token = await createUserToken(
+      reply,
+      user.user.id,
+      user.user.name,
+      user.user.role,
+    );
+
+    return reply.status(200).send({ token: token });
+  }
+
+  async updateUser(
+    request: FastifyRequest<{
+      Body: CreateUserBody;
+    }>,
+    reply: FastifyReply,
+  ) {
+    const id = request.user.id;
+    const { name, email, password, phone } = request.body;
+
+    await service.updateUser(id, {
+      name,
+      email,
+      password,
+      phone,
+    });
+
+    return reply.status(200).send({ message: 'Produto atualizado!' });
+  }
+
+  async removeUser(request: FastifyRequest, reply: FastifyReply) {
+    const id = request.user.id;
+
+    await service.removeUser(id);
+
+    return reply.status(200).send({ message: 'Conta desativada!' });
+  }
+}
