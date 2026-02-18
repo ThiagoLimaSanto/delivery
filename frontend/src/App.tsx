@@ -1,9 +1,9 @@
-function App() {
+import { Outlet } from 'react-router-dom';
+
+export function App() {
   return (
     <>
-      <h1>Ola mundO!</h1>
+      <Outlet />
     </>
   );
 }
-
-export default App;

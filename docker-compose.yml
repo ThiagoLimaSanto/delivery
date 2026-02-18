@@ -32,6 +32,7 @@ services:
       - /app/node_modules
     environment:
       - VITE_API_URL=http://localhost:3333
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - app
 
