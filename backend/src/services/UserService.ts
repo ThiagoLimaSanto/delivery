@@ -35,6 +35,22 @@ export class UserService {
     return;
   }
 
+  async checkAuth(id: string) {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+      },
+    });
+
+    if (!user) throw new AppError('Usuário nao encontrado!', 404);
+
+    return user;
+  }
+
   async login(data: CreateUserLogin) {
     const user = await prisma.user.findUnique({
       where: { email: data.email },

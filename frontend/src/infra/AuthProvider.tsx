@@ -19,7 +19,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     async function checkAuth() {
       try {
-        await api.get('/user/my');
+        const reponse = await api.get('/user/my');
+        setUser(reponse.data.data);
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
@@ -37,8 +38,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (data: UserLogin) => {
     try {
-      const reponse = await api.post('/user/login', data);
-      setUser(reponse.data.user);
+      const response = await api.post('/user/login', data);
+      setUser(response.data.data.user);
       authUser();
       showMessage.success('Logado com sucesso!');
     } catch (err: unknown) {

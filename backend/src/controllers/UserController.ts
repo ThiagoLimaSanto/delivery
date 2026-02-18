@@ -13,7 +13,11 @@ export class UserController {
   }
 
   async checkAuth(request: FastifyRequest, reply: FastifyReply) {
-    return reply.status(200).send({ message: 'Autenticado!' });
+    const userId = request.user.id;
+
+    const user = await service.checkAuth(userId);
+
+    return reply.status(200).send({ message: 'Autenticado!', data: user });
   }
 
   async createUser(
