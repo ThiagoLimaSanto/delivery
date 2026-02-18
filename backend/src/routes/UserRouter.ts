@@ -25,6 +25,17 @@ export async function usersRoutes(app: FastifyInstance) {
     userController.getAllUsers.bind(userController),
   );
 
+  typedApp.get(
+    '/my',
+    {
+      preHandler: [authGuard],
+      schema: {
+        response: 200,
+      },
+    },
+    userController.checkAuth.bind(userController),
+  );
+
   typedApp.post(
     '/cadastrar',
     {
@@ -47,6 +58,17 @@ export async function usersRoutes(app: FastifyInstance) {
       },
     },
     userController.Login.bind(userController),
+  );
+
+  typedApp.post(
+    '/logout',
+    {
+      preHandler: [authGuard],
+      schema: {
+        response: 200,
+      },
+    },
+    userController.logout.bind(userController),
   );
 
   typedApp.patch(

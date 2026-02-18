@@ -25,6 +25,7 @@ export class UserService {
       data: {
         name: data.name,
         email: data.email,
+        phone: data.phone,
         password: password_hash,
         role: UserRole.USER,
         active: true,

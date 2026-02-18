@@ -11,6 +11,11 @@ export class UserController {
 
     return reply.status(200).send({ data: users });
   }
+
+  async checkAuth(request: FastifyRequest, reply: FastifyReply) {
+    return reply.status(200).send({ message: 'Autenticado!' });
+  }
+
   async createUser(
     request: FastifyRequest<{ Body: CreateUserBody }>,
     reply: FastifyReply,
@@ -72,5 +77,18 @@ export class UserController {
     await service.removeUser(id);
 
     return reply.status(200).send({ message: 'Conta desativada!' });
+  }
+
+  async logout(request: FastifyRequest, reply: FastifyReply) {
+    const userId = request.user.id;
+
+    reply.clearCookie('token', {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    return reply.status(200).send({ message: 'Deslogado com sucesso!' });
   }
 }

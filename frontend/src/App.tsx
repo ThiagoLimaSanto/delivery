@@ -1,9 +1,12 @@
 import { Outlet } from 'react-router-dom';
+import { AuthProvider } from './infra/AuthProvider';
 
 export function App() {
   return (
     <>
-      <Outlet />
+      <AuthProvider>
+        <Outlet />
+      </AuthProvider>
     </>
   );
 }
