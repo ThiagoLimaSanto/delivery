@@ -22,9 +22,7 @@ export function Login() {
   const { login } = useAuth();
 
   async function onsubmit(data: loginFormData) {
-    const result = await login(data);
-
-    console.log(result);
+    await login(data);
   }
 
   return (

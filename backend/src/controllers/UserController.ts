@@ -22,16 +22,14 @@ export class UserController {
   ) {
     const { name, email, password, phone } = request.body;
 
-    const user = await service.createUser({
+    await service.createUser({
       name,
       email,
       password,
       phone,
     });
 
-    return reply
-      .status(201)
-      .send({ message: 'Usuário criado com sucesso', data: user });
+    return reply.status(201).send({ message: 'Conta criada!' });
   }
 
   async Login(
@@ -49,7 +47,13 @@ export class UserController {
       user.user.role,
     );
 
-    return reply.status(200).send({ token: token });
+    const userReponse = {
+      name: user.user.name,
+      email: user.user.email,
+      phone: user.user.phone,
+    };
+
+    return reply.status(200).send({ token: token, data: userReponse });
   }
 
   async updateUser(

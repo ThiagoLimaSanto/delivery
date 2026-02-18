@@ -11,6 +11,7 @@ import {
   type RegisterFormData,
 } from '../../schemas/FormSchemas.ts';
 import { LoginTemplate } from '../../templates/LoginTemplate.tsx';
+import { useAuth } from '../../hook/useAuth.tsx';
 
 export function Register() {
   const {
@@ -21,9 +22,11 @@ export function Register() {
     resolver: zodResolver(RegisterSchema),
   });
 
-  const onsubmit = (data: RegisterFormData) => {
-    console.log(data);
-  };
+  const { registerUser } = useAuth();
+
+  async function onsubmit(data: RegisterFormData) {
+    await registerUser(data);
+  }
 
   return (
     <LoginTemplate>

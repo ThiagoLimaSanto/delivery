@@ -1,7 +1,10 @@
+import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { showMessage } from '../adapters/ShowMessage';
+import type { UserLogin, UserRegister } from '../types/User';
 import { api } from '../utils/api';
-import { AuthContext } from './AuthContext';
+import { AuthContext, type User } from './AuthContext';
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -11,6 +14,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
     async function checkAuth() {
@@ -31,20 +35,54 @@ export function AuthProvider({ children }: AuthProviderProps) {
     navigate('/');
   };
 
-  const login = async (data: { email: string; password: string }) => {
+  const login = async (data: UserLogin) => {
     try {
-      await api.post('/user/login', data);
+      const reponse = await api.post('/user/login', data);
+      setUser(reponse.data.user);
       authUser();
-    } catch {
-      console.log('Erro');
+      showMessage.success('Logado com sucesso!');
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        showMessage.error(err.response?.data?.message);
+      } else if (err instanceof Error) {
+        showMessage.error(err.message);
+      } else {
+        showMessage.error('Erro desconhecido');
+      }
+    }
+  };
+
+  const registerUser = async (data: UserRegister) => {
+    try {
+      await api.post('/user/cadastrar', data);
+      navigate('/login');
+      showMessage.success('Conta criada!');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        showMessage.error(error.response?.data?.message);
+      } else if (error instanceof Error) {
+        showMessage.error(error.message);
+      } else {
+        showMessage.error('Erro desconhecido');
+      }
     }
   };
 
   const logout = async () => {
     try {
       await api.post('/user/logout');
+      showMessage.success('Deslogado com sucesso!');
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        showMessage.error(err.response?.data?.message);
+      } else if (err instanceof Error) {
+        showMessage.error(err.message);
+      } else {
+        showMessage.error('Erro desconhecido');
+      }
     } finally {
       setIsAuthenticated(false);
+      setUser(undefined);
       navigate('/login');
     }
   };
@@ -56,6 +94,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (error.response?.status === 401) {
           setIsAuthenticated(false);
           navigate('/login');
+          showMessage.warning('Sua sessão expirou. Faça login novamente.');
         }
         return Promise.reject(error);
       },
@@ -64,7 +103,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [navigate]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, loading, login, user, registerUser, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
