@@ -30,6 +30,11 @@ export const createUserLoginSchema = z.object({
 
 export const loginResponseSchema = z.object({
   token: z.string(),
+  user: z.object({
+    name: z.string(),
+    email: z.string(),
+    phone: z.string().nullable().optional(),
+  }),
 });
 
 export const createUserResponseSchema = z.object({

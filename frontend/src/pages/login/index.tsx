@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Form } from '../../components/form';
 import { Heading } from '../../components/Heading';
 import { Input } from '../../components/Input/index.tsx';
-import { Logo } from '../../components/Logo';
 import { FormError } from '../../errors/FormError/index.tsx';
 import { loginSchema, type loginFormData } from '../../schemas/FormSchemas.ts';
 import { LoginTemplate } from '../../templates/LoginTemplate.tsx';
 import { useAuth } from '../../hook/useAuth.tsx';
+import { Logo } from '../../components/Logo/index.tsx';
 
 export function Login() {
   const {
@@ -27,7 +27,7 @@ export function Login() {
 
   return (
     <LoginTemplate>
-      <Logo />
+      <Logo src='/images/image-logo.png' alt='Logo Login' />
       <Heading>Login</Heading>
       <Form onSubmit={handleSubmit(onsubmit)}>
         <Input

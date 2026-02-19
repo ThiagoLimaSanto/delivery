@@ -38,8 +38,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (data: UserLogin) => {
     try {
-      const response = await api.post('/user/login', data);
-      setUser(response.data.data.user);
+      const response = await api.post('/user/login', data); 
+      setUser(response.data.user);
       authUser();
       showMessage.success('Logado com sucesso!');
     } catch (err: unknown) {

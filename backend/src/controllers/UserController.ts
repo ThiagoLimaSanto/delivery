@@ -57,7 +57,7 @@ export class UserController {
       phone: user.user.phone,
     };
 
-    return reply.status(200).send({ token: token, data: userReponse });
+    return reply.status(200).send({ token: token, user: userReponse });
   }
 
   async updateUser(
