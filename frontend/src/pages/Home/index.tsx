@@ -1,20 +1,16 @@
+import { Spinner } from '../../components/Spinner';
 import { useAuth } from '../../hook/useAuth';
 
 export function Home() {
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
 
-  <p>{loading && 'Carregando...'}</p>;
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div>
       <h1>Home</h1>
-      {user && (
-        <>
-          <p>{user.name}</p>
-          <p>{user.email}</p>
-          <p>{user.phone}</p>
-        </>
-      )}
     </div>
   );
 }
