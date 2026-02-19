@@ -8,9 +8,7 @@ export function Home() {
     return <Spinner />;
   }
 
-  return (
-    <div>
-      <h1>Home</h1>
-    </div>
-  );
+  return <div>
+    
+  </div>;
 }

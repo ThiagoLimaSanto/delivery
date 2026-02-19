@@ -3,8 +3,9 @@ import { Image } from '../Image';
 export type LoginImageProps = {
   src: string;
   alt: string;
+  className?: string;
 };
 
-export function Logo({ src, alt }: LoginImageProps) {
-  return <Image src={src} alt={alt} className='w-90 mb-20 lg:w-[70%]' />;
+export function Logo({ src, alt, className }: LoginImageProps) {
+  return <Image src={src} alt={alt} className={className} />;
 }

@@ -30,7 +30,7 @@ export function Register() {
 
   return (
     <LoginTemplate>
-      <Logo src='/images/image-logo.png' alt='Logo Login' />
+      <Logo src='/images/image-logo.png' alt='Logo Login' className='w-90 mb-20 lg:w-[70%]' />
       <Heading>Login</Heading>
       <Form onSubmit={handleSubmit(onsubmit)}>
         <Input

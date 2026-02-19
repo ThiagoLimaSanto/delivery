@@ -10,7 +10,8 @@ export async function authGuard(
   reply: FastifyReply,
 ) {
   try {
-    await request.jwtVerify();
+    await request.jwtVerify({ onlyCookie: true });
+    
   } catch (error) {
     return reply.status(401).send({ message: 'Token inválido ou expirado!' });
   }
