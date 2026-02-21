@@ -1,0 +1,42 @@
+import { HiOutlineMenu } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
+
+type NavBarProps = {
+  handleModal: () => void;
+};
+
+export function NavBar({ handleModal }: NavBarProps) {
+  const items = ['Início', 'Cardápio', 'Categorias', 'Contatos'];
+
+  return (
+    <nav className='flex justify-between items-center my-4 h-20 fixed inset-0 px-8 pb-2 z-2'>
+      <div className='flex gap-4'>
+        <HiOutlineMenu
+          onClick={handleModal}
+          className='cursor-pointer text-white'
+          size={40}
+        />
+      </div>
+      <ul className='flex text-white gap-8 text-xl'>
+        {items.map(item => (
+          <li key={item} className='cursor-pointer group'>
+            <Link
+              to={`/${item.toLowerCase()}`}
+              className='transition-colors transition-transform inline-block group-hover:text-[#97448F] group-hover:-translate-y-1.5 border-b-2 border-transparent group-hover:border-[#97448F] pb-1 font-semibold'
+            >
+              {item}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <div>
+        <Link
+          to={'/login'}
+          className='flex items-center justify-center text-amber-50 bg-[#97448F] py-2 px-8 cursor-pointer hover:bg-[#973b8e] transition-colors hover:scale-105 rounded-md'
+        >
+          Entrar
+        </Link>
+      </div>
+    </nav>
+  );
+}
