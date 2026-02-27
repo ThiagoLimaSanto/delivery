@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { MainSideBar } from '../../components/MainSideBar';
 import { ModalOverlay } from '../../components/ModalOverlay';
 import { NavBar } from '../../components/NavBar';
-import { SideBar } from '../../components/SideBar';
 import { Spinner } from '../../components/Spinner';
 import { useAuth } from '../../hook/useAuth';
 
@@ -9,10 +9,7 @@ export function Home() {
   const { loading } = useAuth();
 
   const [click, setClick] = useState(false);
-
-  function handleModal() {
-    setClick(!click);
-  }
+  const [clickCarrinho, setClickCarrinho] = useState(false);
 
   if (loading) {
     return <Spinner />;
@@ -20,14 +17,25 @@ export function Home() {
 
   return (
     <div>
-      <NavBar handleModal={handleModal} />
+      <NavBar
+        handleModal={() => setClick(!click)}
+        handleModalCarrinho={() => setClickCarrinho(!clickCarrinho)}
+      />
       <ModalOverlay
         className='w-screen h-screen z-3'
         click={click}
-        handleModal={handleModal}
+        handleModal={() => {
+          setClick(false);
+          setClickCarrinho(false);
+        }}
+        clickCarrinho={clickCarrinho}
       />
-      <SideBar click={click} handleModal={handleModal} />
-      
+      <MainSideBar
+        handleModal={() => setClick(!click)}
+        handleModalCarrinho={() => setClickCarrinho(!clickCarrinho)}
+        click={click}
+        clickCarrinho={clickCarrinho}
+      />
     </div>
   );
 }

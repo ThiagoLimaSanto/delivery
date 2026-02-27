@@ -5,7 +5,7 @@ import { HiOutlineXMark } from "react-icons/hi2";
 export function SideBar({ click, handleModal }: ModalProps) {
   return (
     <div
-      className={`${click ? 'translate-x-0' : '-translate-x-full'} fixed shadow-xl transform transition-transform duration-300 ease-in-out top-0 h-screen left-0 w-1/2 sm:w-1/3 lg:w-1/4 xl:w-1/5 bg-white z-3`}
+      className={`${click ? 'translate-x-0' : '-translate-x-full'} fixed shadow-xl transform transition-transform duration-700 ease-in-out top-0 h-screen left-0 w-1/2 sm:w-1/3 lg:w-1/4 xl:w-1/5 bg-white z-3`}
     >
       <div className='p-5'>
         <button
