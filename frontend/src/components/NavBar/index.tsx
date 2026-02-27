@@ -1,6 +1,7 @@
 import { FaShoppingCart } from 'react-icons/fa';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hook/useAuth';
 
 type NavBarProps = {
   handleModal: () => void;
@@ -8,17 +9,16 @@ type NavBarProps = {
 };
 
 export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
+  const { isAuthenticated } = useAuth();
   const items = ['Início', 'Cardápio', 'Categorias', 'Contatos'];
 
   return (
-    <nav className='flex justify-between items-center my-4 h-20 fixed inset-0 px-8 pb-2 z-2 bg-black'>
-      <div className='flex gap-4'>
-        <HiOutlineMenu
-          onClick={handleModal}
-          className='cursor-pointer text-white'
-          size={40}
-        />
-      </div>
+    <nav className='flex justify-between items-center my-4 h-20 fixed inset-0 px-8 pb-2 z-2'>
+      <HiOutlineMenu
+        onClick={handleModal}
+        className='cursor-pointer text-white'
+        size={40}
+      />
       <ul className='hidden md:flex md:text-white md:gap-8 md:text-xl'>
         {items.map(item => (
           <li
@@ -35,17 +35,19 @@ export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
         ))}
       </ul>
       <div className='flex justify-center items-center gap-4'>
-        <Link
-          to={'/login'}
-          className='flex items-center justify-center text-amber-50 bg-[#97448F] py-2 px-8 cursor-pointer hover:bg-[#973b8e] transition-colors hover:scale-105 rounded-md'
-        >
-          Entrar
-        </Link>
+        {!isAuthenticated && (
+          <Link
+            to={'/login'}
+            className='flex items-center justify-center text-white bg-[#97448F] py-2 px-8 cursor-pointer hover:bg-[#973b8e] transition-colors hover:scale-105 rounded-md'
+          >
+            Entrar
+          </Link>
+        )}
         <FaShoppingCart
           onClick={handleModalCarrinho}
           className='hover:scale-105 cursor-pointer'
           size={35}
-          color='#97448F'
+          color='white'
         />
       </div>
     </nav>

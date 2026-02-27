@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { HeroHome } from '../../components/HeroHome';
 import { MainSideBar } from '../../components/MainSideBar';
 import { ModalOverlay } from '../../components/ModalOverlay';
 import { NavBar } from '../../components/NavBar';
@@ -16,7 +17,7 @@ export function Home() {
   }
 
   return (
-    <div>
+    <>
       <NavBar
         handleModal={() => setClick(!click)}
         handleModalCarrinho={() => setClickCarrinho(!clickCarrinho)}
@@ -36,6 +37,7 @@ export function Home() {
         click={click}
         clickCarrinho={clickCarrinho}
       />
-    </div>
+      <HeroHome />
+    </>
   );
 }
