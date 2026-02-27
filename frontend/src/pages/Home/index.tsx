@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Drinks } from '../../components/Drinks';
 import { HeroHome } from '../../components/HeroHome';
 import { MainSideBar } from '../../components/MainSideBar';
+import { Menu } from '../../components/Menu';
 import { ModalOverlay } from '../../components/ModalOverlay';
 import { NavBar } from '../../components/NavBar';
 import { Spinner } from '../../components/Spinner';
@@ -38,6 +40,8 @@ export function Home() {
         clickCarrinho={clickCarrinho}
       />
       <HeroHome />
+      <Menu />
+      <Drinks />
     </>
   );
 }
