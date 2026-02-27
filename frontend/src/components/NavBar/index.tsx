@@ -17,12 +17,12 @@ export function NavBar({ handleModal }: NavBarProps) {
           size={40}
         />
       </div>
-      <ul className='flex text-white gap-8 text-xl'>
+      <ul className='hidden md:flex md:text-white md:gap-8 md:text-xl'>
         {items.map(item => (
-          <li key={item} className='cursor-pointer group'>
+          <li key={item} className='cursor-pointer group border-b-2 border-transparent hover:border-[#97448F]'>
             <Link
               to={`/${item.toLowerCase()}`}
-              className='transition-colors transition-transform inline-block group-hover:text-[#97448F] group-hover:-translate-y-1.5 border-b-2 border-transparent group-hover:border-[#97448F] pb-1 font-semibold'
+              className='transition-transform inline-block group-hover:text-[#97448F] group-hover:-translate-y-1.5  pb-1 font-semibold'
             >
               {item}
             </Link>
