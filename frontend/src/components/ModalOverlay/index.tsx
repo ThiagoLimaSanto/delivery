@@ -4,12 +4,13 @@ export function ModalOverlay({
   click = true,
   handleModal,
   clickCarrinho = true,
-  className,
 }: ModalProps) {
+  const isOpen = click || clickCarrinho;
+
   return (
     <div
       onClick={handleModal}
-      className={`${click || clickCarrinho ? 'block' : 'hidden'} absolute backdrop-blur-[1px] bg-black/30 ${className}`}
-    ></div>
+      className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 bg-black/40 z-2`}
+    />
   );
 }

@@ -25,7 +25,6 @@ export function Home() {
         handleModalCarrinho={() => setClickCarrinho(!clickCarrinho)}
       />
       <ModalOverlay
-        className='w-screen h-screen z-3 fixed'
         click={click}
         handleModal={() => {
           setClick(false);
