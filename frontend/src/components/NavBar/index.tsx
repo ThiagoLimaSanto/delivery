@@ -2,6 +2,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hook/useAuth';
+import { useEffect, useState } from 'react';
 
 type NavBarProps = {
   handleModal: () => void;
@@ -11,9 +12,19 @@ type NavBarProps = {
 export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
   const { isAuthenticated } = useAuth();
   const items = ['Início', 'Cardápio', 'Categorias', 'Contatos'];
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > window.innerHeight - 80);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className='flex justify-between items-center my-4 h-20 fixed inset-0 px-8 pb-2 z-2'>
+    <nav className={`flex ${scrolled ? 'bg-black/80 backdrop-blur-sm' : 'bg-black/50'} justify-between items-center  h-20 fixed inset-0 px-8 pb-2 z-2`}>
       <HiOutlineMenu
         onClick={handleModal}
         className='cursor-pointer text-white'
@@ -23,11 +34,11 @@ export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
         {items.map(item => (
           <li
             key={item}
-            className='cursor-pointer group border-b-2 border-transparent hover:border-[#97448F]'
+            className='cursor-pointer group border-b-2 border-transparent hover:border-white'
           >
             <Link
               to={`/${item.toLowerCase()}`}
-              className='transition-transform inline-block group-hover:text-[#97448F] group-hover:-translate-y-1.5  pb-1 font-semibold'
+              className='transition-transform inline-block group-hover:text-white group-hover:-translate-y-1.5  pb-1 font-medium'
             >
               {item}
             </Link>
@@ -38,7 +49,7 @@ export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
         {!isAuthenticated && (
           <Link
             to={'/login'}
-            className='flex items-center justify-center text-white bg-[#97448F] py-2 px-8 cursor-pointer hover:bg-[#973b8e] transition-colors hover:scale-105 rounded-md'
+            className='flex items-center justify-center text-white bg-green-600 py-2 px-8 cursor-pointer hover:bg-green-700 transition-colors hover:scale-105 rounded-md'
           >
             Entrar
           </Link>
@@ -47,7 +58,7 @@ export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
           onClick={handleModalCarrinho}
           className='hover:scale-105 cursor-pointer'
           size={35}
-          color='white'
+          color='#fff'
         />
       </div>
     </nav>

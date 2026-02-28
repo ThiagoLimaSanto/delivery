@@ -3,10 +3,10 @@ import { Drinks } from '../../components/Drinks';
 import { HeroHome } from '../../components/HeroHome';
 import { MainSideBar } from '../../components/MainSideBar';
 import { Menu } from '../../components/Menu';
-import { ModalOverlay } from '../../components/ModalOverlay';
 import { NavBar } from '../../components/NavBar';
 import { Spinner } from '../../components/Spinner';
 import { useAuth } from '../../hook/useAuth';
+import { ModalOverlay } from '../../components/ModalOverlay';
 
 export function Home() {
   const { loading } = useAuth();
@@ -25,7 +25,7 @@ export function Home() {
         handleModalCarrinho={() => setClickCarrinho(!clickCarrinho)}
       />
       <ModalOverlay
-        className='w-screen h-screen z-3'
+        className='w-screen h-screen z-3 fixed'
         click={click}
         handleModal={() => {
           setClick(false);
