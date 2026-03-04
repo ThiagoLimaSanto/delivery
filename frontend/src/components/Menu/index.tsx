@@ -4,10 +4,10 @@ import { Image } from '../Image';
 export function Menu() {
   return (
     <main>
-      <h2 className='text-center mt-8 mb-15 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold'>
-        Conheça o nosso Cardápio
+      <h2 className='text-center mt-8 mb-15 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold'>
+        Cardápio
       </h2>
-      <section className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 px-4 mb-16 md:gap-10'>
+      <section className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 px-4 mb-16 md:gap-10 bg-[#F2F2F2]'>
         <div className='flex flex-col  gap-2 bg-white rounded-md'>
           <div className='h-1/2 w-full'>
             <Image

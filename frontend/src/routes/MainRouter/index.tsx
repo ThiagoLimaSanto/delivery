@@ -3,6 +3,7 @@ import { App } from '../../App';
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { Register } from '../../pages/Register';
+import { Menu } from '../../components/Menu';
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: '/register',
         element: <Register />,
+      },
+      {
+        path: '/cardapio',
+        element: <Menu />,
       },
     ],
   },

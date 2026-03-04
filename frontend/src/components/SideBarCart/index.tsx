@@ -1,17 +1,16 @@
 import { HiOutlineXMark } from 'react-icons/hi2';
-import type { ModalProps } from '../../types/Modal';
+import { Link } from 'react-router-dom';
+import { UseHandleModal } from '../../hook/useHandleModal';
 
-export function SideBarCart({
-  clickCarrinho,
-  handleModalCarrinho,
-}: ModalProps) {
+export function SideBarCart() {
+  const { clickCarrinho, handleModalCarrinho } = UseHandleModal();
   return (
     <div
       className={`${clickCarrinho ? 'translate-x-0' : 'translate-x-full'} fixed shadow-xl transform transition-transform duration-700 ease-in-out top-20 h-[calc(100vh-5rem)]  right-0 w-full sm:w-1/2 lg:w-1/3 2xl:w-1/4 bg-white z-3`}
     >
       <div className='p-5 flex flex-col h-full'>
         <button
-          onClick={handleModalCarrinho}
+          onClick={() => handleModalCarrinho(clickCarrinho)}
           className='flex items-center text-black cursor-pointer w-8'
         >
           <HiOutlineXMark size={30} />
@@ -28,8 +27,12 @@ export function SideBarCart({
               <div className='w-full flex justify-between'>
                 <p>(Quantidade: 1)</p>
                 <div className='flex gap-4'>
-                  <button className='cursor-pointer text-green-600 hover:text-green-700'>Adicionar</button>
-                  <button className='cursor-pointer text-red-500 hover:text-red-600'>Remover</button>
+                  <button className='cursor-pointer text-green-600 hover:text-green-700'>
+                    Adicionar
+                  </button>
+                  <button className='cursor-pointer text-red-500 hover:text-red-600'>
+                    Remover
+                  </button>
                 </div>
               </div>
               <p>R$ 18,90</p>
@@ -39,29 +42,25 @@ export function SideBarCart({
               <div className='w-full flex justify-between'>
                 <p>(Quantidade: 1)</p>
                 <div className='flex gap-4'>
-                  <button className='cursor-pointer text-green-600 hover:text-green-700'>Adicionar</button>
-                  <button className='cursor-pointer text-red-500 hover:text-red-600'>Remover</button>
+                  <button className='cursor-pointer text-green-600 hover:text-green-700'>
+                    Adicionar
+                  </button>
+                  <button className='cursor-pointer text-red-500 hover:text-red-600'>
+                    Remover
+                  </button>
                 </div>
               </div>
               <p>R$ 18,90</p>
             </div>
           </div>
-
-          <div className='mt-6'>
-            <h3 className='mb-2 text-black font-bold'>Endereço de Entrega:</h3>
-            <form>
-              <input
-                className='outline-none border-2 border-[#ccc] w-full px-2 py-1'
-                type='text'
-                placeholder='Digite o endereço de entrega...'
-              />
-            </form>
-          </div>
         </div>
 
-        <button className='w-full py-3 bg-green-600 hover:bg-green-700 transition-colors duration-200 text-white cursor-pointer rounded-lg font-bold mt-6'>
-          Finalizar Pedido
-        </button>
+        <Link
+          to={'/pedido/finalizar'}
+          className='w-full py-3 bg-green-600 hover:bg-green-700 transition-colors duration-200 text-white cursor-pointer rounded-lg font-bold mt-6 flex items-center justify-center'
+        >
+          Escolher forma de Pagamento
+        </Link>
       </div>
     </div>
   );

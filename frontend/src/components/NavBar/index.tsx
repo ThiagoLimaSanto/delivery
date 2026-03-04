@@ -3,15 +3,12 @@ import { HiOutlineMenu } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hook/useAuth';
 import { useEffect, useState } from 'react';
+import { NavLink } from '../NavLink';
+import { UseHandleModal } from '../../hook/useHandleModal';
 
-type NavBarProps = {
-  handleModal: () => void;
-  handleModalCarrinho: () => void;
-};
-
-export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
+export function NavBar() {
   const { isAuthenticated } = useAuth();
-  const items = ['Início', 'Cardápio', 'Categorias', 'Contatos'];
+  const { click, clickCarrinho, handleModal, handleModalCarrinho } = UseHandleModal();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -19,31 +16,24 @@ export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
       setScrolled(window.scrollY > window.innerHeight - 80);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <nav className={`flex ${scrolled ? 'bg-black/80 backdrop-blur-sm' : 'bg-black/50'} justify-between items-center  h-20 fixed inset-0 px-8 pb-2 z-2`}>
+    <nav
+      className={`flex ${scrolled ? 'bg-black/80 backdrop-blur-sm' : 'bg-black/50'} justify-between items-center  h-20 fixed inset-0 px-8 pb-2 z-2`}
+    >
       <HiOutlineMenu
-        onClick={handleModal}
+        onClick={() => handleModal(click)}
         className='cursor-pointer text-white'
         size={40}
       />
       <ul className='hidden md:flex md:text-white md:gap-8 md:text-xl'>
-        {items.map(item => (
-          <li
-            key={item}
-            className='cursor-pointer group border-b-2 border-transparent hover:border-white'
-          >
-            <Link
-              to={`/${item.toLowerCase()}`}
-              className='transition-transform inline-block group-hover:text-white group-hover:-translate-y-1.5  pb-1 font-medium'
-            >
-              {item}
-            </Link>
-          </li>
-        ))}
+        <NavLink to={'/'}>Home</NavLink>
+        <NavLink to={'/cardapio'}>Cardápio</NavLink>
+        <NavLink to={'/sobre'}>Sobre</NavLink>
+        <NavLink to={'/contato'}>Contato</NavLink>
       </ul>
       <div className='flex justify-center items-center gap-4'>
         {!isAuthenticated && (
@@ -55,7 +45,7 @@ export function NavBar({ handleModal, handleModalCarrinho }: NavBarProps) {
           </Link>
         )}
         <FaShoppingCart
-          onClick={handleModalCarrinho}
+          onClick={() => handleModalCarrinho(clickCarrinho)}
           className='hover:scale-105 cursor-pointer'
           size={35}
           color='#fff'
