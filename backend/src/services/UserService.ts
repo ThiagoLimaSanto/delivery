@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client';
-import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import { AppError } from '../errors/AppError';
+import { hashPassword, verifyPassword } from '../helpers/Argon2';
 import { prisma } from '../repository/prisma';
 import { CreateUserBody, CreateUserLogin } from '../schemas/UserSchemas';
 
@@ -18,8 +18,13 @@ export class UserService {
     if (userExists)
       throw new AppError('Já existe um usuário com esse email!', 409);
 
-    const salt = await bcrypt.genSaltSync(12);
-    const password_hash = await bcrypt.hash(data.password, salt);
+    if (!process.env.PEPPER) {
+      throw new AppError('PEPPER não definido');
+    }
+
+    const passwordPepper = data.password + process.env.PEPPER;
+
+    const password_hash = await hashPassword(passwordPepper);
 
     await prisma.user.create({
       data: {
@@ -58,7 +63,13 @@ export class UserService {
 
     if (!user) throw new AppError('Usuário ou senha incorretos!', 400);
 
-    const isValidPassword = await bcrypt.compare(data.password, user.password);
+    if (!process.env.PEPPER) {
+      throw new AppError('PEPPER não definido');
+    }
+
+    const passwordPepper = data.password + process.env.PEPPER;
+
+    const isValidPassword = await verifyPassword(user.password, passwordPepper);
 
     if (!isValidPassword)
       throw new AppError('Usuário ou senha incorretos!', 400);
