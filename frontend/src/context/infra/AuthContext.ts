@@ -1,11 +1,11 @@
 import { createContext } from 'react';
-import type { UserLogin, UserRegister } from '../types/User';
+import type { UserLogin, UserRegister } from '../../types/User';
 
 export type User = {
   name: string;
   email: string;
   phone: string;
-}
+};
 
 export type AuthContextType = {
   isAuthenticated: boolean;

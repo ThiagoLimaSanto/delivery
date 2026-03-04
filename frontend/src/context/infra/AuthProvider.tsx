@@ -1,9 +1,9 @@
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { showMessage } from '../adapters/ShowMessage';
-import type { UserLogin, UserRegister } from '../types/User';
-import { api } from '../utils/api';
+import { showMessage } from '../../adapters/ShowMessage';
+import type { UserLogin, UserRegister } from '../../types/User';
+import { api } from '../../utils/api';
 import { AuthContext, type User } from './AuthContext';
 
 type AuthProviderProps = {
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (data: UserLogin) => {
     try {
-      const response = await api.post('/user/login', data); 
+      const response = await api.post('/user/login', data);
       setUser(response.data.user);
       authUser();
       showMessage.success('Logado com sucesso!');

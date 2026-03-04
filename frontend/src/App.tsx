@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { AuthProvider } from './infra/AuthProvider';
+import { AuthProvider } from './context/infra/AuthProvider';
 import { ModalProvider } from './context/modalProvider';
 
 export function App() {
