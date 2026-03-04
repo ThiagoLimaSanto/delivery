@@ -6,7 +6,7 @@ type DefaultInputProps = {
 export function Input({ type, id, labelText, ...rest }: DefaultInputProps) {
   return (
     <div className='flex flex-col mb-8 min-w-[80%] sm:min-w-130 lg:min-w-full h-16'>
-      <label className='text-amber-50 mb-1' htmlFor={id}>
+      <label className='text-white mb-1' htmlFor={id}>
         {labelText}
       </label>
       <input
