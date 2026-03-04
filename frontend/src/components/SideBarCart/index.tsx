@@ -54,13 +54,16 @@ export function SideBarCart() {
             </div>
           </div>
         </div>
-
-        <Link
-          to={'/pedido/finalizar'}
-          className='w-full py-3 bg-green-600 hover:bg-green-700 transition-colors duration-200 text-white cursor-pointer rounded-lg font-bold mt-6 flex items-center justify-center'
-        >
-          Escolher forma de Pagamento
-        </Link>
+        <div>
+          <p className='text-xl font-semibold'>Total: R$ 37,80</p>
+          <Link
+            onClick={() => handleModalCarrinho(clickCarrinho)}
+            to={'/pedido/finalizar'}
+            className='w-full py-3 bg-green-600 hover:bg-green-700 transition-colors duration-200 text-white cursor-pointer rounded-lg font-bold mt-6 flex items-center justify-center'
+          >
+            Escolher forma de Pagamento
+          </Link>
+        </div>
       </div>
     </div>
   );

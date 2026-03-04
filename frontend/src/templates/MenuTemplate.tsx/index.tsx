@@ -13,9 +13,7 @@ export function MenuTemplate({ title, children }: MenuProps) {
           {title}
         </h2>
         <section className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 px-4 mb-16 md:gap-10 bg-[#F2F2F2]'>
-          <div className='flex flex-col  gap-2 bg-white rounded-md transition duration-300 ease-in-out hover:scale-105'>
-            {children}
-          </div>
+          {children}
         </section>
       </main>
     </MainTemplate>

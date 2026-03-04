@@ -12,7 +12,7 @@ export function NavBar() {
 
   return (
     <nav
-      className={`flex bg-black justify-between items-center  h-20 fixed inset-0 px-8 pb-2 z-2`}
+      className={`flex bg-black justify-between items-center h-20 fixed inset-0 px-8 pb-2 z-2`}
     >
       <HiOutlineMenu
         onClick={() => handleModal(click)}

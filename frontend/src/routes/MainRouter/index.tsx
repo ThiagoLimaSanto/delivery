@@ -8,6 +8,7 @@ import { Menu } from '../../pages/Menu';
 import { Register } from '../../pages/Register';
 import { Contact } from '../../pages/Contact';
 import { Category } from '../../pages/Category';
+import { Payment } from '../../pages/Payment';
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: '/contato',
         element: <Contact />,
+      },
+      {
+        path: '/pedido/finalizar',
+        element: <Payment />,
       },
     ],
   },

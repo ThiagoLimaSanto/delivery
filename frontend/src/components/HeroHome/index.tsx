@@ -3,8 +3,8 @@ import { HiOutlineLocationMarker } from 'react-icons/hi';
 export function HeroHome() {
   return (
     <div className='bg-black'>
-      <section className='relative h-[calc(100vh-80px)] w-screen overflow-hidden mt-20'>
-        <div className='absolute inset-0 bg-[url("/images/hamburguer.webp")] bg-cover bg-center blur-[2px]'></div>
+      <section className='relative h-[calc(100vh-80px)] w-screen overflow-hidden'>
+        <div className='absolute inset-0 bg-[url("/images/hamburguer.webp")] bg-cover bg-center blur-[1px]'></div>
         <div className='absolute inset-0 bg-black/40'></div>
 
         <div className='relative flex flex-col gap-4 justify-center items-center h-full text-center'>

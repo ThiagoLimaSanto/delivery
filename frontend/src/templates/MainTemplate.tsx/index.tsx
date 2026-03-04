@@ -10,7 +10,7 @@ export function MainTemplate({ children }: MainTemplateProps) {
       <NavBar />
       <ModalOverlay />
       <MainSideBar />
-      {children}
+      <div className='mt-20'>{children}</div>
     </>
   );
 }
