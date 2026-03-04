@@ -36,12 +36,16 @@ export function NavBar() {
             Entrar
           </Link>
         )}
-        <FaShoppingCart
-          onClick={() => handleModalCarrinho(clickCarrinho)}
-          className='hover:scale-105 cursor-pointer'
-          size={35}
-          color='#fff'
-        />
+        <div className='flex relative hover:scale-105 cursor-pointer'>
+          <FaShoppingCart
+            onClick={() => handleModalCarrinho(clickCarrinho)}
+            size={35}
+            color='#fff'
+          />
+          <div className='flex justify-center items-center absolute h-5 w-5 -bottom-2 -right-2 bg-red-500 rounded-full'>
+            <p className='text-white text-md'>20</p>
+          </div>
+        </div>
       </div>
     </nav>
   );
