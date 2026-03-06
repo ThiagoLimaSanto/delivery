@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { z } from 'zod';
 import { ProductController } from '../controllers/ProductController';
 import { authGuard } from '../middleware/auth.middleware';
 import { authAdmin } from '../middleware/authAdmin';
@@ -27,6 +28,9 @@ export async function productRoutes(app: FastifyInstance) {
     '/disponiveis',
     {
       schema: {
+        querystring: z.object({
+          categoria: z.string().optional(),
+        }),
         response: 200,
       },
     },

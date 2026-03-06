@@ -9,7 +9,7 @@ export function Payment() {
     <MainTemplate>
       <div className='h-[calc(100vh-80px)]'>
         <div className='h-full flex justify-center gap-12 xl:gap-30 w-[90%] p-4 mx-auto'>
-          <div className='flex flex-col items-center max-w-[350px]'>
+          <div className='flex flex-col items-center max-w-87.5'>
             <h1 className='text-2xl lg:text-3xl font-bold xl:text-4xl'>Finalize seu pedido</h1>
             <div className='w-full flex flex-col mt-4'>
               <div className='flex gap-8 mt-4'>
@@ -57,7 +57,7 @@ export function Payment() {
               </div>
             </div>
           </div>
-          <div className='hidden sm:block bg-white p-4 w-[350px] h-[350px] shadow-md rounded'>
+          <div className='hidden sm:block bg-white p-4 w-87.5 h-87.5 shadow-md rounded'>
             <div className='flex flex-col gap-4'>
               <p className='text-[#a6a6a6]'>Seu Pedido</p>
               <NavLink to={'/cardapio'} className='text-black mb-4 cursor-pointer'>Ver Cardápio</NavLink>

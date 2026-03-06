@@ -21,8 +21,8 @@ export function NavBar() {
       />
       <ul className='hidden lg:flex md:text-white md:gap-8 md:text-xl'>
         <NavLink to={'/'}>Home</NavLink>
-        <NavLink to={'/cardapio'}>Cardápio</NavLink>
-        <NavLink to={'/bebidas'}>Bebidas</NavLink>
+        <NavLink to={'/cardapio?categoria=Lanches'}>Cardápio</NavLink>
+        <NavLink to={'/bebidas?categoria=Bebidas'}>Bebidas</NavLink>
         <NavLink to={'/categorias'}>Categorias</NavLink>
         <NavLink to={'/sobre'}>Sobre</NavLink>
         <NavLink to={'/contato'}>Contato</NavLink>

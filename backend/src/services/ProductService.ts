@@ -2,6 +2,12 @@ import { ObjectId } from 'mongodb';
 import { prisma } from '../repository/prisma';
 import { AppError } from '../errors/AppError';
 import { CreateProductBody } from '../schemas/ProductSchemas';
+import { QueryParams } from '../types/queryParamsProduct';
+
+type Query = {
+  available: boolean;
+  categoryId?: string;
+};
 
 export class ProductService {
   async getAllProducts() {
@@ -12,9 +18,22 @@ export class ProductService {
     return products;
   }
 
-  async getAllProductsAvailable() {
+  async getAllProductsAvailable(categoria: QueryParams) {
+    const query: Query = {
+      available: true,
+    };
+
+    if (categoria.categoria) {
+      const category = await prisma.category.findUnique({
+        where: { name: categoria.categoria },
+      });
+
+      if (!category) throw new AppError('Categoria nao encontrada!', 404);
+      query.categoryId = category.id;
+    }
+
     const products = await prisma.product.findMany({
-      where: { available: true },
+      where: query,
       include: { category: { select: { name: true } } },
     });
 

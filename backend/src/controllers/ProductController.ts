@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { CreateProductBody, GetProductParams } from '../schemas/ProductSchemas';
 import { ProductService } from '../services/ProductService';
+import { QueryParams } from '../types/queryParamsProduct';
 
 const service = new ProductService();
 
@@ -11,8 +12,12 @@ export class ProductController {
     return reply.status(200).send({ data: products });
   }
 
-  async getAllProductsAvaliable(request: FastifyRequest, reply: FastifyReply) {
-    const products = await service.getAllProductsAvailable();
+  async getAllProductsAvaliable(
+    request: FastifyRequest<{ Querystring: QueryParams }>,
+    reply: FastifyReply,
+  ) {
+    const categoria = request.query.categoria;
+    const products = await service.getAllProductsAvailable({ categoria });
 
     return reply.status(200).send({ data: products });
   }

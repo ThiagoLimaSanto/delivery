@@ -11,8 +11,7 @@ export function useCategories() {
     queryKey: ['categories'],
     queryFn: async () => {
       const response = await api.get(
-        'http://localhost:3333/category/disponiveis',
-      );
+        `${import.meta.env.VITE_API_URL}/category/disponiveis`);
       return response.data.data;
     },
   });
