@@ -18,17 +18,15 @@ export class ProductService {
     return products;
   }
 
-  async getAllProductsAvailable(categoria: QueryParams) {
-    const query: Query = {
-      available: true,
-    };
+  async getAllProductsAvailable(params?: { categoria?: string }) {
+    const query: Query = { available: true };   
 
-    if (categoria.categoria) {
+    if (params?.categoria) {
       const category = await prisma.category.findUnique({
-        where: { name: categoria.categoria },
+        where: { name: params.categoria },
       });
 
-      if (!category) throw new AppError('Categoria nao encontrada!', 404);
+      if (!category) throw new AppError('Categoria não encontrada!', 404);
       query.categoryId = category.id;
     }
 

@@ -8,8 +8,10 @@ export function ModalOverlay() {
     handleModalCarrinho,
     open,
     handleOpen,
+    orderClick,
+    handleOrderClick,
   } = UseHandleModal();
-  const isOpen = click || clickCarrinho || open;
+  const isOpen = click || clickCarrinho || open || orderClick;
 
   return (
     <div
@@ -17,6 +19,7 @@ export function ModalOverlay() {
         handleModal(true);
         handleModalCarrinho(true);
         handleOpen(true);
+        handleOrderClick(true);
       }}
       className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 bg-black/40 z-2`}
     />

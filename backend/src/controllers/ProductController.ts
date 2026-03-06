@@ -17,7 +17,10 @@ export class ProductController {
     reply: FastifyReply,
   ) {
     const categoria = request.query.categoria;
-    const products = await service.getAllProductsAvailable({ categoria });
+    
+    const products = await service.getAllProductsAvailable(
+      categoria ? { categoria } : undefined,
+    );
 
     return reply.status(200).send({ data: products });
   }
@@ -26,6 +29,8 @@ export class ProductController {
     request: FastifyRequest<{ Params: GetProductParams }>,
     reply: FastifyReply,
   ) {
+
+    
     const { id } = request.params;
 
     const product = await service.getProductById(id);

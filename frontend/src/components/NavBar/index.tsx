@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../hook/useAuth';
 import { UseHandleModal } from '../../hook/useHandleModal';
 import { NavLink } from '../NavLink';
+import { useHandleOrder } from '../../hook/useHandleOrder';
 
 export function NavBar() {
   const { isAuthenticated } = useAuth();
   const { click, clickCarrinho, handleModal, handleModalCarrinho } =
     UseHandleModal();
+
+  const { totalItems } = useHandleOrder();
 
   return (
     <nav
@@ -21,7 +24,7 @@ export function NavBar() {
       />
       <ul className='hidden lg:flex md:text-white md:gap-8 md:text-xl'>
         <NavLink to={'/'}>Home</NavLink>
-        <NavLink to={'/cardapio?categoria=Lanches'}>Cardápio</NavLink>
+        <NavLink to={'/cardapio'}>Cardápio</NavLink>
         <NavLink to={'/categorias'}>Categorias</NavLink>
         <NavLink to={'/sobre'}>Sobre</NavLink>
         <NavLink to={'/contato'}>Contato</NavLink>
@@ -41,9 +44,11 @@ export function NavBar() {
             size={35}
             color='#fff'
           />
-          <div className='flex justify-center items-center absolute h-5 w-5 -bottom-2 -right-2 bg-red-500 rounded-full'>
-            <p className='text-white text-md'>20</p>
-          </div>
+          {totalItems > 0 && (
+            <div className='flex justify-center items-center absolute h-5 w-5 -bottom-2 -right-2 bg-red-500 rounded-full'>
+              <p className='text-white text-md'>{totalItems}</p>
+            </div>
+          )}
         </div>
       </div>
     </nav>

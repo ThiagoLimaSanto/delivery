@@ -27,14 +27,16 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.get(
     '/disponiveis',
     {
+      preHandler: [],
       schema: {
         querystring: z.object({
           categoria: z.string().optional(),
-        }),
+        }).optional(),
         response: 200,
       },
     },
-    productController.getAllProductsAvaliable.bind(productController),
+    (request, reply) =>
+      productController.getAllProductsAvaliable(request as any, reply),
   );
 
   typedApp.get(
