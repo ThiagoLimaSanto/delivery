@@ -18,7 +18,6 @@ export function SideBar() {
       </div>
       <SideBarText to={'/'}>Início</SideBarText>
       <SideBarText to={'/cardapio?categoria=Lanches'}>Cardápio</SideBarText>
-      <SideBarText to={'/bebidas?categoria=Bebidas'}>Bebidas</SideBarText>
       <SideBarText to={'/categorias'}>Categorias</SideBarText>
       <SideBarText to={'/sobre'}>Sobre nós</SideBarText>
       <SideBarText to={'/contato'}>Contatos</SideBarText>

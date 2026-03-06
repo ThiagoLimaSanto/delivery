@@ -1,3 +1,4 @@
+import { Filter } from '../../components/Filter/index.tsx';
 import { MainTemplate } from '../../templates/MainTemplate.tsx';
 
 type MenuProps = {
@@ -12,6 +13,7 @@ export function MenuTemplate({ title, children }: MenuProps) {
         <h2 className='text-center mt-8 mb-15 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold'>
           {title}
         </h2>
+        <Filter />
         <section className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 px-4 mb-16 md:gap-10 bg-[#F2F2F2]'>
           {children}
         </section>

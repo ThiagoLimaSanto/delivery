@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { ModalContext } from './modalContext';
 
 type ModalPrividerProps = {
-    children: React.ReactNode;
-}
+  children: React.ReactNode;
+};
 
 export function ModalProvider({ children }: ModalPrividerProps) {
   const [click, setClick] = useState(false);
   const [clickCarrinho, setClickCarrinho] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleModal = (click?: boolean) => {
     setClick(!click);
   };
@@ -16,9 +17,20 @@ export function ModalProvider({ children }: ModalPrividerProps) {
     setClickCarrinho(!clickCarrinho);
   };
 
+  const handleOpen = (open?: boolean) => {
+    setOpen(!open);
+  };
+
   return (
     <ModalContext.Provider
-      value={{ handleModal, handleModalCarrinho, click, clickCarrinho }}
+      value={{
+        handleModal,
+        handleModalCarrinho,
+        click,
+        clickCarrinho,
+        open,
+        handleOpen,
+      }}
     >
       {children}
     </ModalContext.Provider>
