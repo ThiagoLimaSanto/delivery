@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { AddressController } from '../controllers/AddressController';
-import { getUserByToken } from '../middleware/getUserByToken';
 import { authGuard } from '../middleware/auth.middleware';
+import { getUserByToken } from '../middleware/getUserByToken';
 import {
   createAddressBodySchema,
   getAddressParamsSchema,

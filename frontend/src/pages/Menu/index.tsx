@@ -7,7 +7,7 @@ import { Spinner } from '../../components/Spinner/index.tsx';
 import { UseHandleModal } from '../../hook/useHandleModal.tsx';
 import { useHandleOrder } from '../../hook/useHandleOrder.tsx';
 import { useMenu } from '../../hook/useMenu.tsx';
-import { MenuTemplate } from '../../templates/MenuTemplate.tsx/index.tsx';
+import { MenuTemplate } from '../../templates/MenuTemplate/index.tsx';
 import type { ProductType } from '../../types/Product.ts';
 
 export function Menu() {

@@ -1,6 +1,6 @@
 import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
-import { MainTemplate } from '../../templates/MainTemplate.tsx';
+import { MainTemplate } from '../../templates/MainTemplate/index.tsx';
 
 export function Contact() {
   return (

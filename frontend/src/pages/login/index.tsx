@@ -1,12 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { Form } from '../../components/form';
+import { Form } from '../../components/MainForm/index.tsx';
 import { Heading } from '../../components/Heading';
 import { Input } from '../../components/Input/index.tsx';
 import { FormError } from '../../errors/FormError/index.tsx';
 import { loginSchema, type loginFormData } from '../../schemas/FormSchemas.ts';
-import { LoginTemplate } from '../../templates/LoginTemplate.tsx';
+import { LoginTemplate } from '../../templates/LoginTemplate/index.tsx';
 import { useAuth } from '../../hook/useAuth.tsx';
 import { Logo } from '../../components/Logo/index.tsx';
 
@@ -27,7 +27,11 @@ export function Login() {
 
   return (
     <LoginTemplate>
-      <Logo src='/images/image-logo.png' alt='Logo Login' className='w-90 mb-20 lg:w-[70%]' />
+      <Logo
+        src='/images/image-logo.png'
+        alt='Logo Login'
+        className='w-90 mb-20 lg:w-[70%]'
+      />
       <Heading>Login</Heading>
       <Form onSubmit={handleSubmit(onsubmit)}>
         <Input

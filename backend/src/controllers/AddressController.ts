@@ -19,15 +19,9 @@ export class AddressController {
     const { street, number, district, city, state, zipCode } = request.body;
     const userId = request.user.id;
 
-    await service.createAddress({
-      userId,
-      street,
-      number,
-      district,
-      city,
-      state,
-      zipCode,
-    });
+    const address = { street, number, district, city, state, zipCode, userId };
+
+    await service.createAddress(address);
 
     return reply.status(201).send({ message: 'Endereço criado com sucesso!' });
   }
@@ -43,15 +37,9 @@ export class AddressController {
     const userId = request.user.id;
     const { street, number, district, city, state, zipCode } = request.body;
 
-    await service.updateAddress(id, {
-      street,
-      number,
-      district,
-      city,
-      state,
-      zipCode,
-      userId,
-    });
+    const address = { street, number, district, city, state, zipCode, userId };
+
+    await service.updateAddress(id, address);
 
     return reply.status(200).send({ message: 'Endereço atualizado!' });
   }

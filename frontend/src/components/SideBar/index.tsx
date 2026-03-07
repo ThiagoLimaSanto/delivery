@@ -17,7 +17,7 @@ export function SideBar() {
         </button>
       </div>
       <SideBarText to={'/'}>Início</SideBarText>
-      <SideBarText to={'/cardapio?categoria=Lanches'}>Cardápio</SideBarText>
+      <SideBarText to={'/cardapio'}>Cardápio</SideBarText>
       <SideBarText to={'/categorias'}>Categorias</SideBarText>
       <SideBarText to={'/sobre'}>Sobre nós</SideBarText>
       <SideBarText to={'/contato'}>Contatos</SideBarText>

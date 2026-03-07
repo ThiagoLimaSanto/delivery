@@ -10,6 +10,8 @@ export function ModalProvider({ children }: ModalPrividerProps) {
   const [clickCarrinho, setClickCarrinho] = useState(false);
   const [open, setOpen] = useState(false);
   const [orderClick, setOrderClick] = useState(false);
+  const [addressClick, setAddressClick] = useState(false);
+
   const handleModal = (click?: boolean) => {
     setClick(!click);
   };
@@ -26,6 +28,10 @@ export function ModalProvider({ children }: ModalPrividerProps) {
     setOrderClick(!orderClick);
   };
 
+  const handleAddressClick = (addressClick?: boolean) => {
+    setAddressClick(!addressClick);
+  }
+
   return (
     <ModalContext.Provider
       value={{
@@ -37,6 +43,8 @@ export function ModalProvider({ children }: ModalPrividerProps) {
         orderClick,
         handleOrderClick,
         handleOpen,
+        handleAddressClick,
+        addressClick
       }}
     >
       {children}

@@ -1,18 +1,21 @@
 import { ObjectId } from 'mongodb';
 import { AppError } from '../errors/AppError';
 import { prisma } from '../repository/prisma';
-import { CreateAddressBody } from '../schemas/AddressSchemas';
+import {
+  CreateAddressBody,
+  CreateAddressModal,
+} from '../schemas/AddressSchemas';
 
 export class AddressService {
   async getAllAddressForUser(userId: string) {
-    const addresses = await prisma.address.findMany({
-      where: { userId: userId, active: true },
+    const addresses = await prisma.address.findFirst({
+      where: { userId: userId, active: true, isDefault: true },
     });
 
     return addresses;
   }
 
-  async createAddress(data: CreateAddressBody) {
+  async createAddress(data: CreateAddressModal) {
     const addressExists = await prisma.address.findFirst({
       where: { userId: data.userId },
     });
@@ -36,7 +39,7 @@ export class AddressService {
     return address;
   }
 
-  async updateAddress(id: string, data: CreateAddressBody) {
+  async updateAddress(id: string, data: CreateAddressModal) {
     if (!ObjectId.isValid(id)) throw new AppError('Endereço inválido!', 400);
 
     const address = await prisma.address.findFirst({

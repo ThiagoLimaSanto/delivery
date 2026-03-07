@@ -1,7 +1,7 @@
 import { Image } from '../../components/Image/index.tsx';
 import { Spinner } from '../../components/Spinner/index.tsx';
 import { useCategories } from '../../hook/useCategories.tsx';
-import { MenuTemplate } from '../../templates/MenuTemplate.tsx/index.tsx';
+import { MenuTemplate } from '../../templates/MenuTemplate/index.tsx';
 
 export function Category() {
   const { data, isLoading } = useCategories();

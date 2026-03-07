@@ -5,6 +5,8 @@ export type ModalContextType = {
   clickCarrinho: boolean;
   open: boolean;
   orderClick: boolean;
+  addressClick: boolean;
+  handleAddressClick: (addressClick?: boolean) => void;
   handleOrderClick: (orderClick?: boolean) => void;
   handleModal: (click?: boolean) => void;
   handleModalCarrinho: (clickCarrinho?: boolean) => void;
