@@ -72,19 +72,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logout = async () => {
     try {
       await api.post('/user/logout');
-      showMessage.success('Deslogado com sucesso!');
+      showMessage.success('Saiu!');
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         showMessage.error(err.response?.data?.message);
       } else if (err instanceof Error) {
         showMessage.error(err.message);
       } else {
-        showMessage.error('Erro desconhecido');
+        showMessage.error('Error do servidor, Tente novamente mais tarde!');
       }
     } finally {
       setIsAuthenticated(false);
       setUser(undefined);
-      navigate('/login');
+      navigate('/');
     }
   };
 

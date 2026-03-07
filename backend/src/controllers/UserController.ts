@@ -97,6 +97,6 @@ export class UserController {
       sameSite: 'strict',
     });
 
-    return reply.status(200).send({ message: 'Deslogado com sucesso!' });
+    return reply.status(200).send({ message: 'Saiu!' });
   }
 }

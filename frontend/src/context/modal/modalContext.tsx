@@ -6,6 +6,8 @@ export type ModalContextType = {
   open: boolean;
   orderClick: boolean;
   addressClick: boolean;
+  profileClick: boolean;
+  handleProfileClick: (profileClick?: boolean) => void;
   handleAddressClick: (addressClick?: boolean) => void;
   handleOrderClick: (orderClick?: boolean) => void;
   handleModal: (click?: boolean) => void;

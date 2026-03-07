@@ -1,15 +1,22 @@
 import { FaShoppingCart } from 'react-icons/fa';
+import { FiUser } from 'react-icons/fi';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hook/useAuth';
 import { UseHandleModal } from '../../hook/useHandleModal';
-import { NavLink } from '../NavLink';
 import { useHandleOrder } from '../../hook/useHandleOrder';
+import { NavLink } from '../NavLink';
 
 export function NavBar() {
   const { isAuthenticated } = useAuth();
-  const { click, clickCarrinho, handleModal, handleModalCarrinho } =
-    UseHandleModal();
+  const {
+    click,
+    clickCarrinho,
+    handleModal,
+    handleModalCarrinho,
+    handleProfileClick,
+    profileClick,
+  } = UseHandleModal();
 
   const { totalItems } = useHandleOrder();
 
@@ -29,7 +36,7 @@ export function NavBar() {
         <NavLink to={'/sobre'}>Sobre</NavLink>
         <NavLink to={'/contato'}>Contato</NavLink>
       </ul>
-      <div className='flex justify-center items-center gap-4'>
+      <div className='flex justify-center items-center gap-6'>
         {!isAuthenticated && (
           <Link
             to={'/login'}
@@ -50,6 +57,14 @@ export function NavBar() {
             </div>
           )}
         </div>
+        {isAuthenticated && (
+          <button
+            onClick={() => handleProfileClick(profileClick)}
+            className='flex items-center justify-center text-white bg-white p-2 cursor-pointer hover:bg-[#f1f1f1] border-2 border-[#ccc] transition-colors hover:scale-105 rounded-full'
+          >
+            <FiUser color='#ccc' size={25} />
+          </button>
+        )}
       </div>
     </nav>
   );
