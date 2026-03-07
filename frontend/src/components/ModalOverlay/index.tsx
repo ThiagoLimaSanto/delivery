@@ -14,6 +14,8 @@ export function ModalOverlay() {
     handleAddressClick,
     handleProfileClick,
     profileClick,
+    manageAddressesCLick,
+    handleManageAddressesCLick,
   } = UseHandleModal();
   const isOpen =
     click ||
@@ -21,7 +23,8 @@ export function ModalOverlay() {
     open ||
     orderClick ||
     addressClick ||
-    profileClick;
+    profileClick ||
+    manageAddressesCLick;
 
   return (
     <div
@@ -32,6 +35,7 @@ export function ModalOverlay() {
         handleOrderClick(true);
         handleAddressClick(true);
         handleProfileClick(true);
+        handleManageAddressesCLick(true);
       }}
       className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 bg-black/40 z-2`}
     />

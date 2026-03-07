@@ -5,7 +5,14 @@ import { AddressService } from '../services/AddressService';
 const service = new AddressService();
 
 export class AddressController {
-  async getAllAddressForUser(request: FastifyRequest, reply: FastifyReply) {
+  async getDefaultAddressForUser(request: FastifyRequest, reply: FastifyReply) {
+    const userId = request.user.id;
+    const address = await service.getDefaultAddressForUser(userId);
+
+    return reply.status(200).send({ data: address });
+  }
+
+  async getAlltAddressForUser(request: FastifyRequest, reply: FastifyReply) {
     const userId = request.user.id;
     const address = await service.getAllAddressForUser(userId);
 
@@ -24,6 +31,18 @@ export class AddressController {
     await service.createAddress(address);
 
     return reply.status(201).send({ message: 'Endereço criado com sucesso!' });
+  }
+
+  async toggleDefaultAddressForUser(
+    request: FastifyRequest<{ Params: GetAddressParams }>,
+    reply: FastifyReply,
+  ) {
+    const userId = request.user.id;
+    const addressId = request.params.id;
+
+    await service.toggleDefaultAddressForUser(addressId, userId);
+
+    return reply.status(200).send({ message: 'Endereço padrao alterado!' });
   }
 
   async updateAddress(

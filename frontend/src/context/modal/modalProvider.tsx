@@ -12,6 +12,7 @@ export function ModalProvider({ children }: ModalPrividerProps) {
   const [orderClick, setOrderClick] = useState(false);
   const [addressClick, setAddressClick] = useState(false);
   const [profileClick, setProfileClick] = useState(false);
+  const [manageAddressesCLick, setManageAddressesCLick] = useState(false);
 
   const handleModal = (click?: boolean) => {
     setClick(!click);
@@ -31,11 +32,15 @@ export function ModalProvider({ children }: ModalPrividerProps) {
 
   const handleAddressClick = (addressClick?: boolean) => {
     setAddressClick(!addressClick);
-  }
+  };
 
   const handleProfileClick = (profileClick?: boolean) => {
     setProfileClick(!profileClick);
-  }
+  };
+
+  const handleManageAddressesCLick = (manageAddressesCLick?: boolean) => {
+    setManageAddressesCLick(!manageAddressesCLick);
+  };
 
   return (
     <ModalContext.Provider
@@ -51,7 +56,9 @@ export function ModalProvider({ children }: ModalPrividerProps) {
         handleAddressClick,
         addressClick,
         handleProfileClick,
-        profileClick
+        profileClick,
+        handleManageAddressesCLick,
+        manageAddressesCLick,
       }}
     >
       {children}

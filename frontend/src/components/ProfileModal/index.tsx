@@ -15,8 +15,8 @@ export function ProfileModal() {
                       right-18
                       w-60 sm:max-w-xl
                       bg-white rounded-2xl rounded-tr-none shadow-xl p-4
-                      transition-all duration-300 ease-out z-3
-                      ${profileClick ? '-translate-y-1/2  opacity-100' : '-translate-y-40 opacity-0'}
+                      transition-all duration-300 ease-out
+                      ${profileClick ? '-translate-y-1/2  opacity-100 z-3' : '-translate-y-40 opacity-0'}
                     `}
       >
         <div className='w-full h-full flex flex-col gap-2 p-4'>

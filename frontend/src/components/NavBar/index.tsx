@@ -1,14 +1,18 @@
+import { Suspense } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
-import { FiUser } from 'react-icons/fi';
+import { FiChevronDown, FiUser } from 'react-icons/fi';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
+import { useGetDefaultAddress } from '../../hook/useAddress';
 import { useAuth } from '../../hook/useAuth';
 import { UseHandleModal } from '../../hook/useHandleModal';
 import { useHandleOrder } from '../../hook/useHandleOrder';
 import { NavLink } from '../NavLink';
+import { Spinner } from '../Spinner';
 
 export function NavBar() {
   const { isAuthenticated } = useAuth();
+  const { data } = useGetDefaultAddress();
   const {
     click,
     clickCarrinho,
@@ -16,6 +20,8 @@ export function NavBar() {
     handleModalCarrinho,
     handleProfileClick,
     profileClick,
+    manageAddressesCLick,
+    handleManageAddressesCLick,
   } = UseHandleModal();
 
   const { totalItems } = useHandleOrder();
@@ -44,6 +50,16 @@ export function NavBar() {
           >
             Entrar
           </Link>
+        )}
+        {isAuthenticated && (
+          <Suspense fallback={<Spinner />}>
+            <button
+              onClick={() => handleManageAddressesCLick(manageAddressesCLick)}
+              className='text-sm flex items-center justify-center gap-2 px-3 py-2 text-white  cursor-pointer'
+            >
+              {data?.street}, {data?.number} <FiChevronDown size={16} />
+            </button>
+          </Suspense>
         )}
         <div className='flex relative hover:scale-105 cursor-pointer'>
           <FaShoppingCart

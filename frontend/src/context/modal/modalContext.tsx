@@ -7,6 +7,8 @@ export type ModalContextType = {
   orderClick: boolean;
   addressClick: boolean;
   profileClick: boolean;
+  manageAddressesCLick: boolean;
+  handleManageAddressesCLick: (manageAddressesCLick?: boolean) => void;
   handleProfileClick: (profileClick?: boolean) => void;
   handleAddressClick: (addressClick?: boolean) => void;
   handleOrderClick: (orderClick?: boolean) => void;

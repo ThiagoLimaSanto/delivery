@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AddressModal } from '../../components/AddressModal/index.tsx';
 import { Spinner } from '../../components/Spinner/index.tsx';
-import { useGetAddress } from '../../hook/useAddress.tsx';
+import { useGetDefaultAddress } from '../../hook/useAddress.tsx';
 import { UseHandleModal } from '../../hook/useHandleModal.tsx';
 import { useHandleOrder } from '../../hook/useHandleOrder.tsx';
 import { MainTemplate } from '../../templates/MainTemplate/index.tsx';
 
 export function Payment() {
-  const { data, isLoading } = useGetAddress();
+  const { data, isLoading } = useGetDefaultAddress();
   const [active, setActive] = useState(true);
   const [activePayment, setActivePayment] = useState(true);
   const { order, totalPrice, totalPriceWithDelivery } = useHandleOrder();
