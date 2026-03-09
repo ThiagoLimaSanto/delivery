@@ -4,7 +4,7 @@ import { useAuth } from '../../hook/useAuth';
 import { UseHandleModal } from '../../hook/useHandleModal';
 
 export function ProfileModal() {
-  const { profileClick } = UseHandleModal();
+  const { profileClick, handleProfileClick } = UseHandleModal();
   const { user, logout } = useAuth();
 
   return (
@@ -45,7 +45,10 @@ export function ProfileModal() {
               Pedidos
             </Link>
             <button
-              onClick={() => logout()}
+              onClick={() => {
+                logout();
+                handleProfileClick(profileClick);
+              }}
               className='flex w-15 hover:text-red-600 transition-colors duration-100 justify-start cursor-pointer items-center gap-2'
             >
               <FiLogIn />

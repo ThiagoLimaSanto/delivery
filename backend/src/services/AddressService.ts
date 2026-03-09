@@ -21,12 +21,21 @@ export class AddressService {
     return addresses;
   }
 
+  async getAddressById(userId: string, addressId: string) {
+    const address = await prisma.address.findFirst({
+      where: { userId: userId, active: true, id: addressId },
+    });
+
+    return address;
+  }
+
   async createAddress(data: CreateAddressModal) {
-    const addressExists = await prisma.address.findFirst({
+    const addressExists = await prisma.address.findMany({
       where: { userId: data.userId },
     });
 
-    let isDefault = !addressExists;
+    const anyActive = addressExists.some(address => address.active);
+    const isDefault = !anyActive;
 
     const address = await prisma.address.create({
       data: {

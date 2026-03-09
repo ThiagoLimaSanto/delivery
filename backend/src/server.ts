@@ -16,8 +16,8 @@ import { addressRoutes } from './routes/AddressRouter';
 import { categoryRoutes } from './routes/CategoryRouter';
 import { orderRoutes } from './routes/OrderRouter';
 import { productRoutes } from './routes/ProductRouter';
-import { usersRoutes } from './routes/UserRouter';
 import { refreshTokenRoutes } from './routes/RefreshTokenRouter';
+import { usersRoutes } from './routes/UserRouter';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -37,7 +37,6 @@ app.setErrorHandler((error, request, reply) => {
 
   return reply.status(500).send({
     message: 'Internal server error.',
-    error
   });
 });
 
@@ -56,10 +55,16 @@ app.register(async function (fastify) {
   });
 });
 
-app.register(fastifyCookie);
+app.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET,
+});
 
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET,
+  cookie: {
+    cookieName: 'token',
+    signed: false,
+  },
 });
 
 app.register(fastifyCors, {

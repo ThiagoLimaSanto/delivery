@@ -12,7 +12,7 @@ import {
 export async function productRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
   const productController = new ProductController();
-
+  
   typedApp.get(
     '/todos',
     {
@@ -48,7 +48,8 @@ export async function productRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    productController.getProductById.bind(productController),
+    (request, reply) =>
+      productController.getProductById(request as any, reply),
   );
 
   typedApp.post(
@@ -60,7 +61,8 @@ export async function productRoutes(app: FastifyInstance) {
         response: 201,
       },
     },
-    productController.createProduct.bind(productController),
+    (request, reply) =>
+      productController.createProduct(request as any, reply),
   );
 
   typedApp.patch(
@@ -72,7 +74,8 @@ export async function productRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    productController.updateProduct.bind(productController),
+    (request, reply) =>
+      productController.updateProduct(request as any, reply),
   );
 
   typedApp.patch(
@@ -84,6 +87,7 @@ export async function productRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    productController.changeAvailability.bind(productController),
+    (request, reply) =>
+      productController.changeAvailability(request as any, reply),
   );
 }

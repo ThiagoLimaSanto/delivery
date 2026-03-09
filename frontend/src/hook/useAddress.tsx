@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { showMessage } from '../adapters/ShowMessage';
 import { api } from '../utils/api';
 
@@ -18,24 +14,31 @@ export type Address = {
 };
 
 export function useGetDefaultAddress() {
-  return useSuspenseQuery<Address>({
+  return useQuery<Address>({
     queryKey: ['address'],
     queryFn: async () => {
-      const response = await api.get(
-        `${import.meta.env.VITE_API_URL}/address/my`,
-      );
+      const response = await api.get(`/address/my`);
       return response.data.data;
     },
   });
 }
 
+export function useGetAddressById(addressId: string) {
+  return useQuery<Address>({
+    queryKey: ['address', addressId],
+    queryFn: async () => {
+      const response = await api.get(`/address/${addressId}`);
+
+      return response.data.data as Address;
+    },
+  });
+}
+
 export function useGetAllAddress() {
-  return useSuspenseQuery<Address[]>({
+  return useQuery<Address[]>({
     queryKey: ['address', 'all'],
     queryFn: async () => {
-      const response = await api.get(
-        `${import.meta.env.VITE_API_URL}/address/my/all`,
-      );
+      const response = await api.get(`/address/my/all`);
 
       return response.data.data;
     },
@@ -64,10 +67,7 @@ export function usePostAddress() {
   const queryClient = useQueryClient();
   return useMutation<Address, unknown, Address>({
     mutationFn: async (addressData: Address) => {
-      const response = await api.post(
-        `${import.meta.env.VITE_API_URL}/address/cadastrar`,
-        addressData,
-      );
+      const response = await api.post(`/address/cadastrar`, addressData);
       console.log(response);
 
       return response.data.data;
@@ -82,13 +82,29 @@ export function usePostAddress() {
   });
 }
 
+export function useUpdateAddress() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await api.patch(`/address/${id}/editar`);
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['address'] });
+      showMessage.success('Endereço atualizado!');
+    },
+    onError: () => {
+      showMessage.error('Erro ao atualizar endereço!');
+    },
+  });
+}
+
 export function useDeleteAddres() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      console.log(id);
-      
       await api.patch(`/address/${id}/remover`);
     },
 

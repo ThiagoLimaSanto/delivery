@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { usePostAddress, type Address } from '../../hook/useAddress';
+import { type Address } from '../../hook/useAddress';
 import { Input } from '../Input';
 import { Form } from '../MainForm';
-import { UseHandleModal } from '../../hook/useHandleModal';
 
-export function FormAddress() {
-  const { addressClick, handleAddressClick } = UseHandleModal();
-  const { mutate } = usePostAddress();
+type FormAddressProps = {
+  handleSubmit: (addressId?: string) => Promise<void>;
+};
+
+export function FormAddress({ handleSubmit }: FormAddressProps) {
   const [address, setAddress] = useState<Address>({
+    id: '',
     street: '',
     number: '',
     district: '',
@@ -15,18 +17,13 @@ export function FormAddress() {
     state: '',
     zipCode: '',
   });
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    mutate(address);
-    handleAddressClick(addressClick);
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
   return (
     <div className='flex justify-center h-full w-full gap-2 flex-wrap'>
-      <Form buttonName='Cadastrar' onSubmit={handleSubmit}>
+      <Form buttonName='Cadastrar' onSubmit={() => handleSubmit}>
         <Input
           classNameInput='border-[#ccc]'
           value={address.street}

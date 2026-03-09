@@ -22,7 +22,6 @@ export async function addressRoutes(app: FastifyInstance) {
     },
     addressController.getDefaultAddressForUser.bind(addressController),
   );
-
   typedApp.get(
     '/my/all',
     {
@@ -32,6 +31,18 @@ export async function addressRoutes(app: FastifyInstance) {
       },
     },
     addressController.getAlltAddressForUser.bind(addressController),
+  );
+
+  typedApp.get(
+    '/:id',
+    {
+      preHandler: [authGuard, getUserByToken],
+      schema: {
+        params: getAddressParamsSchema,
+        response: 201,
+      },
+    },
+    (request, reply) => addressController.getAddressById(request as any, reply),
   );
 
   typedApp.post(
@@ -55,7 +66,8 @@ export async function addressRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) => addressController.toggleDefaultAddressForUser(request as any, reply),
+    (request, reply) =>
+      addressController.toggleDefaultAddressForUser(request as any, reply),
   );
 
   typedApp.patch(
@@ -79,6 +91,6 @@ export async function addressRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    addressController.removeAddress.bind(addressController),
+    (request, reply) => addressController.updateAddress(request as any, reply),
   );
 }

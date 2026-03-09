@@ -52,9 +52,7 @@ export async function usersRoutes(app: FastifyInstance) {
     {
       schema: {
         body: createUserLoginSchema,
-        response: {
-          200: loginResponseSchema,
-        },
+        response: 200,
       },
     },
     userController.Login.bind(userController),
@@ -63,7 +61,6 @@ export async function usersRoutes(app: FastifyInstance) {
   typedApp.post(
     '/logout',
     {
-      preHandler: [authGuard],
       schema: {
         response: 200,
       },

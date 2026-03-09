@@ -3,7 +3,11 @@ import { UseHandleModal } from '../../hook/useHandleModal';
 import { MainModalTemplate } from '../../templates/MainModalTemplate';
 import { FormAddress } from '../FormAddress';
 
-export function AddressModal() {
+type AddressModalProps = {
+  handleSubmit: (addressId?: string) => Promise<void>;
+};
+
+export function AddressModal({ handleSubmit }: AddressModalProps) {
   const { handleAddressClick, addressClick } = UseHandleModal();
   return (
     <MainModalTemplate click={!addressClick}>
@@ -17,7 +21,7 @@ export function AddressModal() {
         <p className='text-center font-bold'>Cadastrar Novo Endereço</p>
         <p></p>
       </div>
-      <FormAddress />
+      <FormAddress handleSubmit={handleSubmit}/>
     </MainModalTemplate>
   );
 }

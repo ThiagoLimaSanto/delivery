@@ -51,7 +51,7 @@ export function NavBar() {
             Entrar
           </Link>
         )}
-        {isAuthenticated && (
+        {isAuthenticated && data && (
           <Suspense fallback={<Spinner />}>
             <button
               onClick={() => handleManageAddressesCLick(manageAddressesCLick)}

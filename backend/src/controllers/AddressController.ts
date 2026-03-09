@@ -19,6 +19,17 @@ export class AddressController {
     return reply.status(200).send({ data: address });
   }
 
+  async getAddressById(
+    request: FastifyRequest<{ Params: GetAddressParams }>,
+    reply: FastifyReply,
+  ) {
+    const userId = request.user.id;
+    const addressId = request.params.id;
+    const address = await service.getAddressById(userId, addressId);
+
+    return reply.status(200).send({ data: address });
+  }
+
   async createAddress(
     request: FastifyRequest<{ Body: CreateAddressBody }>,
     reply: FastifyReply,

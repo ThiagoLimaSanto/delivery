@@ -2,7 +2,7 @@ import { prisma } from '../repository/prisma';
 
 export class RefreshTokenService {
   static async createRefreshToken(refreshToken: string, userId: string) {
-    await prisma.refreshToken.create({
+    const token = await prisma.refreshToken.create({
       data: {
         token: refreshToken,
         userId,

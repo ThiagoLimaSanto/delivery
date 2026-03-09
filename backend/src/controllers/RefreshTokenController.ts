@@ -1,5 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { generateAccessToken } from '../helpers/createUserToken';
+import { AppError } from '../errors/AppError';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from '../helpers/createUserToken';
 import { prisma } from '../repository/prisma';
 
 export class RefreshTokenController {
@@ -14,18 +18,15 @@ export class RefreshTokenController {
       where: { token: refreshToken },
     });
 
-    if (!tokenDb) {
-      return reply.status(403).send({ message: 'Token inválido' });
-    }
+    if (!tokenDb || tokenDb.expiresAt < new Date()) {
+      if (tokenDb)
+        await prisma.refreshToken.delete({ where: { id: tokenDb.id } });
 
-    if (tokenDb.expiresAt < new Date()) {
-      return reply.status(403).send({ message: 'token expirado' });
-    }
-
-    try {
-      request.server.jwt.verify(refreshToken);
-    } catch {
-      return reply.status(403).send({ message: 'Token inválido' });
+      return reply
+        .clearCookie('token')
+        .clearCookie('refreshToken')
+        .status(401)
+        .send({ message: 'Sessão expirada, faça login novamente' });
     }
 
     await prisma.refreshToken.delete({
@@ -34,15 +35,10 @@ export class RefreshTokenController {
 
     const user = await prisma.user.findUnique({
       where: { id: tokenDb.userId },
-      select: {
-        id: true,
-        name: true,
-        role: true,
-      },
     });
 
     if (!user) {
-      return reply.status(404).send({ message: 'Usuário nao encontrado' });
+      return new AppError('Usuário nao encontrado', 404);
     }
 
     const accessToken = await generateAccessToken(
@@ -52,14 +48,19 @@ export class RefreshTokenController {
       user.role,
     );
 
+    const newRefreshToken = await generateRefreshToken(reply, tokenDb.userId);
+
     await prisma.refreshToken.create({
       data: {
         userId: tokenDb.userId,
-        token: refreshToken,
+        token: newRefreshToken,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
 
-    return { token: accessToken };
+    return reply.status(200).send({
+      message: 'Token renovado',
+      token: accessToken,
+    });
   }
 }

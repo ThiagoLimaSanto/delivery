@@ -20,8 +20,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function checkAuth() {
       try {
         const reponse = await api.get('/user/my');
-        setUser(reponse.data.data);
-        setIsAuthenticated(true);
+        if (reponse.data?.data) {
+          setUser(reponse.data.data);
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
       } catch {
         setIsAuthenticated(false);
       } finally {
@@ -31,16 +35,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     checkAuth();
   }, []);
 
-  const authUser = () => {
-    setIsAuthenticated(true);
-    navigate('/');
-  };
-
   const login = async (data: UserLogin) => {
     try {
       const response = await api.post('/user/login', data);
-      setUser(response.data.user);
-      authUser();
+      setUser(response.data.data);
+      setIsAuthenticated(true);
+      navigate('/');
       showMessage.success('Logado com sucesso!');
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setIsAuthenticated(false);
       setUser(undefined);
-      navigate('/');
+      navigate('/login');
     }
   };
 
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const interceptor = api.interceptors.response.use(
       response => response,
       error => {
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 && isAuthenticated) {
           setIsAuthenticated(false);
           navigate('/login');
           showMessage.warning('Sua sessão expirou. Faça login novamente.');
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       },
     );
     return () => api.interceptors.response.eject(interceptor);
-  }, [navigate]);
+  }, [navigate, isAuthenticated]);
 
   return (
     <AuthContext.Provider
