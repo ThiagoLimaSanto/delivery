@@ -1,6 +1,11 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { createUserToken } from '../helpers/createUserToken';
+import { cookieOptions } from '../helpers/cookiesOptions';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from '../helpers/createUserToken';
 import { CreateUserBody, CreateUserLogin } from '../schemas/UserSchemas';
+import { RefreshTokenService } from '../services/RefreshTokenService';
 import { UserService } from '../services/UserService';
 
 const service = new UserService();
@@ -44,12 +49,16 @@ export class UserController {
 
     const user = await service.login({ email, password });
 
-    const token = await createUserToken(
+    const token = await generateAccessToken(
       reply,
       user.user.id,
       user.user.name,
       user.user.role,
     );
+
+    const refreshToken = await generateRefreshToken(reply, user.user.id);
+
+    await RefreshTokenService.createRefreshToken(refreshToken, user.user.id);
 
     const userReponse = {
       name: user.user.name,
@@ -57,7 +66,7 @@ export class UserController {
       phone: user.user.phone,
     };
 
-    return reply.status(200).send({ token: token, user: userReponse });
+    return reply.status(200).send({ data: userReponse });
   }
 
   async updateUser(
@@ -88,13 +97,16 @@ export class UserController {
   }
 
   async logout(request: FastifyRequest, reply: FastifyReply) {
-    const userId = request.user.id;
-
+    const { refreshToken } = request.cookies;
+    if (refreshToken) {
+      await RefreshTokenService.removeRefreshToken(refreshToken);
+    }
     reply.clearCookie('token', {
-      path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      ...cookieOptions,
+    });
+
+    reply.clearCookie('refreshToken', {
+      ...cookieOptions,
     });
 
     return reply.status(200).send({ message: 'Saiu!' });

@@ -1,23 +1,37 @@
 import { UserRole } from '@prisma/client';
 import { FastifyReply } from 'fastify';
+import { cookieOptions } from './cookiesOptions';
 
-export async function createUserToken(
+export async function generateAccessToken(
   reply: FastifyReply,
   id: string,
   name: string,
   role: UserRole,
 ) {
-  const token = await reply.jwtSign({ id, name, role }, { expiresIn: '7d' });
+  const accessToken = await reply.jwtSign(
+    { id, name, role },
+    { expiresIn: '15m' },
+  );
+
+  const tempoVida = 60 * 15;
+
+  reply.setCookie('token', accessToken, {
+    ...cookieOptions,
+    maxAge: tempoVida,
+  });
+
+  return accessToken;
+}
+
+export async function generateRefreshToken(reply: FastifyReply, id: string) {
+  const refreshToken = await reply.jwtSign({ id }, { expiresIn: '7d' });
 
   const tempoVida = 60 * 60 * 24 * 7;
 
-  reply.setCookie('token', token, {
-    httpOnly: true, //impede que o cookie seja acessado pelo javascript
-    secure: process.env.NODE_ENV === 'production', //impede que o cookie seja enviado em requisicoes https
-    sameSite: 'strict', //impede que o cookie seja enviado em requisicoes de outras origens
-    path: '/', //impede que o cookie seja enviado em requisicoes de outras rotas
-    maxAge: tempoVida, //tempo de vida do cookie
+  reply.setCookie('refreshToken', refreshToken, {
+    ...cookieOptions,
+    maxAge: tempoVida,
   });
 
-  return token;
+  return refreshToken;
 }

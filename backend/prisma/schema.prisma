@@ -46,9 +46,19 @@ model User {
   orders      Order[]
   addresses   Address[]
   phone       String?
+  tokens      RefreshToken[]
   active      Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+}
+
+model RefreshToken {
+  id          String        @id @map("_id") @default(auto()) @db.ObjectId
+  token       String       
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  expiresAt   DateTime
 }
 
 model Category {

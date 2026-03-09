@@ -17,6 +17,7 @@ import { categoryRoutes } from './routes/CategoryRouter';
 import { orderRoutes } from './routes/OrderRouter';
 import { productRoutes } from './routes/ProductRouter';
 import { usersRoutes } from './routes/UserRouter';
+import { refreshTokenRoutes } from './routes/RefreshTokenRouter';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -59,10 +60,6 @@ app.register(fastifyCookie);
 
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET,
-  cookie: {
-    cookieName: 'token',
-    signed: false,
-  },
 });
 
 app.register(fastifyCors, {
@@ -85,6 +82,9 @@ app.register(orderRoutes, {
 });
 app.register(addressRoutes, {
   prefix: '/address',
+});
+app.register(refreshTokenRoutes, {
+  prefix: '/token',
 });
 
 const start = async () => {

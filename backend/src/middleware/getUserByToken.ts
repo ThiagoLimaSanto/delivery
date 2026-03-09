@@ -6,13 +6,13 @@ declare module '@fastify/jwt' {
   interface FastifyJWT {
     payload: {
       id: string;
-      name: string;
-      role: UserRole;
+      name?: string;
+      role?: UserRole;
     };
     user: {
       id: string;
-      name: string;
-      role: UserRole;
+      name?: string;
+      role?: UserRole;
     };
   }
 }
