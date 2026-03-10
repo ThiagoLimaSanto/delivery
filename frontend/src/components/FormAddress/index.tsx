@@ -1,32 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type Address } from '../../hook/useAddress';
 import { Input } from '../Input';
 import { Form } from '../MainForm';
 
 type FormAddressProps = {
-  handleSubmit: (addressId?: string) => Promise<void>;
+  handleSubmit: (data: Address) => Promise<void>;
+  data?: Address | null;
+  title: string;
 };
 
-export function FormAddress({ handleSubmit }: FormAddressProps) {
-  const [address, setAddress] = useState<Address>({
-    id: '',
-    street: '',
-    number: '',
-    district: '',
-    city: '',
-    state: '',
-    zipCode: '',
-  });
+export function FormAddress({ handleSubmit, data, title }: FormAddressProps) {
+  const [address, setAddress] = useState<Address>(() => ({
+    id: data?.id || '',
+    street: data?.street || '',
+    number: data?.number || '',
+    district: data?.district || '',
+    city: data?.city || '',
+    state: data?.state || '',
+    zipCode: data?.zipCode || '',
+  }));
+
+  useEffect(() => {
+  if (data) {
+    setAddress(data);
+  }
+}, [data]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
   return (
     <div className='flex justify-center h-full w-full gap-2 flex-wrap'>
-      <Form buttonName='Cadastrar' onSubmit={() => handleSubmit}>
+      <Form
+        buttonName={title}
+        onSubmit={e => {
+          e.preventDefault();
+          handleSubmit(address);
+        }}
+      >
         <Input
           classNameInput='border-[#ccc]'
-          value={address.street}
+          classNameLabel='!text-black'
+          value={address.street || ''}  
           onChange={handleChange}
           id='street'
           name='street'
@@ -35,8 +50,9 @@ export function FormAddress({ handleSubmit }: FormAddressProps) {
           placeholder='Digite o nome da rua...'
         />
         <Input
+          classNameLabel='!text-black'
           classNameInput='border-[#ccc]'
-          value={address.number}
+          value={address.number || ''}
           onChange={handleChange}
           id='number'
           name='number'
@@ -45,7 +61,8 @@ export function FormAddress({ handleSubmit }: FormAddressProps) {
           placeholder='Digite o número da casa...'
         />
         <Input
-          value={address.district}
+          classNameLabel='!text-black'
+          value={address.district || ''}
           onChange={handleChange}
           classNameInput='border-[#ccc]'
           id='district'
@@ -55,7 +72,8 @@ export function FormAddress({ handleSubmit }: FormAddressProps) {
           placeholder='Digite o bairro...'
         />
         <Input
-          value={address.city}
+          classNameLabel='!text-black'
+          value={address.city || ''}
           onChange={handleChange}
           classNameInput='border-[#ccc]'
           id='city'
@@ -65,7 +83,8 @@ export function FormAddress({ handleSubmit }: FormAddressProps) {
           placeholder='Digite a cidade...'
         />
         <Input
-          value={address.state}
+          classNameLabel='!text-black'
+          value={address.state || ''}
           onChange={handleChange}
           classNameInput='border-[#ccc]'
           id='state'
@@ -75,7 +94,8 @@ export function FormAddress({ handleSubmit }: FormAddressProps) {
           placeholder='Digite o estado EX: GO'
         />
         <Input
-          value={address.zipCode}
+          classNameLabel='!text-black'
+          value={address.zipCode || ''}
           onChange={handleChange}
           classNameInput='border-[#ccc]'
           id='zipCode'

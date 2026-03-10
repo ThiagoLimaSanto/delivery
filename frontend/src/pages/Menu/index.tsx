@@ -5,7 +5,6 @@ import { Image } from '../../components/Image/index.tsx';
 import { Order } from '../../components/Order/index.tsx';
 import { Spinner } from '../../components/Spinner/index.tsx';
 import { UseHandleModal } from '../../hook/useHandleModal.tsx';
-import { useHandleOrder } from '../../hook/useHandleOrder.tsx';
 import { useMenu } from '../../hook/useMenu.tsx';
 import { MenuTemplate } from '../../templates/MenuTemplate/index.tsx';
 import type { ProductType } from '../../types/Product.ts';
@@ -14,7 +13,6 @@ export function Menu() {
   const [searchParams] = useSearchParams();
   const categoria = searchParams.get('categoria');
   const comment = useRef<HTMLTextAreaElement | null>(null);
-  const { order } = useHandleOrder();
   const [selectedProduct, setSelectedProduct] = useState<ProductType>({
     id: '',
     name: '',
@@ -28,8 +26,6 @@ export function Menu() {
   if (isLoading) {
     return <Spinner />;
   }
-
-  console.log(order);
 
   return (
     <MenuTemplate title={categoria || 'Menu'}>

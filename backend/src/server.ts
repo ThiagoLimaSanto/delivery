@@ -43,7 +43,13 @@ app.setErrorHandler((error, request, reply) => {
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
-if (!process.env.FRONTEND_URL || !process.env.PORT || !process.env.JWT_SECRET) {
+if (
+  !process.env.FRONTEND_URL ||
+  !process.env.PORT ||
+  !process.env.JWT_SECRET ||
+  !process.env.JWT_SECRET_REFRESH ||
+  !process.env.COOKIE_SECRET
+) {
   throw new Error('Variaveis de ambiente não definida');
 }
 

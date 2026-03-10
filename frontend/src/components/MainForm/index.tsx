@@ -10,7 +10,7 @@ export function Form({ children, onSubmit, buttonName = 'Enviar' }: FormProps) {
   return (
     <form
       onSubmit={onSubmit}
-      className='flex flex-col items-center w-screen lg:w-[70%] '
+      className='flex flex-col items-center w-full '
     >
       {children}
       <Button>{buttonName}</Button>

@@ -8,6 +8,7 @@ import { Login } from '../../pages/Login';
 import { Menu } from '../../pages/Menu';
 import { Payment } from '../../pages/Payment';
 import { Register } from '../../pages/Register';
+import { Orders } from '../../pages/Orders';
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: '/pedido/finalizar',
         element: <Payment />,
+      },
+      {
+        path: '/meuspedidos',
+        element: <Orders />,
       },
     ],
   },

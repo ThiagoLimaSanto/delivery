@@ -1,8 +1,11 @@
-import { useMemo, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import {
   useDeleteAddres,
   useGetAllAddress,
+  usePostAddress,
+  useToggleDefaultAddress,
   useUpdateAddress,
+  type Address,
 } from '../../hook/useAddress';
 import { AddressContext } from './addressContext';
 
@@ -12,30 +15,45 @@ type AddressProviderProps = {
 
 export function AddressProvider({ children }: AddressProviderProps) {
   const { data: allAddresses } = useGetAllAddress();
+
   const { mutateAsync: updateAddress } = useUpdateAddress();
   const { mutateAsync: removeAddress } = useDeleteAddres();
+  const { mutateAsync: create } = usePostAddress();
+  const { mutateAsync: toggleDefault } = useToggleDefaultAddress();
 
-  const contextValue = useMemo(() => {
-    const updateAddressByID = async (addressId: string) => {
-      await updateAddress(addressId);
-    };
+  const createAddress = async (data: Address) => {
+    await create(data);
+  };
 
-    const removeAddressById = async (addressId: string) => {
-      await removeAddress(addressId);
-    };
+  const updateAddressByID = async (data: Address) => {
+    await updateAddress(data);
+  };
 
-    const getAddressById = (id: string) => allAddresses?.find(a => a.id === id);
+  const removeAddressById = async (addressId: string) => {
+    await removeAddress(addressId);
+  };
 
-    return {
-      address: allAddresses ?? [],
-      updateAddressByID,
-      removeAddressById,
-      getAddressById,
-    };
-  }, [allAddresses, updateAddress, removeAddress]);
+  const istoggleDefault = async (addressId: string) => {
+    await toggleDefault(addressId);
+  };
+
+  const getAddressById = (id: string) => {
+    return allAddresses
+      ?.map(address => address)
+      .find(address => address.id === id) as Address;
+  };
 
   return (
-    <AddressContext.Provider value={contextValue}>
+    <AddressContext.Provider
+      value={{
+        address: allAddresses,
+        createAddress,
+        updateAddressByID,
+        removeAddressById,
+        istoggleDefault,
+        getAddressById,
+      }}
+    >
       {children}
     </AddressContext.Provider>
   );

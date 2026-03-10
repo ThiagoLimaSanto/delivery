@@ -68,8 +68,6 @@ export function usePostAddress() {
   return useMutation<Address, unknown, Address>({
     mutationFn: async (addressData: Address) => {
       const response = await api.post(`/address/cadastrar`, addressData);
-      console.log(response);
-
       return response.data.data;
     },
     onSuccess: () => {
@@ -86,8 +84,9 @@ export function useUpdateAddress() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      await api.patch(`/address/${id}/editar`);
+    mutationFn: async (data: Address) => {
+      const response = await api.patch(`/address/${data.id}/editar`, data);
+      return response.data.data;
     },
 
     onSuccess: () => {

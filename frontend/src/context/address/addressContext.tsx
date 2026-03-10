@@ -2,10 +2,17 @@ import { createContext } from 'react';
 import type { Address } from '../../hook/useAddress';
 
 export type AddressContextType = {
-  address: Address[];
-  updateAddressByID: (addressId: string) => Promise<void>;
+  address: Address[] | undefined;
+
+  createAddress: (data: Address) => Promise<void>;
+
+  updateAddressByID: (data: Address) => Promise<void>;
+
   removeAddressById: (addressId: string) => Promise<void>;
-  getAddressById: (addressId: string) => Address | undefined;
+
+  istoggleDefault: (addressId: string) => Promise<void>;
+
+  getAddressById: (id: string) => Address | undefined;
 };
 
 export const AddressContext = createContext<AddressContextType | null>(null);

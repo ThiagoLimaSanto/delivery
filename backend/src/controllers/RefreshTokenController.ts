@@ -10,10 +10,6 @@ export class RefreshTokenController {
   async refresh(request: FastifyRequest, reply: FastifyReply) {
     const { refreshToken } = request.cookies;
 
-    if (!refreshToken) {
-      return reply.status(401).send({ message: 'Token ausente' });
-    }
-
     const tokenDb = await prisma.refreshToken.findFirst({
       where: { token: refreshToken },
     });
@@ -29,12 +25,12 @@ export class RefreshTokenController {
         .send({ message: 'Sessão expirada, faça login novamente' });
     }
 
-    await prisma.refreshToken.delete({
-      where: { id: tokenDb.id },
-    });
-
     const user = await prisma.user.findUnique({
       where: { id: tokenDb.userId },
+    });
+    
+    await prisma.refreshToken.delete({
+      where: { id: tokenDb.id },
     });
 
     if (!user) {

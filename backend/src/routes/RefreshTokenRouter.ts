@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { RefreshTokenController } from '../controllers/RefreshTokenController';
-import { authGuard } from '../middleware/auth.middleware';
+import { refreshTokenGuard } from '../middleware/auth.middleware';
 
 export async function refreshTokenRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -10,9 +10,9 @@ export async function refreshTokenRoutes(app: FastifyInstance) {
   typedApp.get(
     '/refresh',
     {
-      preHandler: [authGuard],
+      preHandler: [refreshTokenGuard],
       schema: {
-        response: 201,
+        response: 200,
       },
     },
     refreshTokenController.refresh.bind(refreshTokenController),

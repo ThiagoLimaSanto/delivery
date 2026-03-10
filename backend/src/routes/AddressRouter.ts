@@ -91,6 +91,6 @@ export async function addressRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) => addressController.updateAddress(request as any, reply),
+    (request, reply) => addressController.removeAddress(request as any, reply),
   );
 }

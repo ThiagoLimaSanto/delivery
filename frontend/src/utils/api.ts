@@ -5,6 +5,11 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+const refreshApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true, 
+});
+
 api.interceptors.response.use(
   response => response,
   async error => {
@@ -14,11 +19,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axios.post(
-          `/token/refresh`,
-          {},
-          { withCredentials: true },
-        );
+        await refreshApi.get('/token/refresh');
 
         return api(originalRequest);
       } catch (err) {
@@ -26,5 +27,5 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  },
+  }
 );

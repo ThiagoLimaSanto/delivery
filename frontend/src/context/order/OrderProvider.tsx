@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import type { MenuType } from '../../types/Product';
 import { OrderContext } from './orderContext';
 import { orderReducer } from './OrderReducer';
@@ -8,7 +8,14 @@ type OrderProviderProps = {
 };
 
 export function OrderProvider({ children }: OrderProviderProps) {
-  const [order, dispatch] = useReducer(orderReducer, []);
+  const [order, dispatch] = useReducer(orderReducer, [], () => {
+    const data = localStorage.getItem('order');
+    return data ? (JSON.parse(data) as MenuType[]) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('order', JSON.stringify(order));
+  }, [order]);
 
   const addToCart = (item: MenuType) => {
     dispatch({ type: 'ADD_ITEM', payload: item });

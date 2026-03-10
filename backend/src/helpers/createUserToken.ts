@@ -1,6 +1,7 @@
 import { UserRole } from '@prisma/client';
 import { FastifyReply } from 'fastify';
 import { cookieOptions } from './cookiesOptions';
+import jwt from 'jsonwebtoken';
 
 export async function generateAccessToken(
   reply: FastifyReply,
@@ -24,7 +25,9 @@ export async function generateAccessToken(
 }
 
 export async function generateRefreshToken(reply: FastifyReply, id: string) {
-  const refreshToken = await reply.jwtSign({ id }, { expiresIn: '7d' });
+  const refreshToken = jwt.sign({ id }, process.env.JWT_SECRET_REFRESH!, {
+    expiresIn: '7d',
+  });
 
   const tempoVida = 60 * 60 * 24 * 7;
 

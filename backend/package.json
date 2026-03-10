@@ -23,6 +23,7 @@
     "dotenv": "^17.3.1",
     "fastify": "^5.7.4",
     "fastify-type-provider-zod": "^6.1.0",
+    "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "prisma": "^6.19.2",
     "tsx": "^4.21.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "nodemon": "^3.1.11",

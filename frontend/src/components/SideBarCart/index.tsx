@@ -1,8 +1,8 @@
 import { HiOutlineXMark } from 'react-icons/hi2';
+import { MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { UseHandleModal } from '../../hook/useHandleModal';
 import { useHandleOrder } from '../../hook/useHandleOrder';
-import { MdDelete } from 'react-icons/md';
 
 export function SideBarCart() {
   const { clickCarrinho, handleModalCarrinho } = UseHandleModal();
@@ -14,6 +14,7 @@ export function SideBarCart() {
     totalItems,
     removeItem,
   } = useHandleOrder();
+
   return (
     <div
       className={`${clickCarrinho ? 'translate-x-0' : 'translate-x-full'} fixed shadow-xl transform transition-transform duration-700 ease-in-out top-20 h-[calc(100vh-5rem)]  right-0 w-full sm:w-1/2 lg:w-1/3 2xl:w-1/4 bg-white z-3`}

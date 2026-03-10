@@ -1,27 +1,33 @@
 import { FiChevronDown } from 'react-icons/fi';
+import type { Address } from '../../hook/useAddress';
 import { UseHandleModal } from '../../hook/useHandleModal';
 import { MainModalTemplate } from '../../templates/MainModalTemplate';
 import { FormAddress } from '../FormAddress';
 
 type AddressModalProps = {
-  handleSubmit: (addressId?: string) => Promise<void>;
+  handleSubmit: (data: Address) => Promise<void>;
+  title: string;
+  data?: Address | null;
 };
 
-export function AddressModal({ handleSubmit }: AddressModalProps) {
+export function AddressModal({
+  handleSubmit,
+  title = 'Novo Endereço',
+  data,
+}: AddressModalProps) {
   const { handleAddressClick, addressClick } = UseHandleModal();
   return (
     <MainModalTemplate click={!addressClick}>
-      <div className='flex justify-between items-center mb-4'>
-        <button
-          onClick={() => handleAddressClick(addressClick)}
-          className='text-2xl cursor-pointer'
-        >
-          <FiChevronDown size={25} />
-        </button>
-        <p className='text-center font-bold'>Cadastrar Novo Endereço</p>
-        <p></p>
+      <button
+        onClick={() => handleAddressClick(addressClick)}
+        className='text-2xl cursor-pointer'
+      >
+        <FiChevronDown size={25} />
+      </button>
+      <div className='flex justify-center items-center mb-4'>
+        <p className='text-center font-bold'>{title + ' Endereço'}</p>
       </div>
-      <FormAddress handleSubmit={handleSubmit}/>
+      <FormAddress title={title} data={data} handleSubmit={handleSubmit} />
     </MainModalTemplate>
   );
 }

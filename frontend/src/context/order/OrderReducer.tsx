@@ -9,8 +9,21 @@ type Action =
 
 export function orderReducer(state: MenuType[], action: Action): MenuType[] {
   switch (action.type) {
-    case 'ADD_ITEM':
+    case 'ADD_ITEM': {
+      const itemExists = state.find(
+        i => i.productId === action.payload.productId,
+      );
+
+      if (itemExists) {
+        return state.map(i =>
+          i.productId === action.payload.productId
+            ? { ...i, quantity: i.quantity + 1 }
+            : i,
+        );
+      }
+
       return [...state, action.payload];
+    }
 
     case 'INCREASE':
       return state.map(item =>
