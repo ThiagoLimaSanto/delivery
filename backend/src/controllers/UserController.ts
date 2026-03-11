@@ -66,7 +66,7 @@ export class UserController {
       phone: user.user.phone,
     };
 
-    return reply.status(200).send({ data: userReponse });
+    return reply.status(200).send({ refreshToken, data: userReponse });
   }
 
   async updateUser(

@@ -9,15 +9,18 @@ import { prisma } from '../repository/prisma';
 export class RefreshTokenController {
   async refresh(request: FastifyRequest, reply: FastifyReply) {
     const { refreshToken } = request.cookies;
+    const date = new Date();
 
     const tokenDb = await prisma.refreshToken.findFirst({
       where: { token: refreshToken },
     });
 
-    if (!tokenDb || tokenDb.expiresAt < new Date()) {
+    if (!tokenDb || tokenDb.expiresAt < date) {
       if (tokenDb)
         await prisma.refreshToken.delete({ where: { id: tokenDb.id } });
-
+      
+      console.log("entrei aqui");
+      
       return reply
         .clearCookie('token')
         .clearCookie('refreshToken')
@@ -27,14 +30,15 @@ export class RefreshTokenController {
 
     const user = await prisma.user.findUnique({
       where: { id: tokenDb.userId },
+      select: { name: true, role: true },
     });
-    
+
     await prisma.refreshToken.delete({
       where: { id: tokenDb.id },
     });
 
     if (!user) {
-      return new AppError('Usuário nao encontrado', 404);
+      throw new AppError('Usuário nao encontrado', 404);
     }
 
     const accessToken = await generateAccessToken(

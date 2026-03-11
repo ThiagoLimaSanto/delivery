@@ -14,7 +14,7 @@ export function MainTemplate({ children }: MainTemplateProps) {
       <ManageAddressesModal />
       <ModalOverlay />
       <MainSideBar />
-      <div className='mt-20'>{children}</div>
+      {children}
     </>
   );
 }

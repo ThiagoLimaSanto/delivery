@@ -10,7 +10,7 @@ export function ProfileModal() {
   const closeProfileModal = () => {
     handleProfileClick(profileClick);
   };
-  
+
   return (
     <>
       <div
@@ -40,7 +40,7 @@ export function ProfileModal() {
             <Link
               onClick={closeProfileModal}
               className='text-[1.125rem] hover:text-green-600 transition-colors duration-100'
-              to={'/my/pedidos'}
+              to={'/meusdados'}
             >
               Meus Dados
             </Link>

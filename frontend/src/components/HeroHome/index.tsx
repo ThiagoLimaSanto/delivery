@@ -2,7 +2,7 @@ import { HiOutlineLocationMarker } from 'react-icons/hi';
 
 export function HeroHome() {
   return (
-    <div className='bg-black'>
+    <div className='bg-black mt-20'>
       <section className='relative h-[calc(100vh-80px)] w-screen overflow-hidden'>
         <div className='absolute inset-0 bg-[url("/images/hamburguer.webp")] bg-cover bg-center blur-[1px]'></div>
         <div className='absolute inset-0 bg-black/40'></div>
