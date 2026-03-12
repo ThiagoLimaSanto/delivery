@@ -13,6 +13,7 @@ export function ModalProvider({ children }: ModalPrividerProps) {
   const [addressClick, setAddressClick] = useState(false);
   const [profileClick, setProfileClick] = useState(false);
   const [manageAddressesCLick, setManageAddressesCLick] = useState(false);
+  const [clickSideBarAdmin, setClickSideBarAdmin] = useState(false);
 
   const handleModal = (click?: boolean) => {
     setClick(!click);
@@ -42,6 +43,10 @@ export function ModalProvider({ children }: ModalPrividerProps) {
     setManageAddressesCLick(!manageAddressesCLick);
   };
 
+  const handleClickSideBarAdmin = (clickSideBarAdmin?: boolean) => {
+    setClickSideBarAdmin(!clickSideBarAdmin);
+  };
+
   return (
     <ModalContext.Provider
       value={{
@@ -59,6 +64,8 @@ export function ModalProvider({ children }: ModalPrividerProps) {
         profileClick,
         handleManageAddressesCLick,
         manageAddressesCLick,
+        handleClickSideBarAdmin,
+        clickSideBarAdmin,
       }}
     >
       {children}

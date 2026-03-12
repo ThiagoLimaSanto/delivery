@@ -4,8 +4,8 @@ import { MainTemplate } from '../../templates/MainTemplate/index.tsx';
 export function About() {
   return (
     <MainTemplate>
-      <section className='h-screen'>
-        <div className='mt-30 md:mt-25 p-4 md:absolute md:top-[40%] lg:top-[30%] md:left-1/2 md:h-100 md:w-[80%] md:-translate-y-1/2 md:-translate-x-1/2'>
+      <section className='h-[calc(100vh-80px)]'>
+        <div className='mt-30 w-[90%] mx-auto'>
           <h1 className='text-4xl md:text-5xl xl:text-6xl font-bold text-black mb-6 md:mb-10 xl:mb-20 text-center'>
             Sobre Nós
           </h1>
