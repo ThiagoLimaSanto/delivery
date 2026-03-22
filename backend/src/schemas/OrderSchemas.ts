@@ -1,9 +1,21 @@
 import { StatusEnum } from '@prisma/client';
 import z from 'zod';
 
-export const createOrderBodySchema = z.object({
+export const createOrderSchema = z.object({
   addressId: z.string().trim().min(1, 'Endereço é obrigatório!'),
   userId: z.string().trim().min(1, 'Usuário é obrigatório!'),
+  items: z
+    .array(
+      z.object({
+        productId: z.string().trim().min(1, 'Produto é obrigatório!'),
+        quantity: z.number().positive('Quantidade deve ser maior que zero!'),
+      }),
+    )
+    .min(1, 'O pedido deve ter pelo menos um item!'),
+});
+
+export const createOrderBodySchema = z.object({
+  addressId: z.string().trim().min(1, 'Endereço é obrigatório!'),
   items: z
     .array(
       z.object({
@@ -31,6 +43,6 @@ export const getOrderParamsSchema = z.object({
   id: z.string(),
 });
 
-export type CreateOrderBody = z.infer<typeof createOrderBodySchema>;
+export type CreateOrderBody = z.infer<typeof createOrderSchema>;
 export type getOrdersQuery = z.infer<typeof getOrdersQuerySchema>;
 export type GetOrderParams = z.infer<typeof getOrderParamsSchema>;

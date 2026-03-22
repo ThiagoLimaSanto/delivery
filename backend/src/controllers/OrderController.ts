@@ -56,6 +56,7 @@ export class OrderController {
     reply: FastifyReply,
   ) {
     const { addressId, items } = request.body;
+
     const userId = request.user.id;
 
     await service.createOrder({

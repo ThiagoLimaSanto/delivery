@@ -13,6 +13,8 @@ export type AddressContextType = {
   istoggleDefault: (addressId: string) => Promise<void>;
 
   getAddressById: (id: string) => Address | undefined;
+
+  getDefaultAddress: () => Address | undefined;
 };
 
 export const AddressContext = createContext<AddressContextType | null>(null);

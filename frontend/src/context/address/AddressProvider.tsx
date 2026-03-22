@@ -43,10 +43,15 @@ export function AddressProvider({ children }: AddressProviderProps) {
       .find(address => address.id === id) as Address;
   };
 
+  const getDefaultAddress = () => {
+    return allAddresses?.find(address => address.isDefault) as Address;
+  };
+
   return (
     <AddressContext.Provider
       value={{
         address: allAddresses,
+        getDefaultAddress,
         createAddress,
         updateAddressByID,
         removeAddressById,
