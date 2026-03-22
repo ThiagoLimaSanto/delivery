@@ -29,14 +29,14 @@ export class OrderController {
 
     const orders = await service.listOrders(status, page, limit);
 
-    return reply.status(200).send({ data: orders });
+    return reply.status(200).send(orders);
   }
 
   async getAllOrderForUser(request: FastifyRequest, reply: FastifyReply) {
     const userId = request.user.id;
     const orders = await service.getAllOrderForUser(userId);
 
-    return reply.status(200).send({ data: orders });
+    return reply.status(200).send(orders);
   }
 
   async getOrderById(

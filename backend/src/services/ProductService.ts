@@ -1,8 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { prisma } from '../repository/prisma';
 import { AppError } from '../errors/AppError';
+import { prisma } from '../repository/prisma';
 import { CreateProductBody } from '../schemas/ProductSchemas';
-import { QueryParams } from '../types/queryParamsProduct';
 
 type Query = {
   available: boolean;

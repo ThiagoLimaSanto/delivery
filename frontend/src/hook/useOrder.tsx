@@ -1,11 +1,77 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { showMessage } from '../adapters/ShowMessage';
 import { api } from '../utils/api';
 
-type Order = {
+export type Order = {
   addressId?: string;
   items: { productId: string; quantity: number }[];
 };
+
+type StatusEnum =
+  | 'PENDENTE'
+  | 'PREPARANDO'
+  | 'SAIU_PARA_ENTREGA'
+  | 'ENTREGUE'
+  | 'CANCELADO';
+
+type OrderItemWithProduct = {
+  id: string;
+  productId: string;
+  quantity: number;
+  product: {
+    name: string;
+    price: number;
+  };
+};
+
+type addresses = {
+  id: string;
+  street?: string;
+  number?: string;
+};
+
+type UserWithDefaultAddress = {
+  id: string;
+  name: string;
+  phone: string;
+  addresses: addresses[];
+};
+
+export type OrderWithUserAndItems = {
+  id: string;
+  status: StatusEnum;
+  createdAt: Date;
+  updatedAt: Date;
+  total: number;
+  user: UserWithDefaultAddress;
+
+  items: OrderItemWithProduct[];
+};
+
+type ListOrdersParams = {
+  status?: string;
+  page?: number;
+  limit?: number;
+};
+
+type PaginatedResponse<T> = {
+  data: T[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
+
+export function useListOrders(params?: ListOrdersParams) {
+  return useQuery<PaginatedResponse<OrderWithUserAndItems>>({
+    queryKey: ['order', 'list', params],
+    queryFn: async () => {
+      const response = await api.get('/order/admin', {
+        params,
+      });
+      return response.data;
+    },
+  });
+}
 
 export function usePostOrder() {
   const queryClient = useQueryClient();
