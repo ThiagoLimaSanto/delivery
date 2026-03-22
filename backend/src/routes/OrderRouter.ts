@@ -50,6 +50,20 @@ export async function orderRoutes(app: FastifyInstance) {
   );
 
   typedApp.get(
+    '/my/active',
+    {
+      preHandler: [authGuard, getUserByToken],
+      schema: {
+        response: 200,
+      },
+    },
+    (request, reply) =>
+      orderController.getOrderActive(request as any, reply),
+  );
+
+  
+
+  typedApp.get(
     '/:id',
     {
       preHandler: [authGuard, getUserByToken],

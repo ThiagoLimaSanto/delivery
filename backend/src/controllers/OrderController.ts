@@ -21,6 +21,13 @@ export class OrderController {
     return reply.status(200).send({ data: orders });
   }
 
+  async getOrderActive(request: FastifyRequest, reply: FastifyReply) {
+    const userId = request.user.id;
+    const order = await service.getOrderActive(userId);
+
+    return reply.status(200).send(order);
+  }
+
   async listOrders(
     request: FastifyRequest<{ Querystring: getOrdersQuery }>,
     reply: FastifyReply,

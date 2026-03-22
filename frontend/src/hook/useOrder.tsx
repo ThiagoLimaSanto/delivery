@@ -73,6 +73,18 @@ export function useListOrders(params?: ListOrdersParams) {
     },
   });
 }
+export function useGetUserOrderActive() {
+  return useQuery({
+    queryKey: ['order', 'my'],
+
+    queryFn: async () => {
+      const response = await api.get('/order/my/active');
+      console.log(response.data);
+      
+      return response.data;
+    },
+  });
+}
 
 export function usePostOrder() {
   const queryClient = useQueryClient();

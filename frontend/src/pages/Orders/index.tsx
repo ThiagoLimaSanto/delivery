@@ -1,16 +1,38 @@
 import { Image } from '../../components/Image';
+import { ItemGridOrder } from '../../components/ItemGridOrder';
+import { Spinner } from '../../components/Spinner';
+import { useGetUserOrderActive } from '../../hook/useOrder';
 import { MainTemplate } from '../../templates/MainTemplate';
+import { statusConfig } from '../../types/Order';
 
 export function Orders() {
+  const { data: order, isLoading } = useGetUserOrderActive();
+
+  if (isLoading) return <Spinner />;
   return (
     <MainTemplate>
       <section className='mt-30 h-calc(100vh-80px) w-screen z-2'>
         <div className='w-[90%] lg:max-w-7xl mx-auto'>
           <div className='mb-8'>
-            <h1 className='text-4xl md:text-5xl xl:text-6xl font-semibold text-black mb-6 md:mb-10 xl:mb-20'>
+            <h1 className='text-4xl md:text-5xl xl:text-6xl font-semibold text-black mb-6'>
               Meus Pedidos
             </h1>
-            <p className='text-2xl text-black'>Histórico</p>
+            {order && (
+              <ItemGridOrder
+                key={order.id}
+                total={order.total}
+                order={order}
+                payment='Pix'
+                status={statusConfig[order.status].buttonText}
+                IconsStatus={statusConfig[order.status].icon}
+                ButtonIcons={statusConfig[order.status].buttonIcons}
+                colorTextStatus={statusConfig[order.status].colorText}
+                colorBgStatus={statusConfig[order.status].colorBg}
+                buttonText={statusConfig[order.status].buttonText}
+                declineButton={order.status === 'PENDENTE'}
+              />
+            )}
+            <p className='text-2xl text-black mt-4'>Histórico</p>
           </div>
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 mb-16 md:gap-10 bg-[#F2F2F2]'>
             <div>

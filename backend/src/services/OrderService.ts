@@ -29,6 +29,39 @@ export class OrderService {
     return orders;
   }
 
+  async getOrderActive(userId: string) {
+    const order = await prisma.order.findFirst({
+      where: {
+        userId: userId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+            addresses: {
+              where: { isDefault: true },
+              take: 1,
+            },
+          },
+        },
+        items: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                price: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return order;
+  }
+
   async listOrders(
     status?: StatusEnum,
     page = 1,
@@ -247,7 +280,7 @@ export class OrderService {
     const result = await prisma.order.updateMany({
       where: {
         id: id,
-        status: 'PENDENTE',
+        status: StatusEnum.PENDENTE,
       },
       data: { status: 'CANCELADO' },
     });
