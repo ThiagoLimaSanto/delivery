@@ -43,7 +43,9 @@ export async function categoryRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    categoryController.getCategoryById.bind(categoryController),
+    async (request, reply) => {
+      return categoryController.getCategoryById(request as any, reply);
+    },
   );
 
   typedApp.post(
@@ -71,7 +73,9 @@ export async function categoryRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    categoryController.updateCategory.bind(categoryController),
+    async (request, reply) => {
+      return categoryController.updateCategory(request as any, reply);
+    },
   );
 
   typedApp.patch(
@@ -83,6 +87,8 @@ export async function categoryRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    categoryController.changeAvailability.bind(categoryController),
+    async (request, reply) => {
+      return categoryController.changeAvailability(request as any, reply);
+    },
   );
 }

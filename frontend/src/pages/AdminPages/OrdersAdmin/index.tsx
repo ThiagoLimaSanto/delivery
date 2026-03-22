@@ -1,8 +1,49 @@
+import { useState } from 'react';
 import { FilterOptionsOrder } from '../../../components/FilterOptionsOrder';
 import { GridOrders } from '../../../components/GridOrders';
+import { Spinner } from '../../../components/Spinner';
+import { useListOrders } from '../../../hook/useOrder';
 import { MainTemplateAdmin } from '../../../templates/MainTemplateAdmin';
 
+export type FilterType =
+  | 'Todos'
+  | 'Novos'
+  | 'Preparando'
+  | 'Despacho'
+  | 'Entregue'
+  | 'Cancelado';
+
+type StatusEnum =
+  | 'PENDENTE'
+  | 'PREPARANDO'
+  | 'SAIU_PARA_ENTREGA'
+  | 'ENTREGUE'
+  | 'CANCELADO';
+
+// 🔥 Mapeamento correto
+const statusMap: Record<FilterType, StatusEnum | undefined> = {
+  Todos: undefined,
+  Novos: 'PENDENTE',
+  Preparando: 'PREPARANDO',
+  Despacho: 'SAIU_PARA_ENTREGA',
+  Entregue: 'ENTREGUE',
+  Cancelado: 'CANCELADO',
+};
+
 export function OrdersAdmin() {
+  const [status, setStatus] = useState<FilterType>('Todos');
+
+  const parsedStatus = statusMap[status];
+
+  const { data, isLoading } = useListOrders({
+    page: 1,
+    limit: 9,
+    status: parsedStatus,
+  });
+
+  if (isLoading) return <Spinner />;
+  if (!data) return null;
+
   return (
     <MainTemplateAdmin>
       <div className='p-4'>
@@ -11,8 +52,8 @@ export function OrdersAdmin() {
             Pedidos
           </h1>
         </div>
-        <FilterOptionsOrder />
-        <GridOrders />
+        <FilterOptionsOrder filter={status} handleStatus={setStatus} />
+        <GridOrders data={data} />
       </div>
     </MainTemplateAdmin>
   );

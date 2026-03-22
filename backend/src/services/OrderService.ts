@@ -1,8 +1,8 @@
 import { StatusEnum } from '@prisma/client';
 import { ObjectId } from 'mongodb';
-import { prisma } from '../repository/prisma';
 import { AppError } from '../errors/AppError';
 import { WebSocketManager } from '../helpers/websocketManager';
+import { prisma } from '../repository/prisma';
 import { CreateOrderBody } from '../schemas/OrderSchemas';
 import { OrderWithUserAndItems, PaginatedResponse } from '../types/Order';
 
@@ -207,13 +207,46 @@ export class OrderService {
     return newOrder;
   }
 
-  async OrderCancel(id: string, userId: string) {
+  async changeOrderStatus(id: string) {
+    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
+    const order = await prisma.order.findFirst({
+      where: { id: id },
+    });
+
+    if (!order) {
+      throw new AppError('Pedido não encontrado', 404);
+    }
+
+    let nextStatus: StatusEnum;
+
+    switch (order.status) {
+      case 'PENDENTE':
+        nextStatus = 'PREPARANDO';
+        break;
+      case 'PREPARANDO':
+        nextStatus = 'SAIU_PARA_ENTREGA';
+        break;
+      case 'SAIU_PARA_ENTREGA':
+        nextStatus = 'ENTREGUE';
+        break;
+      default:
+        throw new AppError('Status não pode ser alterado', 400);
+    }
+
+    await prisma.order.update({
+      where: { id: id },
+      data: { status: nextStatus },
+    });
+
+    return;
+  }
+
+  async OrderCancel(id: string) {
     if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
 
     const result = await prisma.order.updateMany({
       where: {
         id: id,
-        userId: userId,
         status: 'PENDENTE',
       },
       data: { status: 'CANCELADO' },

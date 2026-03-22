@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { OrderController } from '../controllers/OrderController';
-import { getUserByToken } from '../middleware/getUserByToken';
 import { authGuard } from '../middleware/auth.middleware';
 import { authAdmin } from '../middleware/authAdmin';
+import { getUserByToken } from '../middleware/getUserByToken';
 import {
   createOrderBodySchema,
   getOrderParamsSchema,
@@ -71,6 +71,19 @@ export async function orderRoutes(app: FastifyInstance) {
       },
     },
     (request, reply) => orderController.createOrder(request as any, reply),
+  );
+
+  typedApp.patch(
+    '/:id/mudarstatus',
+    {
+      preHandler: [authGuard, getUserByToken, authAdmin],
+      schema: {
+        params: getOrderParamsSchema,
+        response: 200,
+      },
+    },
+    (request, reply) =>
+      orderController.changeOrderStatus(request as any, reply),
   );
 
   typedApp.patch(

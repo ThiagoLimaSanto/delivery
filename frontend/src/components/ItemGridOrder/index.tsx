@@ -1,38 +1,45 @@
 import { FiX } from 'react-icons/fi';
-import type { OrderWithUserAndItems } from '../../hook/useOrder';
+import {
+  useChangeStatusOrder,
+  useOrderCancel,
+  type OrderWithUserAndItems,
+} from '../../hook/useOrder';
 
 type ItemGridOrderType = {
-  key: string;
+  status?: string;
   order: OrderWithUserAndItems;
   IconsStatus: React.ElementType;
   colorTextStatus: string;
   colorBgStatus: string;
-  ButtonIconm: React.ElementType;
-  buttonText: string;
+  buttonText?: string;
   payment: string;
   declineButton?: boolean;
   total: number;
+  ButtonIcons?: React.ElementType;
 };
 
 export function ItemGridOrder({
-  key,
+  ButtonIcons,
   order,
   IconsStatus,
   colorTextStatus,
   colorBgStatus,
-  ButtonIconm,
   buttonText,
   payment,
   total,
   declineButton = false,
 }: ItemGridOrderType) {
-  console.log(order);
+  const { mutate } = useChangeStatusOrder();
+  const { mutate: deleteOrder } = useOrderCancel();
+  const handleToggleStatus = () => {
+    mutate(order.id);
+  };
 
+  const handleDeleteOrder = () => {
+    deleteOrder(order.id);
+  };
   return (
-    <div
-      key={key}
-      className='bg-[#1A1E26] flex flex-col gap-4 rounded-lg border border-[#3b3b3b] p-4 text-white'
-    >
+    <div className='bg-[#1A1E26] flex flex-col gap-4 rounded-lg border border-[#3b3b3b] p-4 text-white'>
       <div className='flex justify-between'>
         <p
           className={`flex items-center justify-center gap-2 ${colorTextStatus} text-sm ${colorBgStatus} rounded-full px-2`}
@@ -77,14 +84,20 @@ export function ItemGridOrder({
         <p className='bg-[#1F232B] p-2 rounded-lg text-[#858a8d]'>{payment}</p>
         <div className='flex gap-4'>
           {declineButton && (
-            <button className='text-red-700 border border-red-700 bg-[#111217] flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'>
+            <button
+              onClick={handleDeleteOrder}
+              className='text-red-700 border border-red-700 bg-[#111217] flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
+            >
               <FiX />
               Recusar
             </button>
           )}
-          {ButtonIconm && (
-            <button className='text-white bg-green-600 flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'>
-              <ButtonIconm />
+          {ButtonIcons && (
+            <button
+              onClick={handleToggleStatus}
+              className='text-white bg-green-600 flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
+            >
+              <ButtonIcons />
               {buttonText}
             </button>
           )}

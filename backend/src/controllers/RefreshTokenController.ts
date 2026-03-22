@@ -18,9 +18,6 @@ export class RefreshTokenController {
     if (!tokenDb || tokenDb.expiresAt < date) {
       if (tokenDb)
         await prisma.refreshToken.delete({ where: { id: tokenDb.id } });
-      
-      console.log("entrei aqui");
-      
       return reply
         .clearCookie('token')
         .clearCookie('refreshToken')

@@ -1,40 +1,33 @@
-import { useState } from 'react';
+import type { FilterType } from '../../pages/AdminPages/OrdersAdmin';
 import { FilterOfOrdersAdm } from '../FilterOfOrdersAdm';
 
-export function FilterOptionsOrder() {
-  const [filter, setFilter] = useState('Todos (4)');
+type FilterOptionsOrderProps = {
+  filter: FilterType;
+  handleStatus: (status: FilterType) => void;
+};
 
-  const handleFilter = (filtro: string) => {
-    setFilter(filtro);
-  };
+export function FilterOptionsOrder({
+  handleStatus,
+  filter,
+}: FilterOptionsOrderProps) {
   return (
-    <div className='flex flex-wrap justify-around text-[#858a8d] bg-[#1A1E26] rounded-lg p-2 gap-2 border border-[#3b3b3b] max-w-lg'>
-      <FilterOfOrdersAdm
-        handleFilter={handleFilter}
-        namefilter={'Todos (4)'}
-        filter={filter}
-      />
-      <FilterOfOrdersAdm
-        handleFilter={handleFilter}
-        namefilter={`Novos (2) `}
-        filter={filter}
-        notification={true}
-      />
-      <FilterOfOrdersAdm
-        handleFilter={handleFilter}
-        namefilter={'Preparando'}
-        filter={filter}
-      />
-      <FilterOfOrdersAdm
-        handleFilter={handleFilter}
-        namefilter={'Pronto'}
-        filter={filter}
-      />
-      <FilterOfOrdersAdm
-        handleFilter={handleFilter}
-        namefilter={'Entregue'}
-        filter={filter}
-      />
+    <div className='flex flex-wrap justify-around text-[#858a8d] bg-[#1A1E26] rounded-lg p-2 gap-2 border border-[#3b3b3b] max-w-2xl'>
+      {[
+        'Todos',
+        'Novos',
+        'Preparando',
+        'Despacho',
+        'Entregue',
+        'Cancelado',
+      ].map(item => (
+        <FilterOfOrdersAdm
+          key={item}
+          handleStatus={handleStatus}
+          handleFilter={handleStatus}
+          namefilter={item as FilterType}
+          filter={filter}
+        />
+      ))}
     </div>
   );
 }

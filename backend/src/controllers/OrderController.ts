@@ -68,14 +68,24 @@ export class OrderController {
     return reply.status(201).send({ message: 'Pedido criado com sucesso!' });
   }
 
+  async changeOrderStatus(
+    request: FastifyRequest<{ Params: GetOrderParams }>,
+    reply: FastifyReply,
+  ) {
+    const { id } = request.params;
+
+    await service.changeOrderStatus(id);
+
+    return reply.status(200);
+  }
+
   async OrderCancel(
     request: FastifyRequest<{ Params: GetOrderParams }>,
     reply: FastifyReply,
   ) {
     const { id } = request.params;
-    const userId = request.user.id;
 
-    await service.OrderCancel(id, userId);
+    await service.OrderCancel(id);
 
     return reply.status(200).send({ message: 'Pedido Cancelado!' });
   }

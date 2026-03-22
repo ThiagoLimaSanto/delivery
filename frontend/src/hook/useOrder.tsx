@@ -40,8 +40,8 @@ type UserWithDefaultAddress = {
 export type OrderWithUserAndItems = {
   id: string;
   status: StatusEnum;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   total: number;
   user: UserWithDefaultAddress;
 
@@ -49,12 +49,12 @@ export type OrderWithUserAndItems = {
 };
 
 type ListOrdersParams = {
-  status?: string;
+  status?: StatusEnum;
   page?: number;
   limit?: number;
 };
 
-type PaginatedResponse<T> = {
+export type PaginatedResponse<T> = {
   data: T[];
   total: number;
   page: number;
@@ -64,6 +64,7 @@ type PaginatedResponse<T> = {
 export function useListOrders(params?: ListOrdersParams) {
   return useQuery<PaginatedResponse<OrderWithUserAndItems>>({
     queryKey: ['order', 'list', params],
+
     queryFn: async () => {
       const response = await api.get('/order/admin', {
         params,
@@ -86,6 +87,40 @@ export function usePostOrder() {
     },
     onError: () => {
       showMessage.error('Erro ao realizar pedido!');
+    },
+  });
+}
+
+export function useChangeStatusOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, unknown, string>({
+    mutationFn: async (id: string) => {
+      await api.patch(`/order/${id}/mudarstatus`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order', 'list'] });
+      showMessage.success('Status alterado!');
+    },
+    onError: () => {
+      showMessage.error('Erro ao alterar status!');
+    },
+  });
+}
+
+export function useOrderCancel() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, unknown, string>({
+    mutationFn: async (id: string) => {
+      await api.patch(`/order/${id}/cancelar`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order', 'list'] });
+      showMessage.success('Pedido Cancelado!');
+    },
+    onError: () => {
+      showMessage.error('Erro ao cancelar Pedido!');
     },
   });
 }
