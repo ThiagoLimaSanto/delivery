@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { showMessage } from '../adapters/ShowMessage';
 import { api } from '../utils/api';
+import type { TypePaymentEnum } from '../components/SubmitOrderButton';
 
 export type Order = {
   addressId?: string;
@@ -44,7 +45,8 @@ export type OrderWithUserAndItems = {
   updatedAt: string;
   total: number;
   user: UserWithDefaultAddress;
-
+  typePayment: TypePaymentEnum;
+  orderNumber: number;
   items: OrderItemWithProduct[];
 };
 
@@ -80,7 +82,7 @@ export function useGetUserOrderActive() {
     queryFn: async () => {
       const response = await api.get('/order/my/active');
       console.log(response.data);
-      
+
       return response.data;
     },
   });

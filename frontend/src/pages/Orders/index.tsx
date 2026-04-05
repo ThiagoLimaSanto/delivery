@@ -15,18 +15,20 @@ export function Orders() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!socket) return;
+  if (!socket) return;
 
-    socket.on('orderUpdate', () => {
-      queryClient.invalidateQueries({
-        queryKey: ['order'],
-      });
+  const handleOrderUpdate = () => {
+    queryClient.invalidateQueries({
+      queryKey: ['order'],
     });
+  };
 
-    return () => {
-      socket.off('orderUpdate');
-    };
-  }, [socket]);
+  socket.on('orderUpdate', handleOrderUpdate);
+
+  return () => {
+    socket.off('orderUpdate', handleOrderUpdate);
+  };
+}, [socket, queryClient]);
 
   if (isLoading) return <Spinner />;
   return (

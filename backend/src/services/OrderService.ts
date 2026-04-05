@@ -154,6 +154,11 @@ export class OrderService {
     return order;
   }
   async createOrder(data: CreateOrderBody) {
+    const counter = await prisma.counter.upsert({
+      where: { name: 'global_order_number' },
+      update: { seq: { increment: 1 } },
+      create: { name: 'global_order_number', seq: 1 },
+    });
     const address = await prisma.address.findFirst({
       where: {
         id: data.addressId,
@@ -221,6 +226,8 @@ export class OrderService {
         data: {
           userId: data.userId,
           total,
+          typePayment: data.typePayment,
+          orderNumber: counter.seq,
           status: 'PENDENTE',
           items: {
             create: itemData,
@@ -278,7 +285,7 @@ export class OrderService {
       where: { id: id },
       data: { status: nextStatus },
     });
-    
+
     this.io.emit('orderUpdate', {
       type: 'CHANGE_STATUS_ORDER',
       orderData: updatedOrder,

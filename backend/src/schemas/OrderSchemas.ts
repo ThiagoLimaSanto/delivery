@@ -1,9 +1,13 @@
 import { StatusEnum } from '@prisma/client';
+import { TypePaymentEnum } from '@prisma/client';
 import z from 'zod';
+
+const typePaymentValues = Object.values(TypePaymentEnum);
 
 export const createOrderSchema = z.object({
   addressId: z.string().trim().min(1, 'Endereço é obrigatório!'),
   userId: z.string().trim().min(1, 'Usuário é obrigatório!'),
+  typePayment: z.nativeEnum(TypePaymentEnum),
   items: z
     .array(
       z.object({
@@ -16,6 +20,7 @@ export const createOrderSchema = z.object({
 
 export const createOrderBodySchema = z.object({
   addressId: z.string().trim().min(1, 'Endereço é obrigatório!'),
+  typePayment: z.nativeEnum(TypePaymentEnum),
   items: z
     .array(
       z.object({

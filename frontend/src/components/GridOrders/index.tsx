@@ -20,7 +20,7 @@ export function GridOrders({ data }: GridOrdersProps) {
               key={order.id}
               total={order.total}
               order={order}
-              payment='Pix'
+              payment={order.typePayment}
               status={config.buttonText}
               IconsStatus={config.icon}
               ButtonIcons={config.buttonIcons}

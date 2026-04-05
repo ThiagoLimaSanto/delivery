@@ -41,12 +41,15 @@ export function ItemGridOrder({
   return (
     <div className='bg-[#1A1E26] flex flex-col gap-4 rounded-lg border border-[#3b3b3b] p-4 text-white'>
       <div className='flex justify-between'>
-        <p
-          className={`flex items-center justify-center gap-2 ${colorTextStatus} text-sm ${colorBgStatus} rounded-full px-2`}
-        >
-          <IconsStatus />
-          {order.status}
-        </p>
+        <div className='flex flex-col gap-2'>
+          <p className='text-[#ccc]'>N° do pedido: #{order.orderNumber}</p>
+          <p
+            className={`flex items-center justify-center gap-2 ${colorTextStatus} text-sm ${colorBgStatus} rounded-full px-2`}
+          >
+            <IconsStatus />
+            {order.status}
+          </p>
+        </div>
         <p className='text-[#858a8d]'>
           {new Date(order.createdAt).toLocaleDateString()}
         </p>

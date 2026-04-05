@@ -21,6 +21,13 @@ enum StatusEnum {
   CANCELADO
 }
 
+enum TypePaymentEnum{
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  DINHEIRO
+}
+
 model Address {
   id          String        @id @map("_id") @default(auto()) @db.ObjectId
   street      String
@@ -96,6 +103,12 @@ model OrderItem {
   updatedAt   DateTime      @updatedAt
 }
 
+model Counter {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String        @unique
+  seq         Int           @default(0)
+}
+
 model Order {
   id          String        @id @map("_id") @default(auto()) @db.ObjectId
   userId      String        @db.ObjectId
@@ -103,6 +116,8 @@ model Order {
   items       OrderItem[]
   status      StatusEnum    @default(PENDENTE)
   total       Float
+  typePayment TypePaymentEnum
+  orderNumber Int           @unique
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }

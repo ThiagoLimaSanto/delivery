@@ -1,11 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FilterOptionsOrder } from '../../../components/FilterOptionsOrder';
 import { GridOrders } from '../../../components/GridOrders';
 import { Spinner } from '../../../components/Spinner';
 import { useListOrders, type Order } from '../../../hook/useOrder';
-import { MainTemplateAdmin } from '../../../templates/MainTemplateAdmin';
 import { useSocket } from '../../../hook/useWebSocket';
-import { useQueryClient } from '@tanstack/react-query';
+import { MainTemplateAdmin } from '../../../templates/MainTemplateAdmin';
 
 export type OrderEventType =
   | 'NEW_ORDER'
@@ -48,16 +48,18 @@ export function OrdersAdmin() {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on('orderUpdate', () => {
+    const handleOrderUpdate = () => {
       queryClient.invalidateQueries({
-        queryKey: ['order'], 
+        queryKey: ['order'],
       });
-    });
+    };
+
+    socket.on('orderUpdate', handleOrderUpdate);
 
     return () => {
-      socket.off('orderUpdate');
+      socket.off('orderUpdate', handleOrderUpdate);
     };
-  }, [socket]);
+  }, [socket, queryClient]);
 
   const [status, setStatus] = useState<FilterType>('Todos');
 

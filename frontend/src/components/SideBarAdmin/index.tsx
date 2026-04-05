@@ -1,8 +1,7 @@
 import {
   LuChefHat,
-  LuDollarSign,
   LuShoppingBag,
-  LuUtensilsCrossed,
+  LuUtensilsCrossed
 } from 'react-icons/lu';
 import { UseHandleModal } from '../../hook/useHandleModal';
 import { NavLinkAdmin } from '../NavLinkAdmin';
@@ -29,7 +28,9 @@ export function SidebarAdmin() {
           }
         `}
       >
-        <div className={`flex ${clickSideBarAdmin ? 'p-4' : 'p-2'} items-center gap-4 border-b border-[#3b3b3b]`}>
+        <div
+          className={`flex ${clickSideBarAdmin ? 'p-4' : 'p-2'} items-center gap-4 border-b border-[#3b3b3b]`}
+        >
           <LuChefHat
             size={30}
             color='#32c560'
@@ -45,7 +46,11 @@ export function SidebarAdmin() {
           )}
         </div>
         <div className={`space-y-2`}>
-          <NavLinkAdmin Icon={LuChefHat} title={'DashBoard'} to={'/z_admin/dashboard'} />
+          <NavLinkAdmin
+            Icon={LuChefHat}
+            title={'DashBoard'}
+            to={'/z_admin/dashboard'}
+          />
           <NavLinkAdmin
             Icon={LuUtensilsCrossed}
             title={'Cardápio'}
@@ -55,11 +60,6 @@ export function SidebarAdmin() {
             Icon={LuShoppingBag}
             title={'Pedidos'}
             to={'/z_admin/pedidos'}
-          />
-          <NavLinkAdmin
-            Icon={LuDollarSign}
-            title={'Finanças'}
-            to={'z_admin/financas'}
           />
         </div>
       </div>

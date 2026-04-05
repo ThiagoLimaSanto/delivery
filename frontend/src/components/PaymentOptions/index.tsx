@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { SubmitOrderButton } from '../SubmitOrderButton';
+import { SubmitOrderButton, type TypePaymentEnum } from '../SubmitOrderButton';
 
 export function PaymentOptions() {
   const [activePayment, setActivePayment] = useState(true);
+  const [typePayment, setTypePayment] = useState<TypePaymentEnum>('PIX');
   return (
     <div className='w-full flex flex-col border-t border-[#a6a6a6]'>
       <div className='flex gap-8 mt-8'>
@@ -22,29 +23,29 @@ export function PaymentOptions() {
       <div className='mt-6 flex flex-col gap-8'>
         {activePayment ? (
           <>
-            <button className='cursor-pointer py-3 border border-[#a6a6a6] rounded-lg w-60'>
+            <button onClick={() => setTypePayment('PIX')} className='cursor-pointer py-3 border border-[#a6a6a6] rounded-lg w-60'>
               Pague pelo Pix
             </button>
-            <button className='cursor-pointer py-3 border border-[#a6a6a6] rounded-lg w-60'>
+            <button onClick={() => setTypePayment('CARTAO_CREDITO')} className='cursor-pointer py-3 border border-[#a6a6a6] rounded-lg w-60'>
               Pague pelo Cartão
             </button>
           </>
         ) : (
           <div className='flex gap-4 flex-wrap'>
-            <button className='px-3 py-2 hover:bg-[#D7ECDF]  border border-[#ccc] rounded-full cursor-pointer text-black'>
+            <button onClick={() => setTypePayment('DINHEIRO')} className='px-3 py-2 hover:bg-[#D7ECDF]  border border-[#ccc] rounded-full cursor-pointer text-black'>
               Dinheiro
             </button>
-            <button className='px-3 py-2 hover:bg-[#D7ECDF]  border border-[#ccc] rounded-full cursor-pointer text-black'>
+            <button onClick={() => setTypePayment('CARTAO_CREDITO')} className='px-3 py-2 hover:bg-[#D7ECDF]  border border-[#ccc] rounded-full cursor-pointer text-black'>
               Cartão Credito
             </button>
-            <button className='px-3 py-2 hover:bg-[#D7ECDF]  border border-[#ccc] rounded-full cursor-pointer text-black'>
+            <button onClick={() => setTypePayment('CARTAO_DEBITO')} className='px-3 py-2 hover:bg-[#D7ECDF]  border border-[#ccc] rounded-full cursor-pointer text-black'>
               {' '}
-              Cartão Debido
+              Cartão Debito
             </button>
           </div>
         )}
       </div>
-      <SubmitOrderButton />
+      <SubmitOrderButton typePayment={typePayment} />
     </div>
   );
 }

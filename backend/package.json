@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --legacy-watch --watch src --exec tsx src/server.ts"
+    "dev": "nodemon --legacy-watch --watch src --exec tsx src/server.ts",
+    "prisma:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",

@@ -3,13 +3,16 @@ import { useAddresContext } from '../../hook/useAddressContext';
 import { useHandleOrder } from '../../hook/useHandleOrder';
 import { usePostOrder } from '../../hook/useOrder';
 
-export function SubmitOrderButton() {
+export type TypePaymentEnum = 'DINHEIRO' | 'PIX' | 'CARTAO_CREDITO' | 'CARTAO_DEBITO';
+
+export function SubmitOrderButton({typePayment}: {typePayment: TypePaymentEnum}) {
   const navigate = useNavigate();
   const { order } = useHandleOrder();
   const { getDefaultAddress } = useAddresContext();
   const { mutate } = usePostOrder();
   const data = {
     addressId: getDefaultAddress()?.id,
+    typePayment: typePayment,
     items: order.map(item => ({
       productId: item.productId,
       quantity: item.quantity,
