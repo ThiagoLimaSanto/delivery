@@ -1,12 +1,32 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Image } from '../../components/Image';
 import { ItemGridOrder } from '../../components/ItemGridOrder';
 import { Spinner } from '../../components/Spinner';
 import { useGetUserOrderActive } from '../../hook/useOrder';
+import { useSocket } from '../../hook/useWebSocket';
 import { MainTemplate } from '../../templates/MainTemplate';
 import { statusConfig } from '../../types/Order';
+import { useEffect } from 'react';
 
 export function Orders() {
   const { data: order, isLoading } = useGetUserOrderActive();
+
+  const socket = useSocket();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('orderUpdate', () => {
+      queryClient.invalidateQueries({
+        queryKey: ['order'],
+      });
+    });
+
+    return () => {
+      socket.off('orderUpdate');
+    };
+  }, [socket]);
 
   if (isLoading) return <Spinner />;
   return (

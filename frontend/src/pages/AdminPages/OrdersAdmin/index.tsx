@@ -1,11 +1,11 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { FilterOptionsOrder } from '../../../components/FilterOptionsOrder';
 import { GridOrders } from '../../../components/GridOrders';
 import { Spinner } from '../../../components/Spinner';
 import { useListOrders, type Order } from '../../../hook/useOrder';
 import { MainTemplateAdmin } from '../../../templates/MainTemplateAdmin';
+import { useSocket } from '../../../hook/useWebSocket';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type OrderEventType =
   | 'NEW_ORDER'
@@ -42,22 +42,24 @@ const statusMap: Record<FilterType, StatusEnum | undefined> = {
 };
 
 export function OrdersAdmin() {
+  const socket = useSocket();
   const queryClient = useQueryClient();
-  const [status, setStatus] = useState<FilterType>('Todos');
 
   useEffect(() => {
-    const socket = io('http://localhost:3333', { transports: ['websocket'] });
+    if (!socket) return;
 
     socket.on('orderUpdate', () => {
       queryClient.invalidateQueries({
-        queryKey: ['order'],
+        queryKey: ['order'], 
       });
     });
 
     return () => {
-      socket.disconnect();
+      socket.off('orderUpdate');
     };
-  }, []);
+  }, [socket]);
+
+  const [status, setStatus] = useState<FilterType>('Todos');
 
   const parsedStatus = statusMap[status];
 
