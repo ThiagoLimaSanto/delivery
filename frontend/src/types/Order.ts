@@ -36,4 +36,10 @@ export const statusConfig: Record<string, StatusConfig> = {
     icon: FiX,
     buttonText: 'Cancelado',
   },
+  ENTREGUE: {
+    colorText: 'text-green-400',
+    colorBg: 'bg-green-900',
+    icon: FiCheck,
+    buttonText: 'Entregue',
+  },
 };

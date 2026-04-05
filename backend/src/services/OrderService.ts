@@ -1,12 +1,20 @@
-import { StatusEnum } from '@prisma/client';
+import { Order, StatusEnum } from '@prisma/client';
 import { ObjectId } from 'mongodb';
 import { AppError } from '../errors/AppError';
-import { WebSocketManager } from '../helpers/websocketManager';
 import { prisma } from '../repository/prisma';
 import { CreateOrderBody } from '../schemas/OrderSchemas';
 import { OrderWithUserAndItems, PaginatedResponse } from '../types/Order';
+import { Server } from 'socket.io';
+
+export interface ServerToClientEvents {
+  orderUpdate: (data: {
+    type: 'NEW_ORDER' | 'UPDATE_ORDER' | 'CANCEL_ORDER' | 'CHANGE_STATUS_ORDER';
+    orderData: any;
+  }) => void;
+}
 
 export class OrderService {
+  constructor(private readonly io: Server<any, ServerToClientEvents>) {}
   async getAllOrder(page = 1, limit = 20) {
     const skip = (page - 1) * limit;
     const orders = await prisma.order.findMany({
@@ -235,8 +243,8 @@ export class OrderService {
 
       return newOrder;
     });
-    WebSocketManager.notifyNewOrder('NEW_ORDER', newOrder);
 
+    this.io.emit('orderUpdate', { type: 'NEW_ORDER', orderData: newOrder });
     return newOrder;
   }
 
@@ -266,32 +274,31 @@ export class OrderService {
         throw new AppError('Status não pode ser alterado', 400);
     }
 
-    await prisma.order.update({
+    const updatedOrder = await prisma.order.update({
       where: { id: id },
       data: { status: nextStatus },
     });
-
+    
+    this.io.emit('orderUpdate', {
+      type: 'CHANGE_STATUS_ORDER',
+      orderData: updatedOrder,
+    });
     return;
   }
 
   async OrderCancel(id: string) {
     if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
 
-    const result = await prisma.order.updateMany({
-      where: {
-        id: id,
-        status: StatusEnum.PENDENTE,
-      },
+    const updatedOrder = await prisma.order.update({
+      where: { id },
       data: { status: 'CANCELADO' },
     });
 
-    if (result.count === 0) throw new AppError('Erro ao cancelar pedido!', 404);
-
-    WebSocketManager.notifyNewOrder('ORDER_CANCEL', {
-      id: id,
-      status: 'CANCELADO',
+    this.io.emit('orderUpdate', {
+      type: 'CANCEL_ORDER',
+      orderData: updatedOrder,
     });
 
-    return;
+    return updatedOrder;
   }
 }

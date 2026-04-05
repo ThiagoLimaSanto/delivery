@@ -1,18 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { getOrderService } from '../helpers/getOrderService';
 import {
   CreateOrderBody,
   GetOrderParams,
   getOrdersQuery,
 } from '../schemas/OrderSchemas';
-import { OrderService } from '../services/OrderService';
-
-const service = new OrderService();
 
 export class OrderController {
   async getAllOrder(
     request: FastifyRequest<{ Querystring: { page?: number; limit?: number } }>,
     reply: FastifyReply,
   ) {
+    const service = getOrderService(request);
     const { page, limit } = request.query;
     const pageNum = page ? Number(page) : 1;
     const limitNum = limit ? Number(limit) : 20;
@@ -22,6 +21,7 @@ export class OrderController {
   }
 
   async getOrderActive(request: FastifyRequest, reply: FastifyReply) {
+    const service = getOrderService(request);
     const userId = request.user.id;
     const order = await service.getOrderActive(userId);
 
@@ -32,6 +32,7 @@ export class OrderController {
     request: FastifyRequest<{ Querystring: getOrdersQuery }>,
     reply: FastifyReply,
   ) {
+    const service = getOrderService(request);
     const { status, page, limit } = request.query;
 
     const orders = await service.listOrders(status, page, limit);
@@ -40,6 +41,7 @@ export class OrderController {
   }
 
   async getAllOrderForUser(request: FastifyRequest, reply: FastifyReply) {
+    const service = getOrderService(request);
     const userId = request.user.id;
     const orders = await service.getAllOrderForUser(userId);
 
@@ -50,6 +52,7 @@ export class OrderController {
     request: FastifyRequest<{ Params: GetOrderParams }>,
     reply: FastifyReply,
   ) {
+    const service = getOrderService(request);
     const { id } = request.params;
     const userId = request.user.id;
 
@@ -62,6 +65,7 @@ export class OrderController {
     request: FastifyRequest<{ Body: CreateOrderBody }>,
     reply: FastifyReply,
   ) {
+    const service = getOrderService(request);
     const { addressId, items } = request.body;
 
     const userId = request.user.id;
@@ -79,6 +83,7 @@ export class OrderController {
     request: FastifyRequest<{ Params: GetOrderParams }>,
     reply: FastifyReply,
   ) {
+    const service = getOrderService(request);
     const { id } = request.params;
 
     await service.changeOrderStatus(id);
@@ -90,6 +95,7 @@ export class OrderController {
     request: FastifyRequest<{ Params: GetOrderParams }>,
     reply: FastifyReply,
   ) {
+    const service = getOrderService(request);
     const { id } = request.params;
 
     await service.OrderCancel(id);

@@ -17,6 +17,8 @@ services:
       - API_SECRET=${API_SECRET}
       - API_KEY=${API_KEY}
       - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET_REFRESH=${JWT_SECRET_REFRESH}
+      - COOKIE_SECRET=${COOKIE_SECRET}  
     depends_on:
       - mongodb
 

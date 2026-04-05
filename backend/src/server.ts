@@ -1,7 +1,6 @@
 import fastifyCookie from '@fastify/cookie';
-import { fastifyCors } from '@fastify/cors';
+import cors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
-import fastifyWebsocket from '@fastify/websocket';
 import 'dotenv/config';
 import { fastify } from 'fastify';
 import {
@@ -10,8 +9,8 @@ import {
   validatorCompiler,
   ZodTypeProvider,
 } from 'fastify-type-provider-zod';
+import { Server } from 'socket.io';
 import { AppError } from './errors/AppError';
-import { WebSocketManager } from './helpers/websocketManager';
 import { addressRoutes } from './routes/AddressRouter';
 import { categoryRoutes } from './routes/CategoryRouter';
 import { orderRoutes } from './routes/OrderRouter';
@@ -20,6 +19,19 @@ import { refreshTokenRoutes } from './routes/RefreshTokenRouter';
 import { usersRoutes } from './routes/UserRouter';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
+app.addHook('onReady', async () => {
+  const io = new Server(app.server, {
+    cors: {
+      origin: process.env.FRONTEND_URL,
+    },
+  });
+
+  app.decorate('io', io);
+
+  io.on('connection', socket => {
+    console.log('Cliente conectado:', socket.id);
+  });
+});
 
 app.setErrorHandler((error, request, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
@@ -53,14 +65,6 @@ if (
   throw new Error('Variaveis de ambiente não definida');
 }
 
-app.register(fastifyWebsocket);
-
-app.register(async function (fastify) {
-  fastify.get('/ws/orders', { websocket: true }, (connection, req) => {
-    WebSocketManager.handleConnection(connection);
-  });
-});
-
 app.register(fastifyCookie, {
   secret: process.env.COOKIE_SECRET,
 });
@@ -73,7 +77,7 @@ app.register(fastifyJwt, {
   },
 });
 
-app.register(fastifyCors, {
+app.register(cors, {
   origin: process.env.FRONTEND_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -101,6 +105,7 @@ app.register(refreshTokenRoutes, {
 const start = async () => {
   try {
     await app.listen({ port: Number(process.env.PORT), host: '0.0.0.0' });
+
     console.log('Servidor rodando em http://localhost:3333');
   } catch (err) {
     app.log.error(err);

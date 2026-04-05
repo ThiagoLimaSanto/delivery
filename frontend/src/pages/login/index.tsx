@@ -28,7 +28,7 @@ export function Login() {
   return (
     <LoginTemplate>
       <Logo
-        src='/images/image-logo.png'
+        src='/images/logo.webp'
         alt='Logo Login'
         className='w-90 mb-20 lg:w-[70%]'
       />

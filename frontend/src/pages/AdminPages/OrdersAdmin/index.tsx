@@ -1,9 +1,20 @@
-import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { FilterOptionsOrder } from '../../../components/FilterOptionsOrder';
 import { GridOrders } from '../../../components/GridOrders';
 import { Spinner } from '../../../components/Spinner';
-import { useListOrders } from '../../../hook/useOrder';
+import { useListOrders, type Order } from '../../../hook/useOrder';
 import { MainTemplateAdmin } from '../../../templates/MainTemplateAdmin';
+
+export type OrderEventType =
+  | 'NEW_ORDER'
+  | 'CHANGE_STATUS_ORDER'
+  | 'CANCEL_ORDER';
+export interface OrderUpdatePayload {
+  type: OrderEventType;
+  orderData: Order;
+}
 
 export type FilterType =
   | 'Todos'
@@ -31,7 +42,22 @@ const statusMap: Record<FilterType, StatusEnum | undefined> = {
 };
 
 export function OrdersAdmin() {
+  const queryClient = useQueryClient();
   const [status, setStatus] = useState<FilterType>('Todos');
+
+  useEffect(() => {
+    const socket = io('http://localhost:3333', { transports: ['websocket'] });
+
+    socket.on('orderUpdate', () => {
+      queryClient.invalidateQueries({
+        queryKey: ['order'],
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const parsedStatus = statusMap[status];
 
