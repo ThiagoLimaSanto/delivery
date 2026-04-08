@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from '../utils/api';
 import { showMessage } from '../adapters/ShowMessage';
+import { api } from '../utils/api';
 
 export type Menu = {
   id: number;
@@ -49,14 +49,15 @@ export function useMenu(categoria?: string | null) {
   });
 }
 
-export function useMenuAdmin(categoria?: string | null) {
+export function useMenuAdmin(params?: {
+  categoria?: string | undefined;
+  search?: string | undefined;
+}) {
   return useQuery<MenuAdmin[]>({
-    queryKey: ['menu', categoria],
+    queryKey: ['menu', params],
     queryFn: async () => {
       const response = await api.get(`/product/todos`, {
-        params: {
-          categoria: categoria,
-        },
+        params,
       });
       return response.data.data;
     },

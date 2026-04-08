@@ -6,8 +6,19 @@ import { QueryParams } from '../types/queryParamsProduct';
 const service = new ProductService();
 
 export class ProductController {
-  async getAllProducts(request: FastifyRequest, reply: FastifyReply) {
-    const products = await service.getAllProducts();
+  async getAllProducts(
+    request: FastifyRequest<{ Querystring: QueryParams }>,
+    reply: FastifyReply,
+  ) {
+    const categoria = request.query.categoria;
+    const search = request.query.search;
+
+    const params = {
+      categoria: categoria ? categoria : undefined,
+      search: search ? search : undefined,
+    };
+
+    const products = await service.getAllProducts(params);
 
     return reply.status(200).send({ data: products });
   }
@@ -16,7 +27,7 @@ export class ProductController {
     request: FastifyRequest<{ Querystring: QueryParams }>,
     reply: FastifyReply,
   ) {
-    const categoria = request.query.categoria;
+    const  categoria  = request.query.categoria;
 
     const products = await service.getAllProductsAvailable(
       categoria ? { categoria } : undefined,

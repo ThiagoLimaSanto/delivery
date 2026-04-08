@@ -18,10 +18,14 @@ export async function productRoutes(app: FastifyInstance) {
     {
       preHandler: [authGuard, authAdmin],
       schema: {
+        querystring: z.object({
+          categoria: z.string().optional(),
+          search: z.string().optional(),
+        }),
         response: 200,
       },
     },
-    productController.getAllProducts.bind(productController),
+    (request, reply) => productController.getAllProducts(request as any, reply),
   );
 
   typedApp.get(
@@ -29,11 +33,10 @@ export async function productRoutes(app: FastifyInstance) {
     {
       preHandler: [],
       schema: {
-        querystring: z
-          .object({
-            categoria: z.string().optional(),
-          })
-          .optional(),
+        querystring: z.object({
+          categoria: z.string().optional(),
+          search: z.string().optional(),
+        }),
         response: 200,
       },
     },

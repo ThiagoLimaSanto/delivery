@@ -1,26 +1,44 @@
+import { Prisma } from '@prisma/client';
 import { ObjectId } from 'mongodb';
 import { AppError } from '../errors/AppError';
 import { prisma } from '../repository/prisma';
 import { CreateProductBody } from '../schemas/ProductSchemas';
 
-type Query = {
-  available: boolean;
-  categoryId?: string;
-  active: boolean;
+type Params = {
+  categoria?: string;
+  search?: string;
 };
 
 export class ProductService {
-  async getAllProducts() {
+  async getAllProducts(params?: Params) {
+    const query: Prisma.ProductWhereInput = {
+      active: true,
+    };
+
+    if (params?.categoria) {
+      query.categoryId = params.categoria;
+    }
+
+    if (params?.search) {
+      query.name = {
+        contains: params.search,
+        mode: 'insensitive',
+      };
+    }
+
     const products = await prisma.product.findMany({
-      where: { active: true },
+      where: query,
       include: { category: { select: { name: true, id: true } } },
+      orderBy: [{ category: { name: 'desc' } }, { name: 'asc' }],
     });
 
     return products;
   }
 
   async getAllProductsAvailable(params?: { categoria?: string }) {
-    const query: Query = { available: true, active: true };
+    const query: Prisma.ProductWhereInput = {
+      active: true,
+    };
 
     if (params?.categoria) {
       const category = await prisma.category.findUnique({
@@ -34,6 +52,7 @@ export class ProductService {
     const products = await prisma.product.findMany({
       where: query,
       include: { category: { select: { name: true } } },
+      orderBy: [{ category: { name: 'desc' } }, { name: 'asc' }],
     });
 
     return products;
