@@ -6,19 +6,21 @@ import { CreateProductBody } from '../schemas/ProductSchemas';
 type Query = {
   available: boolean;
   categoryId?: string;
+  active: boolean;
 };
 
 export class ProductService {
   async getAllProducts() {
     const products = await prisma.product.findMany({
-      include: { category: { select: { name: true } } },
+      where: { active: true },
+      include: { category: { select: { name: true, id: true } } },
     });
 
     return products;
   }
 
   async getAllProductsAvailable(params?: { categoria?: string }) {
-    const query: Query = { available: true };   
+    const query: Query = { available: true, active: true };
 
     if (params?.categoria) {
       const category = await prisma.category.findUnique({
@@ -94,6 +96,23 @@ export class ProductService {
     await prisma.product.update({
       where: { id },
       data,
+    });
+
+    return;
+  }
+
+  async removeProduct(id: string) {
+    if (!ObjectId.isValid(id)) throw new AppError('Produto inválido!', 400);
+
+    const product = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!product) throw new AppError('Produto não encontrado!', 404);
+
+    await prisma.product.update({
+      where: { id },
+      data: { active: false },
     });
 
     return;

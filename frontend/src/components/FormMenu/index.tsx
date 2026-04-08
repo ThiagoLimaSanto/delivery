@@ -1,26 +1,56 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import type { Category } from '../../hook/useCategories';
 import { UseHandleModal } from '../../hook/useHandleModal';
-import type { MenuPost } from '../../hook/useMenu';
+import type { MenuAdmin } from '../../hook/useMenu';
 import { Input } from '../Input';
 import { Form } from '../MainForm';
 
 type FormMenuProps = {
-  handleSubmit: (data: MenuPost) => void;
+  handleSubmit: (data: MenuAdmin) => void;
   title?: string;
-  data: Category[] | undefined;
+  dataCategory: Category[] | undefined;
+  data?: MenuAdmin | null;
 };
 
-export function FormMenu({ handleSubmit, title, data }: FormMenuProps) {
+export function FormMenu({
+  handleSubmit,
+  title,
+  dataCategory,
+  data,
+}: FormMenuProps) {
   const { handleCLickPostMenu, clickPostMenu } = UseHandleModal();
-  const [menu, setMenu] = useState<MenuPost>({
+  const [menu, setMenu] = useState<MenuAdmin>({
+    id: 0,
     name: '',
     description: '',
     price: 0,
     image: '',
-    categoryId: '',
+    category: {
+      id: '',
+      name: '',
+    },
+    available: false,
   });
+
+  useEffect(() => {
+    if (data) {
+      setMenu(data);
+    } else {
+      setMenu({
+        id: 0,
+        name: '',
+        description: '',
+        price: 0,
+        image: '',
+        category: {
+          id: '',
+          name: '',
+        },
+        available: false,
+      });
+    }
+  }, [data]);
   return (
     <>
       <div>
@@ -91,11 +121,19 @@ export function FormMenu({ handleSubmit, title, data }: FormMenuProps) {
             className='border-2 focus:border-neutral-400 outline-none bg-white h-10 p-2 rounded-md text-slate-700 border-[#ccc]'
             name='categoryId'
             id='categoryId'
-            onChange={e => setMenu({ ...menu, categoryId: e.target.value })}
+            onChange={e =>
+              setMenu({
+                ...menu,
+                category: {
+                  ...menu.category,
+                  id: e.target.value,
+                },
+              })
+            }
           >
             <option value=''>Selecione uma categoria</option>
-            {data &&
-              data.map(category => (
+            {dataCategory &&
+              dataCategory.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>

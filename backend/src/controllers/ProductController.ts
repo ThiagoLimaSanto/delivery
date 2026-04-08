@@ -76,6 +76,17 @@ export class ProductController {
     return reply.status(200).send({ message: 'Produto atualizado!' });
   }
 
+  async removeProduct(
+    request: FastifyRequest<{ Params: GetProductParams }>,
+    reply: FastifyReply,
+  ) {
+    const { id } = request.params;
+
+    await service.removeProduct(id);
+
+    return reply.status(200).send({ message: 'Produto removido!' });
+  }
+
   async changeAvailability(
     request: FastifyRequest<{ Params: GetProductParams }>,
     reply: FastifyReply,

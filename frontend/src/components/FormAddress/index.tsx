@@ -10,21 +10,31 @@ type FormAddressProps = {
 };
 
 export function FormAddress({ handleSubmit, data, title }: FormAddressProps) {
-  const [address, setAddress] = useState<Address>(() => ({
-    id: data?.id || '',
-    street: data?.street || '',
-    number: data?.number || '',
-    district: data?.district || '',
-    city: data?.city || '',
-    state: data?.state || '',
-    zipCode: data?.zipCode || '',
-  }));
+  const [address, setAddress] = useState<Address>({
+    id: '',
+    street: '',
+    number: '',
+    district: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  });
 
   useEffect(() => {
-  if (data) {
-    setAddress(data);
-  }
-}, [data]);
+    if (data) {
+      setAddress(data);
+    }else{
+      setAddress({
+        id: '',
+        street: '',
+        number: '',
+        district: '',
+        city: '',
+        state: '',
+        zipCode: '',
+      });
+    }
+  }, [data]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
@@ -41,7 +51,7 @@ export function FormAddress({ handleSubmit, data, title }: FormAddressProps) {
         <Input
           classNameInput='border-[#ccc]'
           classNameLabel='!text-black'
-          value={address.street || ''}  
+          value={address.street || ''}
           onChange={handleChange}
           id='street'
           name='street'

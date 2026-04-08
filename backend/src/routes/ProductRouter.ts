@@ -12,7 +12,7 @@ import {
 export async function productRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
   const productController = new ProductController();
-  
+
   typedApp.get(
     '/todos',
     {
@@ -29,9 +29,11 @@ export async function productRoutes(app: FastifyInstance) {
     {
       preHandler: [],
       schema: {
-        querystring: z.object({
-          categoria: z.string().optional(),
-        }).optional(),
+        querystring: z
+          .object({
+            categoria: z.string().optional(),
+          })
+          .optional(),
         response: 200,
       },
     },
@@ -48,8 +50,7 @@ export async function productRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) =>
-      productController.getProductById(request as any, reply),
+    (request, reply) => productController.getProductById(request as any, reply),
   );
 
   typedApp.post(
@@ -61,8 +62,7 @@ export async function productRoutes(app: FastifyInstance) {
         response: 201,
       },
     },
-    (request, reply) =>
-      productController.createProduct(request as any, reply),
+    (request, reply) => productController.createProduct(request as any, reply),
   );
 
   typedApp.patch(
@@ -74,8 +74,19 @@ export async function productRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) =>
-      productController.updateProduct(request as any, reply),
+    (request, reply) => productController.updateProduct(request as any, reply),
+  );
+
+  typedApp.patch(
+    '/:id/remover',
+    {
+      preHandler: [authGuard, authAdmin],
+      schema: {
+        params: getProductParamsSchema,
+        response: 200,
+      },
+    },
+    (request, reply) => productController.removeProduct(request as any, reply),
   );
 
   typedApp.patch(

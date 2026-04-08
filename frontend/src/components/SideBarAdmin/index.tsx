@@ -39,7 +39,7 @@ export function SidebarAdmin() {
           {clickSideBarAdmin && (
             <div>
               <p className='text-white text-2xl uppercase tracking-wide'>
-                Burguer <br /> House
+                Zap <br /> Lanches
               </p>
               <p className='text-[#858a8d] text-sm'>Painel Admin</p>
             </div>

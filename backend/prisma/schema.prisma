@@ -85,6 +85,7 @@ model Product {
   price       Float
   image       String?
   available   Boolean       @default(true)
+  active      Boolean       @default(true)
   categoryId  String        @db.ObjectId
   category    Category      @relation(fields: [categoryId], references: [id])
   orderItems  OrderItem[]

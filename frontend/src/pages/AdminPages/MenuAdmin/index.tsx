@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { LuPlus, LuTag } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { FormMenu } from '../../../components/FormMenu';
@@ -6,19 +7,38 @@ import { SearchProduct } from '../../../components/SearchProduct';
 import { Spinner } from '../../../components/Spinner';
 import { useCategories } from '../../../hook/useCategories';
 import { UseHandleModal } from '../../../hook/useHandleModal';
-import { usePostProduct, type MenuPost } from '../../../hook/useMenu';
+import {
+  usePostProduct,
+  useUpdateProduct,
+  type MenuAdmin
+} from '../../../hook/useMenu';
 import { MainModalTemplate } from '../../../templates/MainModalTemplate';
 import { MainTemplateAdmin } from '../../../templates/MainTemplateAdmin';
 
 export function MenuAdmin() {
   const navigate = useNavigate();
   const { mutateAsync: menu } = usePostProduct();
+  const { mutateAsync: updateProduct } = useUpdateProduct();
   const { data, isLoading } = useCategories();
   const { handleCLickPostMenu, clickPostMenu } = UseHandleModal();
+  const [selectedItem, setSelectedItem] = useState<MenuAdmin | null>(null);
 
-  const handleSubmit = async (data: MenuPost) => {
-    menu(data);
-    navigate('/admin/menu');
+  const handleSubmit = async (data: MenuAdmin) => {
+    if (selectedItem) {
+      await updateProduct(data);
+    } else {
+      await menu({
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        image: data.image,
+        categoryId: data.category.id,
+      });
+    }
+
+    setSelectedItem(null);
+    handleCLickPostMenu(clickPostMenu);
+    navigate('/z_admin/cardapio');
   };
 
   if (isLoading) return <Spinner />;
@@ -35,7 +55,10 @@ export function MenuAdmin() {
               Categorias
             </button>
             <button
-              onClick={() => handleCLickPostMenu(clickPostMenu)}
+              onClick={() => {
+                handleCLickPostMenu(clickPostMenu);
+                setSelectedItem(null);
+              }}
               className='text-white bg-green-600 flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
             >
               <LuPlus />
@@ -46,12 +69,17 @@ export function MenuAdmin() {
         <SearchProduct />
         <div className='mt-8'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            <GridMenuAdmin />
+            <GridMenuAdmin setSelectedItem={setSelectedItem} />
           </div>
         </div>
       </div>
       <MainModalTemplate click={!clickPostMenu}>
-        <FormMenu title={'Adicionar'} data={data} handleSubmit={handleSubmit} />
+        <FormMenu
+          title={'Adicionar'}
+          dataCategory={data}
+          handleSubmit={handleSubmit}
+          data={selectedItem}
+        />
       </MainModalTemplate>
     </MainTemplateAdmin>
   );
