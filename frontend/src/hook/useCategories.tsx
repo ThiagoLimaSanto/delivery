@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../utils/api';
 
-type Category = {
+export type Category = {
   id: string;
   name: string;
 };

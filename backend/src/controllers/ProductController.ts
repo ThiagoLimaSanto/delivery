@@ -17,7 +17,7 @@ export class ProductController {
     reply: FastifyReply,
   ) {
     const categoria = request.query.categoria;
-    
+
     const products = await service.getAllProductsAvailable(
       categoria ? { categoria } : undefined,
     );
@@ -29,8 +29,6 @@ export class ProductController {
     request: FastifyRequest<{ Params: GetProductParams }>,
     reply: FastifyReply,
   ) {
-
-    
     const { id } = request.params;
 
     const product = await service.getProductById(id);
@@ -44,7 +42,7 @@ export class ProductController {
   ) {
     const { name, price, categoryId, image, description } = request.body;
 
-    await service.createProduct({
+    const product = await service.createProduct({
       name,
       price,
       image,
@@ -52,7 +50,9 @@ export class ProductController {
       description,
     });
 
-    return reply.status(201).send({ message: 'Produto criado!' });
+    return reply
+      .status(201)
+      .send({ data: product, message: 'Produto criado!' });
   }
 
   async updateProduct(
