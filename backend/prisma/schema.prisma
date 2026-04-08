@@ -54,6 +54,7 @@ model User {
   addresses   Address[]
   phone       String?
   tokens      RefreshToken[]
+  codeOfDelivery Int
   active      Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

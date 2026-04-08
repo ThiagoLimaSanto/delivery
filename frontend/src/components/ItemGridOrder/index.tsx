@@ -51,7 +51,7 @@ export function ItemGridOrder({
           </p>
         </div>
         <p className='text-[#858a8d]'>
-          {new Date(order.createdAt).toLocaleDateString()}
+          {new Date(order.createdAt).toLocaleDateString('pt-BR')}
         </p>
       </div>
       <div>

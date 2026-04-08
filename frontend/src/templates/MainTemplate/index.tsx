@@ -14,7 +14,7 @@ export function MainTemplate({ children }: MainTemplateProps) {
       <ManageAddressesModal />
       <ModalOverlay />
       <MainSideBar />
-      {children}
+      <div className='mt-20 h-[calc(100vh-120px)]'>{children}</div>
     </>
   );
 }

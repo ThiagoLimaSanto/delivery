@@ -26,11 +26,14 @@ export class UserService {
 
     const password_hash = await hashPassword(passwordPepper);
 
+    const codeOfDelivery = Number(data.phone.slice(-4));
+
     await prisma.user.create({
       data: {
         name: data.name,
         email: data.email,
         phone: data.phone,
+        codeOfDelivery: codeOfDelivery,
         password: password_hash,
         role: UserRole.USER,
         active: true,

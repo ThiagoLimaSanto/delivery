@@ -11,9 +11,7 @@ export function MessagesContainer({ children }: { children: React.ReactNode }) {
         newestOnTop={false}
         closeOnClick={true}
         rtl={false}
-        pauseOnFocusLoss
         draggable
-        pauseOnHover
         theme='light'
         transition={Bounce}
       />

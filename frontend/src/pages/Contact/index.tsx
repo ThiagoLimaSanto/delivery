@@ -5,7 +5,7 @@ import { MainTemplate } from '../../templates/MainTemplate/index.tsx';
 export function Contact() {
   return (
     <MainTemplate>
-      <section className='h-[calc(100vh-80px)]'>
+      <section>
         <div className='mt-30 w-[90%] mx-auto'>
           <h1 className='text-4xl md:text-5xl xl:text-6xl font-bold text-black mb-6 md:mb-10 xl:mb-20 text-center'>
             Entre em Contato
