@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
 import type { Category } from '../../hook/useCategories';
-import { UseHandleModal } from '../../hook/useHandleModal';
-import type { MenuAdmin } from '../../hook/useMenu';
+import type { MenuPost, MenuUpdate } from '../../hook/useMenu';
 import { Input } from '../Input';
 import { Form } from '../MainForm';
 
 type FormMenuProps = {
-  handleSubmit: (data: MenuAdmin) => void;
+  handleSubmit: (data: MenuPost) => void;
   title?: string;
   dataCategory: Category[] | undefined;
-  data?: MenuAdmin | null;
+  data?: MenuUpdate | null;
 };
 
 export function FormMenu({
@@ -19,49 +17,30 @@ export function FormMenu({
   dataCategory,
   data,
 }: FormMenuProps) {
-  const { handleCLickPostMenu, clickPostMenu } = UseHandleModal();
-  const [menu, setMenu] = useState<MenuAdmin>({
-    id: 0,
+  const [menu, setMenu] = useState<MenuPost>({
     name: '',
     description: '',
     price: 0,
     image: '',
-    category: {
-      id: '',
-      name: '',
-    },
-    available: false,
+    categoryId: '',
   });
 
   useEffect(() => {
     if (data) {
-      setMenu(data);
+      const { id, ...rest } = data;
+      setMenu(rest);
     } else {
       setMenu({
-        id: 0,
         name: '',
         description: '',
         price: 0,
         image: '',
-        category: {
-          id: '',
-          name: '',
-        },
-        available: false,
+        categoryId: '',
       });
     }
   }, [data]);
   return (
     <>
-      <div>
-        <button
-          onClick={() => handleCLickPostMenu(clickPostMenu)}
-          className='text-2xl cursor-pointer'
-        >
-          <FiChevronDown size={25} />
-        </button>
-        <p className='text-center text-2xl font-bold'>Adicionar Item</p>
-      </div>
       <Form
         buttonName={title}
         onSubmit={e => {
@@ -121,23 +100,21 @@ export function FormMenu({
             className='border-2 focus:border-neutral-400 outline-none bg-white h-10 p-2 rounded-md text-slate-700 border-[#ccc]'
             name='categoryId'
             id='categoryId'
+            value={menu.categoryId || ''}
             onChange={e =>
               setMenu({
                 ...menu,
-                category: {
-                  ...menu.category,
-                  id: e.target.value,
-                },
+                categoryId: e.target.value,
               })
             }
           >
             <option value=''>Selecione uma categoria</option>
-            {dataCategory &&
-              dataCategory.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
+
+            {dataCategory?.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
         </div>
       </Form>

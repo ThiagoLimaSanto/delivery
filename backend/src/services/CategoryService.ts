@@ -63,7 +63,7 @@ export class CategoryService {
     return categoryUpdate;
   }
 
-  async changeAvailability(id: string) {
+  async removeCategory(id: string) {
     if (!ObjectId.isValid(id)) throw new AppError('Categoria inválido!', 400);
 
     const category = await prisma.category.findUnique({

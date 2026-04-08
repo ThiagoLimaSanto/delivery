@@ -61,13 +61,13 @@ export class CategoryController {
     return reply.status(200).send({ message: 'Produto atualizado!' });
   }
 
-  async changeAvailability(
+  async removeCategory(
     request: FastifyRequest<{ Params: GetCategoryParams }>,
     reply: FastifyReply,
   ) {
     const { id } = request.params;
 
-    await service.changeAvailability(id);
+    await service.removeCategory(id);
 
     return reply.status(200).send({ message: 'Disponibilidade alterada!' });
   }

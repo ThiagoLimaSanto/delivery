@@ -4,16 +4,20 @@ import { UseHandleModal } from '../../hook/useHandleModal';
 import {
   useDeleteProduct,
   useMenuAdmin,
-  type MenuAdmin,
+  type MenuUpdate,
 } from '../../hook/useMenu';
 import { Image } from '../Image';
 import { Spinner } from '../Spinner';
 
 type GridMenuAdminProps = {
-  setSelectedItem: React.Dispatch<React.SetStateAction<MenuAdmin | null>>;
+  setSelectedItem: React.Dispatch<React.SetStateAction<MenuUpdate | null>>;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export function GridMenuAdmin({ setSelectedItem }: GridMenuAdminProps) {
+export function GridMenuAdmin({
+  setSelectedItem,
+  setTitle,
+}: GridMenuAdminProps) {
   const [searchParams] = useSearchParams();
   const categoria = searchParams.get('categoria');
   const search = searchParams.get('search');
@@ -64,7 +68,15 @@ export function GridMenuAdmin({ setSelectedItem }: GridMenuAdminProps) {
               <div className='flex justify-center items-center gap-4'>
                 <FiEdit2
                   onClick={() => {
-                    setSelectedItem(menu);
+                    setTitle('Editar');
+                    setSelectedItem({
+                      id: menu.id,
+                      name: menu.name,
+                      description: menu.description,
+                      price: menu.price,
+                      image: menu.image,
+                      categoryId: menu.category.id,
+                    });
                     handleCLickPostMenu(clickPostMenu);
                   }}
                   className='cursor-pointer'

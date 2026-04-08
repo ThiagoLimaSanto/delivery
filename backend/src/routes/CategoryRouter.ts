@@ -79,7 +79,7 @@ export async function categoryRoutes(app: FastifyInstance) {
   );
 
   typedApp.patch(
-    '/:id/disponibilidade',
+    '/:id/remove',
     {
       preHandler: [authGuard, authAdmin],
       schema: {
@@ -88,7 +88,7 @@ export async function categoryRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      return categoryController.changeAvailability(request as any, reply);
+      return categoryController.removeCategory(request as any, reply);
     },
   );
 }

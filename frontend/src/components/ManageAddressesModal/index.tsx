@@ -50,10 +50,7 @@ export function ManageAddressesModal() {
   };
 
   return (
-    <MainModalTemplate click={!manageAddressesCLick}>
-      <div className='mb-4'>
-        <h2 className='font-bold text-center'>Seus Endereços</h2>
-      </div>
+    <MainModalTemplate title={'Seus Endereço'} handleClick={handleAddressClick} click={!manageAddressesCLick}>
       <div className='flex flex-col gap-4 mb-4'>
         {address &&
           address.map(address => (

@@ -10,6 +10,8 @@ export type ModalContextType = {
   manageAddressesCLick: boolean;
   clickSideBarAdmin: boolean;
   clickPostMenu: boolean;
+  manageCategoriesCLick: boolean;
+  handleManageCategoriesCLick: (manageCategoriesCLick?: boolean) => void;
   handleCLickPostMenu: (clickPostMenu?: boolean) => void;
   handleClickSideBarAdmin: (clickSideBarAdmin?: boolean) => void;
   handleManageAddressesCLick: (manageAddressesCLick?: boolean) => void;

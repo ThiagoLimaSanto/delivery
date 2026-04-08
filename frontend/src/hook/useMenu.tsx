@@ -2,16 +2,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { showMessage } from '../adapters/ShowMessage';
 import { api } from '../utils/api';
 
+export type MenuCategory = {
+  id: string;
+  name: string;
+};
+
 export type Menu = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
   image: string;
-  category: {
-    id: number;
-    name: string;
-  };
+  category: MenuCategory;
+};
+
+export type MenuAdmin = Menu & {
+  available: boolean;
 };
 
 export type MenuPost = {
@@ -22,17 +28,8 @@ export type MenuPost = {
   categoryId: string;
 };
 
-export type MenuAdmin = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  available: boolean;
-  category: {
-    id: string;
-    name: string;
-  };
+export type MenuUpdate = MenuPost & {
+  id: string;
 };
 
 export function useMenu(categoria?: string | null) {
@@ -85,8 +82,8 @@ export function useUpdateProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: MenuAdmin) => {
-      const response = await api.patch(`/product/${data.id}/editar`, data);
+    mutationFn: async ({ id, data }: { id: string; data: MenuPost }) => {
+      const response = await api.patch(`/product/${id}/editar`, data);
       return response.data.data;
     },
 
@@ -94,6 +91,7 @@ export function useUpdateProduct() {
       queryClient.invalidateQueries({ queryKey: ['menu'] });
       showMessage.success('Produto atualizado!');
     },
+
     onError: () => {
       showMessage.error('Erro ao atualizar produto!');
     },
