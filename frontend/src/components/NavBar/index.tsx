@@ -50,14 +50,23 @@ export function NavBar() {
             Entrar
           </Link>
         )}
-        {isAuthenticated && data && (
+        {isAuthenticated && (
           <Suspense fallback={<Spinner />}>
-            <button
-              onClick={() => handleManageAddressesCLick(manageAddressesCLick)}
-              className='text-sm flex items-center justify-center gap-2 px-3 py-2 text-white  cursor-pointer'
-            >
-              {data?.street}, {data?.number} <FiChevronDown size={16} />
-            </button>
+            {data ? (
+              <button
+                onClick={() => handleManageAddressesCLick(manageAddressesCLick)}
+                className='text-sm flex items-center justify-center gap-2 px-3 py-2 text-white cursor-pointer'
+              >
+                {data.street}, {data.number} <FiChevronDown size={16} />
+              </button>
+            ) : (
+              <button
+                onClick={() => handleManageAddressesCLick(manageAddressesCLick)}
+                className='flex items-center justify-center text-sm text-white bg-green-600 py-2 px-3 cursor-pointer hover:bg-green-700 transition-colors hover:scale-105 rounded-md'
+              >
+                Novo endereço
+              </button>
+            )}
           </Suspense>
         )}
         <div className='flex relative hover:scale-105 cursor-pointer'>

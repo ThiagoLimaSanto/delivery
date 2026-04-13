@@ -15,8 +15,9 @@ type StatusEnum =
   | 'ENTREGUE'
   | 'CANCELADO';
 
-type OrderItemWithProduct = {
+export type OrderItemWithProduct = {
   id: string;
+  createdAt: string;
   productId: string;
   quantity: number;
   product: {
@@ -86,13 +87,26 @@ export function useRecentListOrders() {
     },
   });
 }
-export function useGetUserOrderActive() {
+export function useGetUserOrderHistory() {
+  return useQuery<OrderWithUserAndItems[]>({
+    queryKey: ['order', 'my', 'history'],
+
+    queryFn: async () => {
+      const response = await api.get('/order/my/history');
+
+      return response.data.data;
+    },
+  });
+}
+
+export function useGetOrderActive() {
   return useQuery({
-    queryKey: ['order', 'my'],
+    queryKey: ['order', 'my', 'active'],
 
     queryFn: async () => {
       const response = await api.get('/order/my/active');
-      return response.data;
+
+      return response.data.data;
     },
   });
 }

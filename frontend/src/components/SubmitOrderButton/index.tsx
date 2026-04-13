@@ -3,11 +3,19 @@ import { useAddresContext } from '../../hook/useAddressContext';
 import { useHandleOrder } from '../../hook/useHandleOrder';
 import { usePostOrder } from '../../hook/useOrder';
 
-export type TypePaymentEnum = 'DINHEIRO' | 'PIX' | 'CARTAO_CREDITO' | 'CARTAO_DEBITO';
+export type TypePaymentEnum =
+  | 'DINHEIRO'
+  | 'PIX'
+  | 'CARTAO_CREDITO'
+  | 'CARTAO_DEBITO';
 
-export function SubmitOrderButton({typePayment}: {typePayment: TypePaymentEnum}) {
+export function SubmitOrderButton({
+  typePayment,
+}: {
+  typePayment: TypePaymentEnum;
+}) {
   const navigate = useNavigate();
-  const { order } = useHandleOrder();
+  const { order, clearCart } = useHandleOrder();
   const { getDefaultAddress } = useAddresContext();
   const { mutate } = usePostOrder();
   const data = {
@@ -27,7 +35,10 @@ export function SubmitOrderButton({typePayment}: {typePayment: TypePaymentEnum})
     <div className='w-full'>
       <button
         disabled={!getDefaultAddress}
-        onClick={handleSubmit}
+        onClick={() => {
+          handleSubmit();
+          clearCart();
+        }}
         className='w-full py-3 bg-green-600 hover:bg-green-700 transition-colors duration-200 text-white cursor-pointer rounded-lg font-bold mt-6 flex items-center justify-center'
       >
         Agendar Pedido

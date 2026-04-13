@@ -25,7 +25,7 @@ export class OrderController {
     const userId = request.user.id;
     const order = await service.getOrderActive(userId);
 
-    return reply.status(200).send(order);
+    return reply.status(200).send({data: order});
   }
 
   async listOrders(
@@ -40,15 +40,12 @@ export class OrderController {
     return reply.status(200).send(orders);
   }
 
-  async listRecentOrders(
-    request: FastifyRequest,
-    reply: FastifyReply,
-  ) {
+  async listRecentOrders(request: FastifyRequest, reply: FastifyReply) {
     const service = getOrderService(request);
 
     const orders = await service.listRecentOrders();
 
-    return reply.status(200).send(orders);
+    return reply.status(200).send({ data: orders });
   }
 
   async getAllOrderForUser(request: FastifyRequest, reply: FastifyReply) {
@@ -56,7 +53,7 @@ export class OrderController {
     const userId = request.user.id;
     const orders = await service.getAllOrderForUser(userId);
 
-    return reply.status(200).send(orders);
+    return reply.status(200).send({ data: orders });
   }
 
   async getOrderById(

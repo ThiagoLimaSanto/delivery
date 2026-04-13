@@ -12,8 +12,12 @@ export function ManageAddressesModal() {
   const [modalMode, setModalMode] = useState<AddressModalMode>('create');
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [title, setTitle] = useState('');
-  const { addressClick, handleAddressClick, manageAddressesCLick } =
-    UseHandleModal();
+  const {
+    addressClick,
+    handleAddressClick,
+    manageAddressesCLick,
+    handleManageAddressesCLick,
+  } = UseHandleModal();
   const {
     updateAddressByID,
     removeAddressById,
@@ -50,7 +54,11 @@ export function ManageAddressesModal() {
   };
 
   return (
-    <MainModalTemplate title={'Seus Endereço'} handleClick={handleAddressClick} click={!manageAddressesCLick}>
+    <MainModalTemplate
+      title={'Seus Endereço'}
+      handleClick={handleManageAddressesCLick}
+      click={!manageAddressesCLick}
+    >
       <div className='flex flex-col gap-4 mb-4'>
         {address &&
           address.map(address => (

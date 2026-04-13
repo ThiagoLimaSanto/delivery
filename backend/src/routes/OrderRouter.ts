@@ -61,6 +61,16 @@ export async function orderRoutes(app: FastifyInstance) {
   );
 
   typedApp.get(
+    '/my/history',
+    {
+      preHandler: [authGuard, getUserByToken],
+      schema: {
+        response: 200,
+      },
+    },
+    (request, reply) => orderController.getAllOrderForUser(request as any, reply),
+  );
+  typedApp.get(
     '/my/active',
     {
       preHandler: [authGuard, getUserByToken],

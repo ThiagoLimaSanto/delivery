@@ -41,6 +41,9 @@ export class OrderService {
     const order = await prisma.order.findFirst({
       where: {
         userId: userId,
+        status: {
+          notIn: ['ENTREGUE', 'CANCELADO'],
+        },
       },
       include: {
         user: {
@@ -48,10 +51,6 @@ export class OrderService {
             id: true,
             name: true,
             phone: true,
-            addresses: {
-              where: { isDefault: true },
-              take: 1,
-            },
           },
         },
         items: {
@@ -154,16 +153,21 @@ export class OrderService {
   async getAllOrderForUser(id: string) {
     if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
     const orders = await prisma.order.findMany({
-      where: { userId: id },
+      where: { userId: id, status: StatusEnum.ENTREGUE },
       include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+          },
+        },
         items: {
           include: {
             product: {
               select: {
                 name: true,
                 price: true,
-                image: true,
-                category: { select: { name: true } },
               },
             },
           },
