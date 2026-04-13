@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { showMessage } from '../adapters/ShowMessage';
-import { api } from '../utils/api';
 import type { TypePaymentEnum } from '../components/SubmitOrderButton';
+import { api } from '../utils/api';
 
 export type Order = {
   addressId?: string;
@@ -75,14 +75,23 @@ export function useListOrders(params?: ListOrdersParams) {
     },
   });
 }
+
+export function useRecentListOrders() {
+  return useQuery<OrderWithUserAndItems[]>({
+    queryKey: ['order', 'list', 'recent'],
+
+    queryFn: async () => {
+      const response = await api.get('/order/admin/recent');
+      return response.data;
+    },
+  });
+}
 export function useGetUserOrderActive() {
   return useQuery({
     queryKey: ['order', 'my'],
 
     queryFn: async () => {
       const response = await api.get('/order/my/active');
-      console.log(response.data);
-
       return response.data;
     },
   });

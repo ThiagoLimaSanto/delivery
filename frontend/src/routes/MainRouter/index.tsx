@@ -5,7 +5,6 @@ import { About } from '../../pages/About';
 import { Admin } from '../../pages/AdminPages/Admin';
 import { MenuAdmin } from '../../pages/AdminPages/MenuAdmin';
 import { OrdersAdmin } from '../../pages/AdminPages/OrdersAdmin';
-import { Category } from '../../pages/Category';
 import { Contact } from '../../pages/Contact';
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
@@ -35,10 +34,6 @@ export const router = createBrowserRouter([
       {
         path: '/cardapio',
         element: <Menu />,
-      },
-      {
-        path: '/categorias',
-        element: <Category />,
       },
       {
         path: '/sobre',

@@ -4,6 +4,7 @@ import {
   useOrderCancel,
   type OrderWithUserAndItems,
 } from '../../hook/useOrder';
+import { status } from '../../types/Order';
 
 type ItemGridOrderType = {
   status?: string;
@@ -47,7 +48,7 @@ export function ItemGridOrder({
             className={`flex items-center justify-center gap-2 ${colorTextStatus} text-sm ${colorBgStatus} rounded-full px-2`}
           >
             <IconsStatus />
-            {order.status}
+            {status[order.status]}
           </p>
         </div>
         <p className='text-[#858a8d]'>

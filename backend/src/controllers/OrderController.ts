@@ -40,6 +40,17 @@ export class OrderController {
     return reply.status(200).send(orders);
   }
 
+  async listRecentOrders(
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ) {
+    const service = getOrderService(request);
+
+    const orders = await service.listRecentOrders();
+
+    return reply.status(200).send(orders);
+  }
+
   async getAllOrderForUser(request: FastifyRequest, reply: FastifyReply) {
     const service = getOrderService(request);
     const userId = request.user.id;

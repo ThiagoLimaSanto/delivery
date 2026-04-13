@@ -35,10 +35,9 @@ export function NavBar() {
         className='cursor-pointer text-white'
         size={40}
       />
-      <ul className='hidden lg:flex md:text-white md:gap-8 md:text-xl'>
+      <ul className='hidden md:flex md:text-white md:gap-8 md:text-xl'>
         <NavLink to={'/'}>Home</NavLink>
         <NavLink to={'/cardapio'}>Cardápio</NavLink>
-        <NavLink to={'/categorias'}>Categorias</NavLink>
         <NavLink to={'/sobre'}>Sobre</NavLink>
         <NavLink to={'/contato'}>Contato</NavLink>
       </ul>

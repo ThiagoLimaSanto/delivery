@@ -58,8 +58,8 @@ export function DeliveryOptions() {
           </>
         ) : (
           <>
-            <p>Rua Centro, 204</p>
-            <p>Rua de frente ao cemiterio - Morrinhos/GO</p>
+            <p>R. Rio Grande do Sul, 1-85</p>
+            <p>Morrinhos - GO, 75650-000</p>
           </>
         )}
       </div>

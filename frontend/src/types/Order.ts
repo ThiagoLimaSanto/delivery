@@ -9,6 +9,14 @@ export type StatusConfig = {
   buttonText?: string;
 };
 
+export const status = {
+  PENDENTE: 'Pendente',
+  PREPARANDO: 'Preparando',
+  SAIU_PARA_ENTREGA: 'Saiu para Entrega',
+  ENTREGUE: 'Entregue',
+  CANCELADO: 'Cancelado',
+};
+
 export const statusConfig: Record<string, StatusConfig> = {
   PENDENTE: {
     colorText: 'text-[#32c560]',

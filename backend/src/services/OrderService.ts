@@ -1,10 +1,10 @@
-import { Order, StatusEnum } from '@prisma/client';
+import { StatusEnum } from '@prisma/client';
 import { ObjectId } from 'mongodb';
+import { Server } from 'socket.io';
 import { AppError } from '../errors/AppError';
 import { prisma } from '../repository/prisma';
 import { CreateOrderBody } from '../schemas/OrderSchemas';
 import { OrderWithUserAndItems, PaginatedResponse } from '../types/Order';
-import { Server } from 'socket.io';
 
 export interface ServerToClientEvents {
   orderUpdate: (data: {
@@ -117,6 +117,38 @@ export class OrderService {
       page,
       totalPages: Math.ceil(total / limit),
     };
+  }
+
+  async listRecentOrders() {
+    const orders = await prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+            addresses: {
+              where: { isDefault: true },
+              take: 1,
+            },
+          },
+        },
+        items: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                price: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return orders;
   }
 
   async getAllOrderForUser(id: string) {

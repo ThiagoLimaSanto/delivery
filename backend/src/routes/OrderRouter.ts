@@ -38,6 +38,17 @@ export async function orderRoutes(app: FastifyInstance) {
   );
 
   typedApp.get(
+    '/admin/recent',
+    {
+      preHandler: [authGuard, authAdmin],
+      schema: {
+        response: 200,
+      },
+    },
+    (request, reply) => orderController.listRecentOrders(request as any, reply),
+  );
+
+  typedApp.get(
     '/my',
     {
       preHandler: [authGuard, getUserByToken],
@@ -57,11 +68,8 @@ export async function orderRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) =>
-      orderController.getOrderActive(request as any, reply),
+    (request, reply) => orderController.getOrderActive(request as any, reply),
   );
-
-  
 
   typedApp.get(
     '/:id',
