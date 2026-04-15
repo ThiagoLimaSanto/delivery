@@ -119,6 +119,19 @@ export async function orderRoutes(app: FastifyInstance) {
   );
 
   typedApp.patch(
+    '/:id/confirmar',
+    {
+      preHandler: [authGuard, getUserByToken],
+      schema: {
+        params: getOrderParamsSchema,
+        response: 200,
+      },
+    },
+    (request, reply) =>
+      orderController.confirmOrder(request as any, reply),
+  );
+
+  typedApp.patch(
     '/:id/cancelar',
     {
       preHandler: [authGuard, getUserByToken],

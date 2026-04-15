@@ -1,8 +1,10 @@
-import { useGetOrderActive } from '../../hook/useOrder';
+import { FiCheck } from 'react-icons/fi';
+import { useConfirmOrder, useGetOrderActive } from '../../hook/useOrder';
 import { statusConfig, status as statusOrder } from '../../types/Order';
 import { Spinner } from '../Spinner';
 
 export function OrderActive() {
+  const { mutateAsync: confirmOrder } = useConfirmOrder();
   const { data: order, isLoading } = useGetOrderActive();
   const status = order ? statusConfig[order.status] : null;
 
@@ -51,6 +53,17 @@ export function OrderActive() {
                 </p>
               </div>
             </div>
+            {order.status === 'SAIU_PARA_ENTREGA' && (
+              <div className='w-full flex justify-end'>
+                <button
+                  onClick={() => confirmOrder(order.id)}
+                  className='text-white bg-green-600 flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
+                >
+                  <FiCheck />
+                  Confirmar Entrega
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}

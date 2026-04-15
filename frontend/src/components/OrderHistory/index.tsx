@@ -15,7 +15,7 @@ export function OrderHistory() {
     <div>
       <p className='text-2xl text-black my-4'>Histórico</p>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 md:gap-10 bg-[#F2F2F2]'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl pb-16 lg:grid-cols-3 md:gap-10 bg-[#F2F2F2]'>
         {data?.map(order => {
           const status = statusConfig[order.status];
 
@@ -24,7 +24,7 @@ export function OrderHistory() {
           return (
             <div
               key={order.id}
-              className='bg-white flex flex-col gap-4 rounded-lg border mb-16 border-gray-200 p-4 text-black shadow-sm max-w-lg'
+              className='bg-white flex flex-col gap-4 rounded-lg border border-gray-200 p-4 text-black shadow-sm max-w-lg'
             >
               <div className='flex justify-between'>
                 <div className='flex flex-col gap-2'>

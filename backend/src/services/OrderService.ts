@@ -153,7 +153,7 @@ export class OrderService {
   async getAllOrderForUser(id: string) {
     if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
     const orders = await prisma.order.findMany({
-      where: { userId: id, status: StatusEnum.ENTREGUE },
+      where: { userId: id, status: { in: ['CANCELADO', 'ENTREGUE'] } },
       include: {
         user: {
           select: {
@@ -304,14 +304,14 @@ export class OrderService {
     let nextStatus: StatusEnum;
 
     switch (order.status) {
-      case 'PENDENTE':
-        nextStatus = 'PREPARANDO';
+      case StatusEnum.PENDENTE:
+        nextStatus = StatusEnum.PREPARANDO;
         break;
-      case 'PREPARANDO':
-        nextStatus = 'SAIU_PARA_ENTREGA';
+      case StatusEnum.PREPARANDO:
+        nextStatus = StatusEnum.SAIU_PARA_ENTREGA;
         break;
-      case 'SAIU_PARA_ENTREGA':
-        nextStatus = 'ENTREGUE';
+      case StatusEnum.SAIU_PARA_ENTREGA:
+        nextStatus = StatusEnum.ENTREGUE;
         break;
       default:
         throw new AppError('Status não pode ser alterado', 400);
@@ -320,6 +320,29 @@ export class OrderService {
     const updatedOrder = await prisma.order.update({
       where: { id: id },
       data: { status: nextStatus },
+    });
+
+    return this.io.emit('orderUpdate', {
+      type: 'CHANGE_STATUS_ORDER',
+      orderData: updatedOrder,
+    });
+  }
+
+  async confirmOrder(id: string, userId: string) {
+    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
+
+    const order = await prisma.order.findFirst({
+      where: { id: id, userId: userId },
+    });
+
+    if (!order) throw new AppError('Pedido nao encontrado', 404);
+
+    if (order.status !== StatusEnum.SAIU_PARA_ENTREGA)
+      throw new AppError('Pedido nao pode ser confirmado', 400);
+
+    const updatedOrder = await prisma.order.update({
+      where: { id: id },
+      data: { status: StatusEnum.ENTREGUE },
     });
 
     this.io.emit('orderUpdate', {

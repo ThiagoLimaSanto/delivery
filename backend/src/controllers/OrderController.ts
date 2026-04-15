@@ -100,6 +100,19 @@ export class OrderController {
     return reply.status(200);
   }
 
+  async confirmOrder(
+    request: FastifyRequest<{ Params: GetOrderParams }>,
+    reply: FastifyReply,
+  ) {
+    const service = getOrderService(request);
+    const { id } = request.params;
+    const userId = request.user.id;
+
+    await service.confirmOrder(id, userId);
+
+    return reply.status(200);
+  }
+
   async OrderCancel(
     request: FastifyRequest<{ Params: GetOrderParams }>,
     reply: FastifyReply,

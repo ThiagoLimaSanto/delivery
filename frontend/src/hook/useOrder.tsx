@@ -137,10 +137,31 @@ export function useChangeStatusOrder() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['order', 'list'] });
+      showMessage.dismiss();
       showMessage.success('Status alterado!');
     },
     onError: () => {
+      showMessage.dismiss();
       showMessage.error('Erro ao alterar status!');
+    },
+  });
+}
+
+export function useConfirmOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, unknown, string>({
+    mutationFn: async (id: string) => {
+      await api.patch(`/order/${id}/confirmar`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order', 'list'] });
+      showMessage.dismiss();
+      showMessage.success('Entrega confirmada!');
+    },
+    onError: () => {
+      showMessage.dismiss();
+      showMessage.error('Erro ao confirmar entrega!');
     },
   });
 }
