@@ -1,15 +1,14 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { getProductService } from '../helpers/getAllServices';
 import { CreateProductBody, GetProductParams } from '../schemas/ProductSchemas';
-import { ProductService } from '../services/ProductService';
 import { QueryParams } from '../types/queryParamsProduct';
-
-const service = new ProductService();
 
 export class ProductController {
   async getAllProducts(
     request: FastifyRequest<{ Querystring: QueryParams }>,
     reply: FastifyReply,
   ) {
+    const service = getProductService(request);
     const categoria = request.query.categoria;
     const search = request.query.search;
 
@@ -27,7 +26,8 @@ export class ProductController {
     request: FastifyRequest<{ Querystring: QueryParams }>,
     reply: FastifyReply,
   ) {
-    const  categoria  = request.query.categoria;
+    const service = getProductService(request);
+    const categoria = request.query.categoria;
 
     const products = await service.getAllProductsAvailable(
       categoria ? { categoria } : undefined,
@@ -40,6 +40,7 @@ export class ProductController {
     request: FastifyRequest<{ Params: GetProductParams }>,
     reply: FastifyReply,
   ) {
+    const service = getProductService(request);
     const { id } = request.params;
 
     const product = await service.getProductById(id);
@@ -51,6 +52,7 @@ export class ProductController {
     request: FastifyRequest<{ Body: CreateProductBody }>,
     reply: FastifyReply,
   ) {
+    const service = getProductService(request);
     const { name, price, categoryId, image, description } = request.body;
 
     const product = await service.createProduct({
@@ -73,6 +75,7 @@ export class ProductController {
     }>,
     reply: FastifyReply,
   ) {
+    const service = getProductService(request);
     const { id } = request.params;
     const { name, price, image, categoryId, description } = request.body;
 
@@ -91,6 +94,7 @@ export class ProductController {
     request: FastifyRequest<{ Params: GetProductParams }>,
     reply: FastifyReply,
   ) {
+    const service = getProductService(request);
     const { id } = request.params;
 
     await service.removeProduct(id);
@@ -102,6 +106,7 @@ export class ProductController {
     request: FastifyRequest<{ Params: GetProductParams }>,
     reply: FastifyReply,
   ) {
+    const service = getProductService(request);
     const { id } = request.params;
 
     await service.changeAvailability(id);

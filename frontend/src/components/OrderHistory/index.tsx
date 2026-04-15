@@ -10,13 +10,12 @@ export function OrderHistory() {
   }
 
   console.log(data);
-  
 
   return (
     <div>
       <p className='text-2xl text-black my-4'>Histórico</p>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 mb-16 md:gap-10 bg-[#F2F2F2]'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-7 mx-auto max-w-7xl lg:grid-cols-3 md:gap-10 bg-[#F2F2F2]'>
         {data?.map(order => {
           const status = statusConfig[order.status];
 
@@ -25,11 +24,13 @@ export function OrderHistory() {
           return (
             <div
               key={order.id}
-              className='bg-white flex flex-col gap-4 rounded-lg border border-gray-200 p-4 text-black shadow-sm max-w-lg'
+              className='bg-white flex flex-col gap-4 rounded-lg border mb-16 border-gray-200 p-4 text-black shadow-sm max-w-lg'
             >
               <div className='flex justify-between'>
                 <div className='flex flex-col gap-2'>
-                  <p className='text-gray-500'>N° do pedido: #</p>
+                  <p className='text-gray-500'>
+                    N° do pedido: #{order.orderNumber}
+                  </p>
 
                   <p className='flex items-center gap-2 text-sm rounded-full'>
                     <status.icon />
@@ -43,17 +44,18 @@ export function OrderHistory() {
               </div>
 
               <div className='bg-gray-100 p-4 rounded-lg'>
-                {order.items.map(item => (
-                  <div key={item.id} className='flex justify-between'>
-                    <p className='font-semibold text-black'>
-                      {item.quantity}x {item.product.name}
-                    </p>
-
-                    <p className='text-black'>
-                      R$ {item.product.price.toFixed(2)}
-                    </p>
-                  </div>
-                ))}
+                <div className='max-h-20 overflow-y-auto w-full pr-3 [scrollbar-gutter:stable]'>
+                  {order.items.map(item => (
+                    <div key={item.id} className='flex justify-between'>
+                      <p className='font-semibold text-black'>
+                        {item.quantity}x {item.product.name}
+                      </p>
+                      <p className='text-black'>
+                        R$ {item.product.price.toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
 
                 <div className='flex flex-col gap-2 border-t border-gray-300 mt-2 pt-2'>
                   <p className='text-gray-500 text-sm flex justify-between'>

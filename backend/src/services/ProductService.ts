@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { ObjectId } from 'mongodb';
+import { Server } from 'socket.io';
 import { AppError } from '../errors/AppError';
 import { prisma } from '../repository/prisma';
 import { CreateProductBody } from '../schemas/ProductSchemas';
@@ -9,7 +10,19 @@ type Params = {
   search?: string;
 };
 
+export interface ServerToClientEvents {
+  productUpdate: (data: {
+    type:
+      | 'NEW_PRODUCT'
+      | 'UPDATE_PRODUCT'
+      | 'CANCEL_PRODUCT'
+      | 'CHANGE_STATUS_PRODUCT';
+    productData: any;
+  }) => void;
+}
+
 export class ProductService {
+  constructor(private readonly io: Server<any, ServerToClientEvents>) {}
   async getAllProducts(params?: Params) {
     const query: Prisma.ProductWhereInput = {
       active: true,
@@ -38,6 +51,7 @@ export class ProductService {
   async getAllProductsAvailable(params?: { categoria?: string }) {
     const query: Prisma.ProductWhereInput = {
       active: true,
+      available: true,
     };
 
     if (params?.categoria) {
@@ -80,7 +94,7 @@ export class ProductService {
 
     if (!categoryExists) throw new AppError('Categoria não encontrada!', 404);
 
-    await prisma.product.create({
+    const newProduct = await prisma.product.create({
       data: {
         name: data.name,
         price: data.price,
@@ -91,7 +105,11 @@ export class ProductService {
       },
     });
 
-    return;
+    this.io.emit('productUpdate', {
+      type: 'NEW_PRODUCT',
+      productData: newProduct,
+    });
+    return newProduct;
   }
 
   async updateProduct(id: string, data: CreateProductBody) {
@@ -112,11 +130,15 @@ export class ProductService {
 
     if (!categoryExists) throw new AppError('Categoria não encontrada!', 404);
 
-    await prisma.product.update({
+    const updateProduct = await prisma.product.update({
       where: { id },
       data,
     });
 
+    this.io.emit('productUpdate', {
+      type: 'UPDATE_PRODUCT',
+      productData: updateProduct,
+    });
     return;
   }
 
@@ -129,9 +151,14 @@ export class ProductService {
 
     if (!product) throw new AppError('Produto não encontrado!', 404);
 
-    await prisma.product.update({
+    const removedProduct = await prisma.product.update({
       where: { id },
       data: { active: false },
+    });
+
+    this.io.emit('productUpdate', {
+      type: 'CANCEL_PRODUCT',
+      productData: removedProduct,
     });
 
     return;
@@ -146,9 +173,14 @@ export class ProductService {
 
     if (!product) throw new AppError('Produto não encontrado!', 404);
 
-    await prisma.product.update({
+    const updatedProduct = await prisma.product.update({
       where: { id },
       data: { available: !product.available },
+    });
+
+    this.io.emit('productUpdate', {
+      type: 'CHANGE_STATUS_PRODUCT',
+      productData: updatedProduct,
     });
 
     return;

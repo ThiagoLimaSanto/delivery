@@ -25,16 +25,17 @@ export function MainModalTemplate({
                   `}
     >
       <div className='w-full h-full flex flex-col gap-2 p-4'>
-        <div>
+        <div className='relative flex items-center mb-4'>
           <button
             onClick={() => handleClick(!click)}
             className='text-2xl cursor-pointer'
           >
             <FiChevronDown size={25} />
           </button>
-          <div className='mb-4'>
-            <h2 className='font-bold text-xl text-center'>{title}</h2>
-          </div>
+
+          <h2 className='absolute left-1/2 -translate-x-1/2 font-bold text-xl text-center'>
+            {title}
+          </h2>
         </div>
         {children}
       </div>

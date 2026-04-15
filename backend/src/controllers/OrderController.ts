@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { getOrderService } from '../helpers/getOrderService';
+import { getOrderService } from '../helpers/getAllServices';
 import {
   CreateOrderBody,
   GetOrderParams,
@@ -25,7 +25,7 @@ export class OrderController {
     const userId = request.user.id;
     const order = await service.getOrderActive(userId);
 
-    return reply.status(200).send({data: order});
+    return reply.status(200).send({ data: order });
   }
 
   async listOrders(

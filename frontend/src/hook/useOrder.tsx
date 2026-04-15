@@ -83,7 +83,7 @@ export function useRecentListOrders() {
 
     queryFn: async () => {
       const response = await api.get('/order/admin/recent');
-      return response.data;
+      return response.data.data;
     },
   });
 }

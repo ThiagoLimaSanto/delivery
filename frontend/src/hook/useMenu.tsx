@@ -126,6 +126,7 @@ export function useChangeAvailableProduct() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['menu'] });
+      showMessage.dismiss()
       showMessage.success('Produto alterado!');
     },
     onError: () => {

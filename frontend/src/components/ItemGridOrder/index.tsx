@@ -39,6 +39,13 @@ export function ItemGridOrder({
   const handleDeleteOrder = () => {
     deleteOrder(order.id);
   };
+
+  const typePayment = {
+    CARTAO_CREDITO: 'Cartão de Crédito',
+    CARTAO_DEBITO: 'Cartão de Débito',
+    DINHEIRO: 'Dinheiro',
+    PIX: 'Pix',
+  };
   return (
     <div className='bg-[#1A1E26] flex flex-col gap-4 rounded-lg border border-[#3b3b3b] p-4 text-white'>
       <div className='flex justify-between'>
@@ -64,47 +71,53 @@ export function ItemGridOrder({
         </p>
         <p className='text-md text-[#858a8d]'>{order.user.phone}</p>
       </div>
-      <div className='bg-[#1F232B] p-4 rounded-lg'>
-        <div>
-          {order.items.map(item => (
-            <div key={item.productId} className='flex justify-between'>
-              <p className='font-semibold'>
-                {item.quantity}x {item.product.name}
-              </p>
-              <p>R$ {item.product.price.toFixed(2)}</p>
+      <div className='flex flex-col justify-between gap-4 h-full'>
+        <div className='bg-[#1F232B] p-4 rounded-lg'>
+          <div>
+            <div className='max-h-20 overflow-y-auto w-full pr-3 [scrollbar-gutter:stable]'>
+              {order.items.map(item => (
+                <div key={item.productId} className='flex justify-between'>
+                  <p className='font-semibold'>
+                    {item.quantity}x {item.product.name}
+                  </p>
+                  <p>R$ {item.product.price.toFixed(2)}</p>
+                </div>
+              ))}
             </div>
-          ))}
-          <div className='flex flex-col gap-2 border-t border-[#3b3b3b] mt-2 pt-2'>
-            <p className=' text-[#ccc] text-sm flex justify-between'>
-              Taxa de Entrega <span>R$ 3,00</span>
-            </p>
-            <p className='font-extrabold flex justify-between'>
-              Total: <span>R$ {(total + 3).toFixed(2)}</span>
-            </p>
+            <div className='flex flex-col gap-2 border-t border-[#3b3b3b] mt-2 pt-2'>
+              <p className=' text-[#ccc] text-sm flex justify-between'>
+                Taxa de Entrega <span>R$ 3,00</span>
+              </p>
+              <p className='font-extrabold flex justify-between'>
+                Total: <span>R$ {(total + 3).toFixed(2)}</span>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <div className='flex justify-between items-center'>
-        <p className='bg-[#1F232B] p-2 rounded-lg text-[#858a8d]'>{payment}</p>
-        <div className='flex gap-4'>
-          {declineButton && (
-            <button
-              onClick={handleDeleteOrder}
-              className='text-red-700 border border-red-700 bg-[#111217] flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
-            >
-              <FiX />
-              Recusar
-            </button>
-          )}
-          {ButtonIcons && (
-            <button
-              onClick={handleToggleStatus}
-              className='text-white bg-green-600 flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
-            >
-              <ButtonIcons />
-              {buttonText}
-            </button>
-          )}
+        <div className='flex justify-between items-center'>
+          <p className='bg-[#1F232B] p-2 rounded-lg text-[#858a8d]'>
+            {typePayment[payment]}
+          </p>
+          <div className='flex gap-4'>
+            {declineButton && (
+              <button
+                onClick={handleDeleteOrder}
+                className='text-red-700 border border-red-700 bg-[#111217] flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
+              >
+                <FiX />
+                Recusar
+              </button>
+            )}
+            {ButtonIcons && (
+              <button
+                onClick={handleToggleStatus}
+                className='text-white bg-green-600 flex justify-center items-center gap-2 rounded-lg p-2 cursor-pointer'
+              >
+                <ButtonIcons />
+                {buttonText}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
