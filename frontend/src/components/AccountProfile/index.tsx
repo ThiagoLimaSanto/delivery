@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { FiLogIn, FiMapPin, FiUser, FiEdit2 } from 'react-icons/fi';
-import { MenuItemProfile } from '../MenuItemProfile';
+import { FiEdit2, FiLogIn, FiMapPin, FiUser } from 'react-icons/fi';
+import { useAuth } from '../../hook/useAuth';
 import { LayoutTemplateProfile } from '../../templates/LayoutTemplateProfile';
+import { MenuItemProfile } from '../MenuItemProfile';
 
 export function AccountProfile() {
+  const { logout } = useAuth();
   const [open, setOpen] = useState('meus-dados');
   return (
     <LayoutTemplateProfile className='max-h-50!'>
@@ -37,6 +39,7 @@ export function AccountProfile() {
         Icon={FiLogIn}
         className='text-red-600! hover:bg-red-100!'
         colorIcon='text-red-600!'
+        onClick={logout}
       >
         Sair
       </MenuItemProfile>

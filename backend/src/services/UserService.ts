@@ -51,6 +51,7 @@ export class UserService {
         name: true,
         email: true,
         phone: true,
+        createdAt: true,
       },
     });
 
@@ -84,6 +85,7 @@ export class UserService {
         role: user.role,
         email: user.email,
         phone: user.phone,
+        createdAt: user.createdAt,
       },
     };
   }

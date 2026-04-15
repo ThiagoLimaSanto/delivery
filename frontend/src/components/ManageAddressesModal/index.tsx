@@ -6,7 +6,7 @@ import { UseHandleModal } from '../../hook/useHandleModal';
 import { MainModalTemplate } from '../../templates/MainModalTemplate';
 import { AddressModal } from '../AddressModal';
 
-type AddressModalMode = 'create' | 'edit';
+export type AddressModalMode = 'create' | 'edit';
 
 export function ManageAddressesModal() {
   const [modalMode, setModalMode] = useState<AddressModalMode>('create');

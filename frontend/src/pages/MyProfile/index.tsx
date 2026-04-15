@@ -3,8 +3,10 @@ import { AccountProfile } from '../../components/AccountProfile';
 import { AddressProfile } from '../../components/AddressProfile';
 import { PessoalInfoProfile } from '../../components/PessoaInfoProfile';
 import { MainTemplate } from '../../templates/MainTemplate';
+import { useAuth } from '../../hook/useAuth';
 
 export function MyProfile() {
+  const { user } = useAuth();
   return (
     <MainTemplate>
       <div className='m-32 mx-auto max-w-5xl'>
@@ -13,8 +15,11 @@ export function MyProfile() {
             <FiUser color='#3B82F6' size={35} />
           </div>
           <div>
-            <h1 className='text-xl font-bold lg:text-2xl'>Matheus Silva</h1>
-            <p className='text-sm'>Membro desde janeiro de 2026</p>
+            <h1 className='text-xl font-bold lg:text-2xl'>{user?.name}</h1>
+            <p className='text-sm'>
+              Membro desde{' '}
+              {new Date(user?.createdAt).toLocaleDateString('pt-BR')}
+            </p>
           </div>
         </div>
         <div className='p-4 grid gap-8 grid-cols-1 lg:grid-cols-2'>

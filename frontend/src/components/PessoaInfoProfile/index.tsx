@@ -1,8 +1,10 @@
 import { FiEdit2, FiUser } from 'react-icons/fi';
 import { LayoutTemplateProfile } from '../../templates/LayoutTemplateProfile';
 import { FiMail, FiPhone} from 'react-icons/fi';
+import { useAuth } from '../../hook/useAuth';
 
 export function PessoalInfoProfile() {
+  const { user } = useAuth();
   return (
     <LayoutTemplateProfile>
       <div className='flex justify-between mb-4'>
@@ -16,21 +18,21 @@ export function PessoalInfoProfile() {
         <div className='flex items-center gap-2 bg-white p-4 rounded-lg'>
           <FiUser color='#000' />
           <p className='text-sm font-semibold'>
-            Nome: <span className='font-medium text-md'>Matheus Silva</span>
+            Nome: <span className='font-medium text-md'>{user?.name}</span>
           </p>
         </div>
         <div className='flex items-center gap-2 bg-white p-4 rounded-lg'>
           <FiMail color='#000' />
           <p className='text-sm font-semibold'>
             Email:{' '}
-            <span className='font-medium text-md'>matheus@example.com</span>
+            <span className='font-medium text-md'>{user?.email}</span>
           </p>
         </div>
         <div className='flex items-center gap-2 bg-white p-4 rounded-lg'>
           <FiPhone color='#000' />
           <p className='text-sm font-semibold'>
             Telefone:{' '}
-            <span className='font-medium text-md'>(11) 99999-9999</span>
+            <span className='font-medium text-md'>{user?.phone}</span>
           </p>
         </div>
       </div>
