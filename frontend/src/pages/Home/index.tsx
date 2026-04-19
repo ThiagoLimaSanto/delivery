@@ -12,7 +12,7 @@ export function Home() {
 
   return (
     <>
-      <MainTemplate>
+      <MainTemplate footerOverlay={true}>
         <HeroHome />
       </MainTemplate>
     </>
