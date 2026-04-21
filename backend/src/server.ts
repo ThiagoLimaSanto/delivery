@@ -20,6 +20,7 @@ import { usersRoutes } from './routes/UserRouter';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 app.addHook('onReady', async () => {
+  
   const io = new Server(app.server, {
     cors: {
       origin: process.env.FRONTEND_URL,

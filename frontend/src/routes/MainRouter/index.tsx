@@ -7,12 +7,14 @@ import { MenuAdmin } from '../../pages/AdminPages/MenuAdmin';
 import { OrdersAdmin } from '../../pages/AdminPages/OrdersAdmin';
 import { Contact } from '../../pages/Contact';
 import { Home } from '../../pages/Home';
-import { Login } from '../../pages/Login';
 import { Menu } from '../../pages/Menu';
 import { MyProfile } from '../../pages/MyProfile';
 import { Orders } from '../../pages/Orders';
 import { Payment } from '../../pages/Payment';
 import { Register } from '../../pages/Register';
+import { Waiter } from '../../pages/waiter';
+import { Login } from '../../pages/login';
+import { MainWaiter } from '../../MainWaiter';
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +76,16 @@ export const router = createBrowserRouter([
           {
             path: '/z_admin/financas',
             element: <MyProfile />,
+          },
+        ],
+      },
+      {
+        path: '/garcom',
+        element: <MainWaiter />,
+        children: [
+          {
+            path: '/garcom/dashboard',
+            element: <Waiter />,
           },
         ],
       },

@@ -3,12 +3,16 @@ import { SidebarAdmin } from '../../components/SideBarAdmin';
 
 type MainTemplateAdminProps = {
   children: React.ReactNode;
+  sidebar?: boolean;
 };
 
-export function MainTemplateAdmin({ children }: MainTemplateAdminProps) {
+export function MainTemplateAdmin({
+  children,
+  sidebar = true,
+}: MainTemplateAdminProps) {
   return (
     <div className='bg-[#15171e] w-full min-h-screen flex'>
-      <SidebarAdmin />
+      {sidebar && <SidebarAdmin />}
       <div className='flex-1'>
         <NavBarAdmin />
         {children}

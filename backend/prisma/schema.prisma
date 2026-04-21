@@ -11,11 +11,13 @@ datasource db {
 enum UserRole {
   USER
   ADMIN
+  GARCOM
 }
 
 enum StatusEnum {
   PENDENTE
   PREPARANDO
+  PRONTO
   SAIU_PARA_ENTREGA
   ENTREGUE
   CANCELADO
