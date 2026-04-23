@@ -8,6 +8,11 @@ export type Order = {
   items: { productId: string; quantity: number }[];
 };
 
+export type Command = {
+  tableId: string;
+  items: { productId: string; quantity: number }[];
+};
+
 type StatusEnum =
   | 'PENDENTE'
   | 'PREPARANDO'
@@ -179,6 +184,23 @@ export function useOrderCancel() {
     },
     onError: () => {
       showMessage.error('Erro ao cancelar Pedido!');
+    },
+  });
+}
+
+export function usePostCommand() {
+  const queryClient = useQueryClient();
+  return useMutation<Command, unknown, Command>({
+    mutationFn: async (CommandData: Command) => {
+      const response = await api.post(`/command/criar`, CommandData);
+      return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['command'] });
+      showMessage.success('Pedido feito!');
+    },
+    onError: error => {
+      showMessage.error(error.response?.data?.message);
     },
   });
 }

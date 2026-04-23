@@ -7,8 +7,22 @@ export class TableService {
     return tables;
   }
   async listTablesActives() {
-    const tables = await prisma.table.findMany({ where: { active: true } });
-    return tables;
+    const tables = await prisma.table.findMany({
+      where: { active: true },
+      include: {
+        commands: {
+          where: {
+            open: true,
+          },
+        },
+      },
+    });
+
+    return tables.map(table => ({
+      id: table.id,
+      number: table.number,
+      isOccupied: table.commands.some(c => c.open),
+    }));
   }
   async createTable(number: number) {
     const tableExists = await prisma.table.findFirst({ where: { number } });
@@ -24,6 +38,9 @@ export class TableService {
 
   async removeTable(id: string) {
     if (!id) throw new AppError('Mesa inválida!');
-    return await prisma.table.update({ where: { id }, data: { active: false } });
+    return await prisma.table.update({
+      where: { id },
+      data: { active: false },
+    });
   }
 }

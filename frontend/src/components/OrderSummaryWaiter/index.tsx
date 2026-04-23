@@ -1,11 +1,28 @@
+import { showMessage } from '../../adapters/ShowMessage';
 import { useHandleOrder } from '../../hook/useHandleOrder';
+import { usePostCommand } from '../../hook/useOrder';
 import { CartsTemplate } from '../../templates/CartsTemplate';
 import { CartsOrderSummary } from '../CartsOrderSummary';
 
-export function OrderSummaryWaiter() {
-  const { totalPrice, clearCart } = useHandleOrder();
+type OrderSummaryWaiterProps = {
+  tableId: string;
+};
+
+export function OrderSummaryWaiter({ tableId }: OrderSummaryWaiterProps) {
+  const { mutateAsync: createCommand } = usePostCommand();
+  const { totalPrice, clearCart, order } = useHandleOrder();
+  const data = {
+    tableId,
+    items: order.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+    })),
+  };
 
   const handleSubmit = () => {
+    if (!tableId) return showMessage.error('Selecione uma Mesa!');
+    if (data.items.length === 0) return showMessage.error('Selecione um item!');
+    createCommand(data);
     clearCart();
   };
   return (

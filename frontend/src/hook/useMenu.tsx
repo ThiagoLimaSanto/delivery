@@ -102,8 +102,8 @@ export function useDeleteProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      await api.patch(`/product/${id}/remover`);
+    mutationFn: (id: string) => {
+      return api.patch(`/product/${id}/disponibilidade`);
     },
 
     onSuccess: () => {
@@ -120,13 +120,13 @@ export function useChangeAvailableProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      await api.patch(`/product/${id}/disponibilidade`);
+    mutationFn: (id: string) => {
+      return api.patch(`/product/${id}/disponibilidade`);
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['menu'] });
-      showMessage.dismiss()
+      showMessage.dismiss();
       showMessage.success('Produto alterado!');
     },
     onError: () => {

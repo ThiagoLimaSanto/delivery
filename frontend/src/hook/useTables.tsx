@@ -4,6 +4,7 @@ import { api } from '../utils/api';
 export type Tables = {
   id: string;
   number: number;
+  isOccupied: boolean;
 };
 
 export function useGetActivesTables() {
