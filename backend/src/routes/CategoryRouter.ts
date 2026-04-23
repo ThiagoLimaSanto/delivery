@@ -2,12 +2,13 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { CategoryController } from '../controllers/CategoryController';
 import { authGuard } from '../middleware/auth.middleware';
-import { authAdmin } from '../middleware/authAdmin';
 import {
   createCategoryBodySchema,
   createCategoryResponseSchema,
   getCategoryParamsSchema,
 } from '../schemas/CategorySchemas';
+import { authRoles } from '../middleware/authRoles';
+import { UserRole } from '@prisma/client';
 
 export async function categoryRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -16,7 +17,7 @@ export async function categoryRoutes(app: FastifyInstance) {
   typedApp.get(
     '/todos',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -37,7 +38,7 @@ export async function categoryRoutes(app: FastifyInstance) {
   typedApp.get(
     '/:id',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: getCategoryParamsSchema,
         response: 200,
@@ -51,7 +52,7 @@ export async function categoryRoutes(app: FastifyInstance) {
   typedApp.post(
     '/cadastrar',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         body: createCategoryBodySchema,
         response: {
@@ -67,7 +68,7 @@ export async function categoryRoutes(app: FastifyInstance) {
   typedApp.patch(
     '/:id/editar',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         body: createCategoryBodySchema,
         response: 200,
@@ -81,7 +82,7 @@ export async function categoryRoutes(app: FastifyInstance) {
   typedApp.patch(
     '/:id/remove',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: getCategoryParamsSchema,
         response: 200,

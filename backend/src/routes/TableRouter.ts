@@ -2,8 +2,9 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { TableController } from '../controllers/TableController';
 import { authGuard } from '../middleware/auth.middleware';
-import { authAdmin } from '../middleware/authAdmin';
 import { createTableBodySchema, createTableParamsSchema } from '../schemas/TableSchemas';
+import { authRoles } from '../middleware/authRoles';
+import { UserRole } from '@prisma/client';
 
 export async function tableRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -12,7 +13,7 @@ export async function tableRoutes(app: FastifyInstance) {
   typedApp.get(
     '/todos',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -23,7 +24,7 @@ export async function tableRoutes(app: FastifyInstance) {
   typedApp.get(
     '/ativos',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.GARCOM, UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -34,7 +35,7 @@ export async function tableRoutes(app: FastifyInstance) {
   typedApp.post(
     '/criar',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.GARCOM])],
       schema: {
         body: createTableBodySchema,
         response: 200,
@@ -46,7 +47,7 @@ export async function tableRoutes(app: FastifyInstance) {
   typedApp.put(
     '/:id',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: createTableParamsSchema,
         response: 200,
@@ -60,7 +61,7 @@ export async function tableRoutes(app: FastifyInstance) {
   typedApp.delete(
     '/:id',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: createTableParamsSchema,
         response: 200,

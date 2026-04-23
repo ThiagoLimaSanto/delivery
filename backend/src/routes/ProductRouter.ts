@@ -3,11 +3,12 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import { ProductController } from '../controllers/ProductController';
 import { authGuard } from '../middleware/auth.middleware';
-import { authAdmin } from '../middleware/authAdmin';
 import {
   createProductBodySchema,
   getProductParamsSchema,
 } from '../schemas/ProductSchemas';
+import { authRoles } from '../middleware/authRoles';
+import { UserRole } from '@prisma/client';
 
 export async function productRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -16,7 +17,7 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.get(
     '/todos',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         querystring: z.object({
           categoria: z.string().optional(),
@@ -47,7 +48,7 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.get(
     '/:id',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: getProductParamsSchema,
         response: 200,
@@ -59,7 +60,7 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.post(
     '/cadastrar',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         body: createProductBodySchema,
         response: 201,
@@ -71,7 +72,7 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.patch(
     '/:id/editar',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         body: createProductBodySchema,
         response: 200,
@@ -83,7 +84,7 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.patch(
     '/:id/remover',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: getProductParamsSchema,
         response: 200,
@@ -95,7 +96,7 @@ export async function productRoutes(app: FastifyInstance) {
   typedApp.patch(
     '/:id/disponibilidade',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: getProductParamsSchema,
         response: 200,

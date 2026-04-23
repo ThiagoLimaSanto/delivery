@@ -2,13 +2,14 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { UserController } from '../controllers/UserController';
 import { authGuard } from '../middleware/auth.middleware';
-import { authAdmin } from '../middleware/authAdmin';
 import { getUserByToken } from '../middleware/getUserByToken';
 import {
   createUserBodySchema,
   createUserLoginSchema,
   loginResponseSchema,
 } from '../schemas/UserSchemas';
+import { authRoles } from '../middleware/authRoles';
+import { UserRole } from '@prisma/client';
 
 export async function usersRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -17,7 +18,7 @@ export async function usersRoutes(app: FastifyInstance) {
   typedApp.get(
     '/todos',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -61,6 +62,7 @@ export async function usersRoutes(app: FastifyInstance) {
   typedApp.post(
     '/logout',
     {
+      preHandler: [authGuard],
       schema: {
         response: 200,
       },

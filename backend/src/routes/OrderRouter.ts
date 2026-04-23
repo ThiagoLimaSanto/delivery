@@ -2,13 +2,14 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { OrderController } from '../controllers/OrderController';
 import { authGuard } from '../middleware/auth.middleware';
-import { authAdmin } from '../middleware/authAdmin';
 import { getUserByToken } from '../middleware/getUserByToken';
 import {
   createOrderBodySchema,
   getOrderParamsSchema,
   getOrdersQuerySchema,
 } from '../schemas/OrderSchemas';
+import { authRoles } from '../middleware/authRoles';
+import { UserRole } from '@prisma/client';
 
 export async function orderRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -17,7 +18,7 @@ export async function orderRoutes(app: FastifyInstance) {
   typedApp.get(
     '/todos',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -28,7 +29,7 @@ export async function orderRoutes(app: FastifyInstance) {
   typedApp.get(
     '/admin',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         querystring: getOrdersQuerySchema,
         response: 200,
@@ -40,7 +41,7 @@ export async function orderRoutes(app: FastifyInstance) {
   typedApp.get(
     '/admin/recent',
     {
-      preHandler: [authGuard, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -68,7 +69,8 @@ export async function orderRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) => orderController.getAllOrderForUser(request as any, reply),
+    (request, reply) =>
+      orderController.getAllOrderForUser(request as any, reply),
   );
   typedApp.get(
     '/my/active',
@@ -108,7 +110,7 @@ export async function orderRoutes(app: FastifyInstance) {
   typedApp.patch(
     '/:id/mudarstatus',
     {
-      preHandler: [authGuard, getUserByToken, authAdmin],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
       schema: {
         params: getOrderParamsSchema,
         response: 200,
@@ -127,8 +129,7 @@ export async function orderRoutes(app: FastifyInstance) {
         response: 200,
       },
     },
-    (request, reply) =>
-      orderController.confirmOrder(request as any, reply),
+    (request, reply) => orderController.confirmOrder(request as any, reply),
   );
 
   typedApp.patch(

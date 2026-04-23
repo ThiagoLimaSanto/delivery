@@ -2,13 +2,13 @@ import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { CommandController } from '../controllers/Command';
 import { authGuard } from '../middleware/auth.middleware';
-import { authAdmin } from '../middleware/authAdmin';
 import {
   createAddOrderToCommandSchema,
   createCommandParamsSchema,
   createCommandSchema,
 } from '../schemas/CommandSchemas';
-import { authWaiter } from '../middleware/authWaiter';
+import { UserRole } from '@prisma/client';
+import { authRoles } from '../middleware/authRoles';
 
 export async function commandRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -17,7 +17,7 @@ export async function commandRoutes(app: FastifyInstance) {
   typedApp.get(
     '/listar',
     {
-      preHandler: [authGuard, authWaiter],
+      preHandler: [authGuard, authRoles([UserRole.GARCOM, UserRole.ADMIN])],
       schema: {
         response: 200,
       },
@@ -28,7 +28,7 @@ export async function commandRoutes(app: FastifyInstance) {
   typedApp.post(
     '/criar',
     {
-      preHandler: [authGuard, authWaiter],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN, UserRole.GARCOM])],
       schema: {
         body: createCommandSchema,
         response: 200,
@@ -40,7 +40,7 @@ export async function commandRoutes(app: FastifyInstance) {
   typedApp.post(
     '/:id/adicionar',
     {
-      preHandler: [authGuard, authWaiter],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN, UserRole.GARCOM])],
       schema: {
         params: createCommandParamsSchema,
         body: createAddOrderToCommandSchema,
@@ -55,7 +55,7 @@ export async function commandRoutes(app: FastifyInstance) {
   typedApp.post(
     '/:id/finalizar',
     {
-      preHandler: [authGuard, authWaiter],
+      preHandler: [authGuard, authRoles([UserRole.ADMIN, UserRole.GARCOM])],
       schema: {
         params: createCommandParamsSchema,
         response: 200,
