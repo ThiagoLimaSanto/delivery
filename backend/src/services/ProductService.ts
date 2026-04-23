@@ -97,7 +97,7 @@ export class ProductService {
     const newProduct = await prisma.product.create({
       data: {
         name: data.name,
-        price: data.price,
+        price: Number(data.price.toFixed(2)),
         image: data.image,
         categoryId: data.categoryId,
         description: data.description,

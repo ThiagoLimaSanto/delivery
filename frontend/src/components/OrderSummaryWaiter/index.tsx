@@ -7,7 +7,7 @@ export function OrderSummaryWaiter() {
       <CartsTemplate>
         <h2 className='text-white mb-6 text-lg'>Pedido Atual</h2>
         <div className='flex flex-col justify-between h-full text-white'>
-          <div className='overflow-y-auto max-h-30'>
+          <div className='overflow-y-auto max-h-30 pr-4 [scrollbar-gutter:stable]'>
             <CartsOrderSummary />
           </div>
           <div className='text-white pb-4'>

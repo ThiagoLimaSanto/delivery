@@ -1,4 +1,4 @@
-import { StatusEnum } from '@prisma/client';
+import { OrderTypeEnum, StatusEnum } from '@prisma/client';
 import { ObjectId } from 'mongodb';
 import { Server } from 'socket.io';
 import { AppError } from '../errors/AppError';
@@ -261,9 +261,10 @@ export class OrderService {
       const newOrder = await tx.order.create({
         data: {
           userId: data.userId,
-          total,
+          total: Number(total.toFixed(2)),
           typePayment: data.typePayment,
           orderNumber: counter.seq,
+          typeOrder: OrderTypeEnum.DELIVERY,
           status: 'PENDENTE',
           items: {
             create: itemData,

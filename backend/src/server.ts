@@ -17,10 +17,11 @@ import { orderRoutes } from './routes/OrderRouter';
 import { productRoutes } from './routes/ProductRouter';
 import { refreshTokenRoutes } from './routes/RefreshTokenRouter';
 import { usersRoutes } from './routes/UserRouter';
+import { tableRoutes } from './routes/TableRouter';
+import { commandRoutes } from './routes/CommandRouter';
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>();
 app.addHook('onReady', async () => {
-  
   const io = new Server(app.server, {
     cors: {
       origin: process.env.FRONTEND_URL,
@@ -101,6 +102,12 @@ app.register(addressRoutes, {
 });
 app.register(refreshTokenRoutes, {
   prefix: '/token',
+});
+app.register(tableRoutes, {
+  prefix: '/table',
+});
+app.register(commandRoutes, {
+  prefix: '/command',
 });
 
 const start = async () => {
