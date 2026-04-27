@@ -63,19 +63,19 @@ export function ItemGridOrder({
         </p>
       </div>
       <div>
-        <p className='text-white font-bold text-xl'>{order.user.name}</p>
+        <p className='text-white font-bold text-xl'>{order?.user?.name}</p>
         <p className='text-md text-[#858a8d]'>
-          {order.user.addresses[0].street +
+          {order?.user?.addresses[0]?.street +
             ', ' +
-            order.user.addresses[0].number}
+            order?.user?.addresses[0]?.number}
         </p>
-        <p className='text-md text-[#858a8d]'>{order.user.phone}</p>
+        <p className='text-md text-[#858a8d]'>{order?.user?.phone}</p>
       </div>
       <div className='flex flex-col justify-between gap-4 h-full'>
         <div className='bg-[#1F232B] p-4 rounded-lg'>
           <div>
             <div className='max-h-20 overflow-y-auto w-full pr-3 [scrollbar-gutter:stable]'>
-              {order.items.map(item => (
+              {order?.items?.map(item => (
                 <div key={item.productId} className='flex justify-between'>
                   <p className='font-semibold'>
                     {item.quantity}x {item.product.name}

@@ -1,4 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useGetActivesTables } from '../../hook/useTables';
+import { useTablesSocket } from '../../hook/useRealTimeSockets';
+import { useSocket } from '../../hook/useWebSocket';
 import { CartsTemplate } from '../../templates/CartsTemplate';
 import { Spinner } from '../Spinner';
 
@@ -7,7 +11,42 @@ type TablesWaiterProps = {
 };
 
 export function TablesWaiter({ setTableId }: TablesWaiterProps) {
+  useTablesSocket();
   const { data, isLoading } = useGetActivesTables();
+  const socket = useSocket();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleUpdate = () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tables'],
+      });
+    };
+
+    socket.on('commandUpdate', handleUpdate);
+
+    return () => {
+      socket.off('commandUpdate', handleUpdate);
+    };
+  }, [socket, queryClient]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleUpdate = () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tables'],
+      });
+    };
+
+    socket.on('tableUpdate', handleUpdate);
+
+    return () => {
+      socket.off('tableUpdate', handleUpdate);
+    };
+  }, [socket, queryClient]);
 
   if (isLoading) return <Spinner />;
 

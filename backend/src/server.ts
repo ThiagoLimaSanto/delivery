@@ -32,6 +32,38 @@ app.addHook('onReady', async () => {
 
   io.on('connection', socket => {
     console.log('Cliente conectado:', socket.id);
+    socket.on('join:tables', () => {
+      socket.join('tables');
+    });
+
+    socket.on('leave:tables', () => {
+      socket.leave('tables');
+    });
+    socket.on('join:products', () => {
+      socket.join('products');
+    });
+
+    socket.on('leave:products', () => {
+      socket.leave('products');
+    });
+    socket.on('join:orders', () => {
+      socket.join('orders');
+    });
+
+    socket.on('leave:orders', () => {
+      socket.leave('orders');
+    });
+    socket.on('join:command', (commandId: string) => {
+      socket.join(`command-${commandId}`);
+    });
+
+    socket.on('leave:command', (commandId: string) => {
+      socket.leave(`command-${commandId}`);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Cliente desconectado:', socket.id);
+    });
   });
 });
 
@@ -51,6 +83,7 @@ app.setErrorHandler((error, request, reply) => {
 
   return reply.status(500).send({
     message: 'Internal server error.',
+    error: error.message,
   });
 });
 
@@ -113,8 +146,6 @@ app.register(commandRoutes, {
 const start = async () => {
   try {
     await app.listen({ port: Number(process.env.PORT), host: '0.0.0.0' });
-
-    console.log('Servidor rodando em http://localhost:3333');
   } catch (err) {
     app.log.error(err);
     process.exit(1);

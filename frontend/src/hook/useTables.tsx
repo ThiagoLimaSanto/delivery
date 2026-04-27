@@ -8,11 +8,13 @@ export type Tables = {
 };
 
 export function useGetActivesTables() {
-  return useQuery<Tables[]>({
+  const query = useQuery<Tables[]>({
     queryKey: ['tables'],
     queryFn: async () => {
       const response = await api.get(`/table/ativos`);
       return response.data.data;
     },
   });
+
+  return query;
 }

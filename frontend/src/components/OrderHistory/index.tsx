@@ -9,8 +9,6 @@ export function OrderHistory() {
     return <Spinner />;
   }
 
-  console.log(data);
-
   return (
     <div>
       <p className='text-2xl text-black my-4'>Histórico</p>

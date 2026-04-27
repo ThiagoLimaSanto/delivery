@@ -1,9 +1,11 @@
 import { FiCheck } from 'react-icons/fi';
 import { useConfirmOrder, useGetOrderActive } from '../../hook/useOrder';
+import { useOrdersSocket } from '../../hook/useRealTimeSockets';
 import { statusConfig, status as statusOrder } from '../../types/Order';
 import { Spinner } from '../Spinner';
 
 export function OrderActive() {
+  useOrdersSocket();
   const { mutateAsync: confirmOrder } = useConfirmOrder();
   const { data: order, isLoading } = useGetOrderActive();
   const status = order ? statusConfig[order.status] : null;

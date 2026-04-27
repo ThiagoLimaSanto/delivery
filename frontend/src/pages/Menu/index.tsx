@@ -1,5 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { MdShoppingCart } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
 import { Image } from '../../components/Image/index.tsx';
@@ -7,13 +6,12 @@ import { Order } from '../../components/Order/index.tsx';
 import { Spinner } from '../../components/Spinner/index.tsx';
 import { UseHandleModal } from '../../hook/useHandleModal.tsx';
 import { useMenu } from '../../hook/useMenu.tsx';
-import { useSocket } from '../../hook/useWebSocket.tsx';
+import { useProductsSocket } from '../../hook/useRealTimeSockets.tsx';
 import { MenuTemplate } from '../../templates/MenuTemplate/index.tsx';
 import type { ProductType } from '../../types/Product.ts';
 
 export function Menu() {
-  const socket = useSocket();
-  const queryClient = useQueryClient();
+  useProductsSocket();
   const [searchParams] = useSearchParams();
   const categoria = searchParams.get('categoria');
   const comment = useRef<HTMLTextAreaElement | null>(null);
@@ -26,22 +24,6 @@ export function Menu() {
   });
   const { data, isLoading } = useMenu(categoria);
   const { orderClick, handleOrderClick } = UseHandleModal();
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleProductUpdate = () => {
-      queryClient.invalidateQueries({
-        queryKey: ['menu'],
-      });
-    };
-
-    socket.on('productUpdate', handleProductUpdate);
-
-    return () => {
-      socket.off('productUpdate', handleProductUpdate);
-    };
-  }, [socket, queryClient]);
 
   if (isLoading) {
     return <Spinner />;

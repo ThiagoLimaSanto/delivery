@@ -45,18 +45,6 @@ export async function productRoutes(app: FastifyInstance) {
       productController.getAllProductsAvaliable(request as any, reply),
   );
 
-  typedApp.get(
-    '/:id',
-    {
-      preHandler: [authGuard, authRoles([UserRole.ADMIN])],
-      schema: {
-        params: getProductParamsSchema,
-        response: 200,
-      },
-    },
-    (request, reply) => productController.getProductById(request as any, reply),
-  );
-
   typedApp.post(
     '/cadastrar',
     {

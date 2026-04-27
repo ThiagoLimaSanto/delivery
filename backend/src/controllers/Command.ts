@@ -4,12 +4,11 @@ import {
   CreateCommandBody,
   CreateCommandParams,
 } from '../schemas/CommandSchemas';
-import { CommandService } from '../services/CommandService';
-
-const service = new CommandService();
+import { getCommandService } from '../helpers/getAllServices';
 
 export class CommandController {
   async listCommand(request: FastifyRequest, reply: FastifyReply) {
+    const service = getCommandService(request);
     const commands = await service.listCommand();
     return reply.status(200).send({ data: commands });
   }
@@ -17,6 +16,7 @@ export class CommandController {
     request: FastifyRequest<{ Body: CreateCommandBody }>,
     reply: FastifyReply,
   ) {
+    const service = getCommandService(request);
     const { tableId, items } = request.body;
     const command = await service.createCommand(tableId, items);
     return reply.status(201).send({ data: command });
@@ -29,6 +29,7 @@ export class CommandController {
     }>,
     reply: FastifyReply,
   ) {
+    const service = getCommandService(request);
     const { id } = request.params;
     const { items } = request.body;
     const command = await service.addOrderToCommand(id, items);
@@ -39,6 +40,7 @@ export class CommandController {
     request: FastifyRequest<{ Params: CreateCommandParams }>,
     reply: FastifyReply,
   ) {
+    const service = getCommandService(request);
     const { id } = request.params;
     const command = await service.closeCommand(id);
     return reply.status(201).send({ data: command });

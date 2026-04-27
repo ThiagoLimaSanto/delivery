@@ -6,18 +6,23 @@ import { prisma } from '../repository/prisma';
 import { CreateOrderBody } from '../schemas/OrderSchemas';
 import { OrderWithUserAndItems, PaginatedResponse } from '../types/Order';
 
+type OrderEvent =
+  | { action: 'order_created'; payload: any }
+  | { action: 'order_updated'; payload: any }
+  | { action: 'order_status_changed'; payload: any }
+  | { action: 'order_cancelled'; payload: any };
+
 export interface ServerToClientEvents {
-  orderUpdate: (data: {
-    type: 'NEW_ORDER' | 'UPDATE_ORDER' | 'CANCEL_ORDER' | 'CHANGE_STATUS_ORDER';
-    orderData: any;
-  }) => void;
+  'order:update': (data: OrderEvent) => void;
 }
 
 export class OrderService {
   constructor(private readonly io: Server<any, ServerToClientEvents>) {}
+
   async getAllOrder(page = 1, limit = 20) {
     const skip = (page - 1) * limit;
-    const orders = await prisma.order.findMany({
+
+    return prisma.order.findMany({
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -33,40 +38,29 @@ export class OrderService {
         },
       },
     });
-
-    return orders;
   }
 
   async getOrderActive(userId: string) {
-    const order = await prisma.order.findFirst({
+    return prisma.order.findFirst({
       where: {
-        userId: userId,
+        userId,
         status: {
           notIn: ['ENTREGUE', 'CANCELADO'],
         },
       },
       include: {
         user: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-          },
+          select: { id: true, name: true, phone: true },
         },
         items: {
           include: {
             product: {
-              select: {
-                name: true,
-                price: true,
-              },
+              select: { name: true, price: true },
             },
           },
         },
       },
     });
-
-    return order;
   }
 
   async listOrders(
@@ -89,20 +83,12 @@ export class OrderService {
               id: true,
               name: true,
               phone: true,
-              addresses: {
-                where: { isDefault: true },
-                take: 1,
-              },
+              addresses: { where: { isDefault: true }, take: 1 },
             },
           },
           items: {
             include: {
-              product: {
-                select: {
-                  name: true,
-                  price: true,
-                },
-              },
+              product: { select: { name: true, price: true } },
             },
           },
         },
@@ -118,133 +104,61 @@ export class OrderService {
     };
   }
 
-  async listRecentOrders() {
-    const orders = await prisma.order.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 3,
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-            addresses: {
-              where: { isDefault: true },
-              take: 1,
-            },
-          },
-        },
-        items: {
-          include: {
-            product: {
-              select: {
-                name: true,
-                price: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return orders;
-  }
-
-  async getAllOrderForUser(id: string) {
-    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
-    const orders = await prisma.order.findMany({
-      where: { userId: id, status: { in: ['CANCELADO', 'ENTREGUE'] } },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-          },
-        },
-        items: {
-          include: {
-            product: {
-              select: {
-                name: true,
-                price: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return orders;
-  }
-
-  async getOrderById(id: string, userId: string) {
-    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
-
-    const order = await prisma.order.findFirst({
-      where: { id: id, userId: userId },
-    });
-
-    if (!order) throw new AppError('Pedido não encontrado!', 404);
-
-    return order;
-  }
   async createOrder(data: CreateOrderBody) {
     const counter = await prisma.counter.upsert({
       where: { name: 'global_order_number' },
       update: { seq: { increment: 1 } },
       create: { name: 'global_order_number', seq: 1 },
     });
+
     const address = await prisma.address.findFirst({
-      where: {
-        id: data.addressId,
-        userId: data.userId,
-      },
+      where: { id: data.addressId, userId: data.userId },
     });
 
-    if (!address)
+    if (!address) {
       throw new AppError(
-        'Endereço de entrega não encontrado ou não pertence ao usuário!',
+        'Endereço inválido ou não pertence ao usuário',
         404,
       );
+    }
 
     const newOrder = await prisma.$transaction(async tx => {
       const userExists = await tx.user.findUnique({
         where: { id: data.userId },
       });
 
-      if (!userExists) throw new AppError('Usuário nao encontrado!', 404);
-
-      const mergedItemsMap = new Map<string, number>();
-
-      for (const item of data.items) {
-        const currentQty = mergedItemsMap.get(item.productId) || 0;
-        mergedItemsMap.set(item.productId, currentQty + item.quantity);
+      if (!userExists) {
+        throw new AppError('Usuário não encontrado', 404);
       }
 
-      const sanitizedItems = Array.from(mergedItemsMap.entries()).map(
-        ([productId, quantity]) => ({
-          productId,
-          quantity,
-        }),
+      // 🔥 merge de itens
+      const merged = new Map<string, number>();
+
+      for (const item of data.items) {
+        merged.set(
+          item.productId,
+          (merged.get(item.productId) || 0) + item.quantity,
+        );
+      }
+
+      const sanitizedItems = Array.from(merged.entries()).map(
+        ([productId, quantity]) => ({ productId, quantity }),
       );
 
       const products = await tx.product.findMany({
         where: {
-          id: {
-            in: sanitizedItems.map(item => item.productId),
-          },
+          id: { in: sanitizedItems.map(i => i.productId) },
         },
       });
 
-      const productMap = new Map(
-        products.map(product => [product.id, product]),
-      );
+      const productMap = new Map(products.map(p => [p.id, p]));
 
       const itemData = sanitizedItems.map(item => {
         const product = productMap.get(item.productId);
 
-        if (!product) throw new AppError(`Produto nao encontrado!`, 404);
+        if (!product) {
+          throw new AppError('Produto não encontrado', 404);
+        }
 
         return {
           productId: product.id,
@@ -258,49 +172,35 @@ export class OrderService {
         0,
       );
 
-      const newOrder = await tx.order.create({
+      return tx.order.create({
         data: {
           userId: data.userId,
           total: Number(total.toFixed(2)),
           typePayment: data.typePayment,
           orderNumber: counter.seq,
           typeOrder: OrderTypeEnum.DELIVERY,
-          status: 'PENDENTE',
-          items: {
-            create: itemData,
-          },
-        },
-        select: {
-          id: true,
-          userId: true,
-          status: true,
-          total: true,
-          items: true,
-          user: {
-            select: {
-              name: true,
-              addresses: true,
-            },
-          },
+          status: StatusEnum.PENDENTE,
+          items: { create: itemData },
         },
       });
-
-      return newOrder;
     });
 
-    this.io.emit('orderUpdate', { type: 'NEW_ORDER', orderData: newOrder });
+    this.io.emit('order:update', {
+      action: 'order_created',
+      payload: newOrder,
+    });
+
     return newOrder;
   }
 
   async changeOrderStatus(id: string) {
-    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
-    const order = await prisma.order.findFirst({
-      where: { id: id },
-    });
-
-    if (!order) {
-      throw new AppError('Pedido não encontrado', 404);
+    if (!ObjectId.isValid(id)) {
+      throw new AppError('Pedido inválido!', 400);
     }
+
+    const order = await prisma.order.findUnique({ where: { id } });
+
+    if (!order) throw new AppError('Pedido não encontrado', 404);
 
     let nextStatus: StatusEnum;
 
@@ -315,57 +215,65 @@ export class OrderService {
         nextStatus = StatusEnum.ENTREGUE;
         break;
       default:
-        throw new AppError('Status não pode ser alterado', 400);
+        throw new AppError('Status inválido para alteração', 400);
     }
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: id },
+    const updated = await prisma.order.update({
+      where: { id },
       data: { status: nextStatus },
     });
 
-    return this.io.emit('orderUpdate', {
-      type: 'CHANGE_STATUS_ORDER',
-      orderData: updatedOrder,
+    this.io.emit('order:update', {
+      action: 'order_status_changed',
+      payload: updated,
     });
+
+    return updated;
   }
 
   async confirmOrder(id: string, userId: string) {
-    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
+    if (!ObjectId.isValid(id)) {
+      throw new AppError('Pedido inválido!', 400);
+    }
 
     const order = await prisma.order.findFirst({
-      where: { id: id, userId: userId },
+      where: { id, userId },
     });
 
-    if (!order) throw new AppError('Pedido nao encontrado', 404);
+    if (!order) throw new AppError('Pedido não encontrado', 404);
 
-    if (order.status !== StatusEnum.SAIU_PARA_ENTREGA)
-      throw new AppError('Pedido nao pode ser confirmado', 400);
+    if (order.status !== StatusEnum.SAIU_PARA_ENTREGA) {
+      throw new AppError('Pedido não pode ser confirmado', 400);
+    }
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: id },
+    const updated = await prisma.order.update({
+      where: { id },
       data: { status: StatusEnum.ENTREGUE },
     });
 
-    this.io.emit('orderUpdate', {
-      type: 'CHANGE_STATUS_ORDER',
-      orderData: updatedOrder,
+    this.io.emit('order:update', {
+      action: 'order_status_changed',
+      payload: updated,
     });
-    return;
+
+    return updated;
   }
 
   async OrderCancel(id: string) {
-    if (!ObjectId.isValid(id)) throw new AppError('Pedido inválido!', 400);
+    if (!ObjectId.isValid(id)) {
+      throw new AppError('Pedido inválido!', 400);
+    }
 
-    const updatedOrder = await prisma.order.update({
+    const updated = await prisma.order.update({
       where: { id },
-      data: { status: 'CANCELADO' },
+      data: { status: StatusEnum.CANCELADO },
     });
 
-    this.io.emit('orderUpdate', {
-      type: 'CANCEL_ORDER',
-      orderData: updatedOrder,
+    this.io.emit('order:update', {
+      action: 'order_cancelled',
+      payload: updated,
     });
 
-    return updatedOrder;
+    return updated;
   }
 }

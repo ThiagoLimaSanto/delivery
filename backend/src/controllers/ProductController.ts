@@ -36,18 +36,6 @@ export class ProductController {
     return reply.status(200).send({ data: products });
   }
 
-  async getProductById(
-    request: FastifyRequest<{ Params: GetProductParams }>,
-    reply: FastifyReply,
-  ) {
-    const service = getProductService(request);
-    const { id } = request.params;
-
-    const product = await service.getProductById(id);
-
-    return reply.status(200).send({ data: product });
-  }
-
   async createProduct(
     request: FastifyRequest<{ Body: CreateProductBody }>,
     reply: FastifyReply,

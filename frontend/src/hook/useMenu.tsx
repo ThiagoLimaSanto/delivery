@@ -103,7 +103,7 @@ export function useDeleteProduct() {
 
   return useMutation({
     mutationFn: (id: string) => {
-      return api.patch(`/product/${id}/disponibilidade`);
+      return api.patch(`/product/${id}/remover`);
     },
 
     onSuccess: () => {
