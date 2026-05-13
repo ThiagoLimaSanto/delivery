@@ -12,22 +12,22 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | undefined>(undefined);
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     async function checkAuth() {
       try {
-        const reponse = await api.get('/user/my');
-        if (reponse.data?.data) {
-          setUser(reponse.data.data);
-          setIsAuthenticated(true);
+        const response = await api.get('/user/my');
+
+        if (response.data?.data) {
+          setUser(response.data.data);
         } else {
-          setIsAuthenticated(false);
+          setUser(undefined);
         }
       } catch {
-        setIsAuthenticated(false);
+        setUser(undefined);
       } finally {
         setLoading(false);
       }
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await api.post('/user/login', data);
       setUser(response.data.data);
-      setIsAuthenticated(true);
+
       navigate('/');
       showMessage.success('Logado com sucesso!');
     } catch (err: unknown) {
@@ -82,26 +82,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         showMessage.error('Error do servidor, Tente novamente mais tarde!');
       }
     } finally {
-      setIsAuthenticated(false);
       setUser(undefined);
       navigate('/login');
     }
   };
-
-  useEffect(() => {
-    const interceptor = api.interceptors.response.use(
-      response => response,
-      error => {
-        if (error.response?.status === 401 && isAuthenticated) {
-          setIsAuthenticated(false);
-          navigate('/login');
-          showMessage.warning('Sua sessão expirou. Faça login novamente.');
-        }
-        return Promise.reject(error);
-      },
-    );
-    return () => api.interceptors.response.eject(interceptor);
-  }, [navigate, isAuthenticated]);
 
   return (
     <AuthContext.Provider

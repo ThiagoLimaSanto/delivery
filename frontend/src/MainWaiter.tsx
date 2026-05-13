@@ -1,19 +1,23 @@
 import { Outlet } from 'react-router-dom';
 import { MessagesContainer } from './components/MessagesContainer';
-import { AuthProvider } from './context/infra/AuthProvider';
+import { Spinner } from './components/Spinner';
 import { ModalProvider } from './context/modal/modalProvider';
+import { useAuth } from './hook/useAuth';
 
 export function MainWaiter() {
-  
+  const { loading } = useAuth();
+
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <>
-      <AuthProvider>
-        <MessagesContainer>
-          <ModalProvider>
-            <Outlet />
-          </ModalProvider>
-        </MessagesContainer>
-      </AuthProvider>
+      <MessagesContainer>
+        <ModalProvider>
+          <Outlet />
+        </ModalProvider>
+      </MessagesContainer>
     </>
   );
 }

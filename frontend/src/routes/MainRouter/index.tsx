@@ -1,20 +1,20 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { App } from '../../App';
 import { MainAdmin } from '../../MainAdmin';
+import { MainWaiter } from '../../MainWaiter';
 import { About } from '../../pages/About';
 import { Admin } from '../../pages/AdminPages/Admin';
 import { MenuAdmin } from '../../pages/AdminPages/MenuAdmin';
 import { OrdersAdmin } from '../../pages/AdminPages/OrdersAdmin';
 import { Contact } from '../../pages/Contact';
 import { Home } from '../../pages/Home';
+import { Login } from '../../pages/login';
 import { Menu } from '../../pages/Menu';
 import { MyProfile } from '../../pages/MyProfile';
 import { Orders } from '../../pages/Orders';
 import { Payment } from '../../pages/Payment';
 import { Register } from '../../pages/Register';
 import { Waiter } from '../../pages/waiter';
-import { Login } from '../../pages/login';
-import { MainWaiter } from '../../MainWaiter';
 
 export const router = createBrowserRouter([
   {

@@ -11,7 +11,7 @@ export async function generateAccessToken(
 ) {
   const accessToken = await reply.jwtSign(
     { id, name, role },
-    { expiresIn: '15m' },
+    { expiresIn: '10s' },
   );
 
   const tempoVida = 60 * 15;
