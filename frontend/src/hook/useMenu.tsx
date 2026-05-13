@@ -23,10 +23,18 @@ export type MenuAdmin = Menu & {
 export type MenuPost = {
   name: string;
   description: string;
-  price: number;
+  price: string;
   image: string;
   categoryId: string;
 };
+
+export type MenuPostPayload = {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  categoryId: string;
+}
 
 export type MenuUpdate = MenuPost & {
   id: string;
@@ -63,8 +71,8 @@ export function useMenuAdmin(params?: {
 
 export function usePostProduct() {
   const queryClient = useQueryClient();
-  return useMutation<MenuPost, unknown, MenuPost>({
-    mutationFn: async (productData: MenuPost) => {
+  return useMutation<MenuPostPayload, unknown, MenuPostPayload>({
+    mutationFn: async (productData: MenuPostPayload) => {
       const response = await api.post(`/product/cadastrar`, productData);
       return response.data.data;
     },
@@ -82,7 +90,7 @@ export function useUpdateProduct() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: MenuPost }) => {
+    mutationFn: async ({ id, data }: { id: string; data: MenuPostPayload }) => {
       const response = await api.patch(`/product/${id}/editar`, data);
       return response.data.data;
     },

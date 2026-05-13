@@ -4,7 +4,7 @@ import { UseHandleModal } from '../../hook/useHandleModal';
 import {
   usePostProduct,
   useUpdateProduct,
-  type MenuPost,
+  type MenuPostPayload,
   type MenuUpdate,
 } from '../../hook/useMenu';
 import { MainModalTemplate } from '../../templates/MainModalTemplate';
@@ -14,21 +14,28 @@ type ManageMenuProps = {
   data: Category[] | undefined;
   selectedItem: MenuUpdate | null;
   title?: string;
+  setSelectedItem: (item: MenuUpdate | null) => void;
 };
 
-export function ManageMenu({ data, selectedItem, title }: ManageMenuProps) {
+export function ManageMenu({
+  data,
+  selectedItem,
+  title,
+  setSelectedItem,
+}: ManageMenuProps) {
   const { clickPostMenu, handleCLickPostMenu } = UseHandleModal();
 
   const navigate = useNavigate();
   const { mutateAsync: menu } = usePostProduct();
   const { mutateAsync: updateProduct } = useUpdateProduct();
 
-  const handleSubmit = async (data: MenuPost) => {
+  const handleSubmit = async (data: MenuPostPayload) => {
     if (selectedItem?.id) {
       await updateProduct({ id: selectedItem.id, data: data });
     } else {
       await menu(data);
     }
+    setSelectedItem(null);
     handleCLickPostMenu(clickPostMenu);
     navigate('/z_admin/cardapio');
   };
@@ -39,6 +46,7 @@ export function ManageMenu({ data, selectedItem, title }: ManageMenuProps) {
       click={!clickPostMenu}
     >
       <FormMenu
+        key={String(clickPostMenu)}
         title={title}
         dataCategory={data}
         handleSubmit={handleSubmit}

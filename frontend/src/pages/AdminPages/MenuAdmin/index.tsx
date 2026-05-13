@@ -61,7 +61,7 @@ export function MenuAdmin() {
         </div>
       </div>
       <ManagerCategories />
-      <ManageMenu data={data} selectedItem={selectedItem} title={title} />
+      <ManageMenu data={data} selectedItem={selectedItem} setSelectedItem={setSelectedItem} title={title} />
     </MainTemplateAdmin>
   );
 }

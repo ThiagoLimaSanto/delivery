@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import type { Category } from '../../hook/useCategories';
-import type { MenuPost, MenuUpdate } from '../../hook/useMenu';
+import type { MenuPost, MenuPostPayload, MenuUpdate } from '../../hook/useMenu';
 import { Input } from '../Input';
 import { Form } from '../MainForm';
 
 type FormMenuProps = {
-  handleSubmit: (data: MenuPost) => void;
+  handleSubmit: (data: MenuPostPayload) => void;
   title?: string;
   dataCategory: Category[] | undefined;
   data?: MenuUpdate | null;
@@ -20,7 +20,7 @@ export function FormMenu({
   const [menu, setMenu] = useState<MenuPost>({
     name: '',
     description: '',
-    price: 0,
+    price: '',
     image: '',
     categoryId: '',
   });
@@ -33,7 +33,7 @@ export function FormMenu({
       setMenu({
         name: '',
         description: '',
-        price: 0,
+        price: '',
         image: '',
         categoryId: '',
       });
@@ -45,7 +45,10 @@ export function FormMenu({
         buttonName={title}
         onSubmit={e => {
           e.preventDefault();
-          handleSubmit(menu);
+          handleSubmit({
+            ...menu,
+            price: Number(String(menu.price).replace(',', '.')),
+          });
         }}
       >
         <Input
@@ -73,7 +76,13 @@ export function FormMenu({
         <Input
           classNameLabel='!text-black'
           value={menu.price || ''}
-          onChange={e => setMenu({ ...menu, price: Number(e.target.value) })}
+          onChange={e => {
+            const value = e.target.value;
+
+            if (/^[0-9.,]*$/.test(value)) {
+              setMenu({ ...menu, price: value });
+            }
+          }}
           classNameInput='border-[#ccc]'
           id='price'
           name='price'
