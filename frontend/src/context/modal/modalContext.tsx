@@ -11,6 +11,8 @@ export type ModalContextType = {
   clickSideBarAdmin: boolean;
   clickPostMenu: boolean;
   manageCategoriesCLick: boolean;
+  formCategories: boolean;
+  handleFormCategories: (formCategories?: boolean) => void;
   handleManageCategoriesCLick: (manageCategoriesCLick?: boolean) => void;
   handleCLickPostMenu: (clickPostMenu?: boolean) => void;
   handleClickSideBarAdmin: (clickSideBarAdmin?: boolean) => void;

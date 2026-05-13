@@ -15,13 +15,16 @@ import { Spinner } from '../Spinner';
 
 export function ManagerCategories() {
   const navigate = useNavigate();
-  const { handleCLickPostMenu, clickPostMenu } = UseHandleModal();
   const [title, setTitle] = useState<string>('');
   const [selectedItem, setSelectedItem] = useState<Category | undefined>(
     undefined,
   );
-  const { manageCategoriesCLick, handleManageCategoriesCLick } =
-    UseHandleModal();
+  const {
+    manageCategoriesCLick,
+    handleManageCategoriesCLick,
+    handleFormCategories,
+    formCategories,
+  } = UseHandleModal();
   const { data, isLoading } = useCategories();
   const { mutateAsync: updateCategory } = useUpdateCategory();
   const { mutateAsync: create } = usePostCategory();
@@ -33,9 +36,9 @@ export function ManagerCategories() {
     } else {
       await create(data);
     }
-
     setSelectedItem(undefined);
-    handleCLickPostMenu(clickPostMenu);
+    setTitle('');
+    handleFormCategories(formCategories);
     navigate('/z_admin/cardapio');
   };
 
@@ -57,6 +60,7 @@ export function ManagerCategories() {
                   onClick={() => {
                     setTitle('Editar');
                     setSelectedItem(data);
+                    handleFormCategories(formCategories);
                   }}
                   size={20}
                   className='cursor-pointer hover:text-blue-600 transition-colors duration-100'
@@ -78,6 +82,8 @@ export function ManagerCategories() {
       <button
         onClick={() => {
           setTitle('Adicionar');
+          setSelectedItem(undefined);
+          handleFormCategories(formCategories);
         }}
         className=' transition-colors duration-300 bg-green-600 hover:bg-green-700 py-2 px-3 w-1/3 rounded-lg cursor-pointer text-white font-bold'
       >
